@@ -15,7 +15,6 @@ knitr::opts_chunk$set(
 # mscatch
 The goal of `mscatch` is to expand total catch by species and area apportioned to length composition in a consistent manner.
 
-
 ## Installation
 ```{r, eval=FALSE}
 remotes::install_github("NOAA-EDAB/mscatch")
