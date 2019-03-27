@@ -1,17 +1,17 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-neusCatch
-=========
+mscatch
+=======
 
-The goal of neusCatch is to ...
+The goal of mscatch is to ...
 
 Installation
 ------------
 
-You can install the released version of neusCatch from [CRAN](https://CRAN.R-project.org) with:
+You can install the released version of mscatch from [CRAN](https://CRAN.R-project.org) with:
 
 ``` r
-install.packages("neusCatch")
+install.packages("mscatch")
 ```
 
 Example
