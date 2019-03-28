@@ -8,12 +8,13 @@
 
 create_EPU_10minsq <- function() {
   ## 10min square EPUs
-  path <- "data-raw/"
+  inPath <- "data-raw/"
+  outPath <- "inst/extdata/EPU_10mins" # accessible once package is installed
   options(warn=-1) # supress writeOGR  warning messages
 
   # reads in shape files for EPUS and 10 min square grid
-  EPU10MinSq <-  rgdal::readOGR(dsn = paste0(path,'EPU_WITH_ESTUARIES'), layer = 'EPUS_FULL')
-  Grid10MinSq <-  rgdal::readOGR(dsn = paste0(path,'Grid_10minSQ'), layer = 'TMSQ')
+  EPU10MinSq <-  rgdal::readOGR(dsn = paste0(inPath,'EPU_WITH_ESTUARIES'), layer = 'EPUS_FULL')
+  Grid10MinSq <-  rgdal::readOGR(dsn = paste0(inPath,'Grid_10minSQ'), layer = 'TMSQ')
 
   EPUNames <- as.vector(EPU10MinSq@data$EPU)
 
@@ -27,7 +28,7 @@ create_EPU_10minsq <- function() {
     #raster::plot(EPU)
 
     # create a new shape file for shiny app
-    rgdal::writeOGR(EPU,dsn=paste0(path,"EPU_10mins"),layer=paste0("10MinSq_",EPUNames[rname]),
+    rgdal::writeOGR(EPU,dsn=paste0(outPath),layer=paste0("10MinSq_",EPUNames[rname]),
                     driver="ESRI Shapefile",overwrite_layer=TRUE)
   }
 
