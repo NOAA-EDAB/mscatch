@@ -1,0 +1,67 @@
+---
+title: "Data Notes"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## ADIOS!
+
+This is the database that the population dynamics (Pop Dy) branch use for their stock assessments.  
+
+* Access the online [GUI](file://155.206.139.2/home0/pdy/pub/STOCKEFF/ADIOS/website/webfiles/ADIOS_homepage.html)
+
+* Read the [DOCUMENTATION](file://155.206.139.2/home0/pdy/pub/STOCKEFF/ADIOS/ADIOS_CF/website/webfiles/ADIOS_technical_documentation.pdf)
+
+The landing portion are stored in the Stockeff.MV_cf_Landings materialized view. (This is equivalent to AA Trip and AA Species tables joined). Each record represents trip and species data for a specific landed species. A trip will appear as many times as there are landed species in that trip
+
+* MV_CF_LANDINGS  - (WOLANDT/S,WODET/S, CFDETT/S tables combined)
+
+* MV_CF_AGE - (WOAGE, CFAGE AA tables combined)
+
+* MV_CF_LEN (WOLEN, CFLEN AA tables combined)
+
+### Statistical Area
+
+In the database there are:
+
+* 35,515,060 records
+* 6,913,365 record (20%) still have unknown area designation (AREA = '000')
+
+Pop Dy branch will assign these records to areas based on the species of interest. Of course this means that a trip could be assigned to several different areas depending on the species of interest. The algorithm for assigning the area is run "behind the scenes" when a scientist using the web GUI makes a request for data.
+
+
+### Latitude and Longitude
+
+* 35,515,060 records
+* 21,227,636 records (60%) where GIS_LAT, GIS_LON is null
+* 1,952,157 records (5%) where LAT, LON are null 
+* 1,482,958 records (4%) where LAT or LON are '00'
+* 17,792,521 records (50%) have valid LAT and LON but NULL foor GIS_LAT, GIS_LON
+
+Need to find out why so many of the GIS_LAT and GIS_LON fields are null.
+
+There is a TENMSQ field but only included from 1994+
+
+Allocation rules:
+
+1. All trips WITH missing AREA (='000') need to be assigned to an AREA
+
+1.  If most of the GIS_LAT and GIS_LON fields contain valid entires we can allocate these TRIPS to an EPU.
+
+1. For those that do not (hopefully only 10%) we will need to allocate these trips to an EPU based on the AREA they fished.
+
+1. If they fished in an AREA that is entirely within an EPU, we can allocate to that EPU
+
+1. Otherise the AREA straddles multiple EPUs so we will need to look at all trips already in associated with that AREA and allocate to an EPU based on most similar trips. HOW DO THIS?
+
+
+
+### Market Category
+
+Simplified to categories based on the species (Looking for definitions)
+
+eg Cod -> "UN", "LG", "MK", "SK"
+
