@@ -36,12 +36,24 @@ Pop Dy branch will assign these records to areas based on the species of interes
 ### Latitude and Longitude
 
 * 35,515,060 records
+* 14,288,139 records (40%) have valid GIS_LAT, GIS_LON
 * 21,227,636 records (60%) where GIS_LAT, GIS_LON is null
+
 * 1,952,157 records (5%) where LAT, LON are null 
 * 1,482,958 records (4%) where LAT or LON are '00'
-* 17,792,521 records (50%) have valid LAT and LON but NULL foor GIS_LAT, GIS_LON
+* 17,791,806 records (50%) where LAT or LON are '0000'
 
-Need to find out why so many of the GIS_LAT and GIS_LON fields are null.
+#### Trip level records
+
+Use link field as the unique identifier
+
+* 15,774,961 unique trips (15,776,348 in AA tables -> 1387 trips removed)
+* 2,596,744 records (16%) have valid GIS_LAT, GIS_LON
+
+* when comparing the AA tables by year and ADIOS by year 
+
+
+
 
 There is a TENMSQ field but only included from 1994+
 
@@ -65,3 +77,12 @@ Simplified to categories based on the species (Looking for definitions)
 
 eg Cod -> "UN", "LG", "MK", "SK"
 
+
+## Questions for Stock Assessment Scientists
+
+1. For areas defined as '000' (post AA table creation). How do they deal with them?
+For example: Does the scientist pull all cod data then deal with the missing areas from this reduced data set or are all missing areas dealt with THEN cod data are pulled?
+
+1. Is this consistent for all scientists? and is the method of dealing with missing area  designations consistent?
+
+1. If everyone is using ADIOS then what are the scripts in the background (from the GUI) doing to answer these questions?

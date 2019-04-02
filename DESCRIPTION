@@ -15,4 +15,6 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
-Imports: rgdal
+Imports: rgdal,
+    RODBC,
+    cfdbs
