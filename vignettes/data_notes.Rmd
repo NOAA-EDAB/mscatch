@@ -30,7 +30,7 @@ In the database there are:
 * 35,515,060 records
 * 6,913,365 record (20%) still have unknown area designation (AREA = '000')
 
-Pop Dy branch will assign these records to areas based on the species of interest. Of course this means that a trip could be assigned to several different areas depending on the species of interest. The algorithm for assigning the area is run "behind the scenes" when a scientist using the web GUI makes a request for data.
+Pop Dy branch will assign these records to areas based on the species of interest. Of course this means that a trip could be assigned to several different areas depending on the species of interest. The algorithm for assigning the area is run "behind the scenes" when a scientist using the web GUI makes a request for data. [Methodology](file://155.206.139.2/home0/pdy/pub/STOCKEFF/documentation/references/Palmer_2008_unknown_apportionment.pdf) by Mike Palmer
 
 
 ### Latitude and Longitude
@@ -50,12 +50,8 @@ Use link field as the unique identifier
 * 15,774,961 unique trips (15,776,348 in AA tables -> 1387 trips removed)
 * 2,596,744 records (16%) have valid GIS_LAT, GIS_LON
 
-* when comparing the AA tables by year and ADIOS by year 
-
-
-
-
 There is a TENMSQ field but only included from 1994+
+
 
 Allocation rules:
 
@@ -67,8 +63,7 @@ Allocation rules:
 
 1. If they fished in an AREA that is entirely within an EPU, we can allocate to that EPU
 
-1. Otherise the AREA straddles multiple EPUs so we will need to look at all trips already in associated with that AREA and allocate to an EPU based on most similar trips. HOW DO THIS?
-
+1. Otherise the AREA straddles multiple EPUs so we will need to look at all trips already in associated with that AREA and allocate to an EPU based on most similar trips. HOW DO THIS? 
 
 
 ### Market Category
@@ -76,6 +71,19 @@ Allocation rules:
 Simplified to categories based on the species (Looking for definitions)
 
 eg Cod -> "UN", "LG", "MK", "SK"
+
+
+### Species (species_itis)
+
+How deal with missing species info? How much missing data ?
+
+### Gear
+
+How deal with missing gear info? How much is there ? 
+
+### Time
+
+Some months = 00 but have landings data. what do with them?
 
 
 ## Questions for Stock Assessment Scientists
@@ -86,3 +94,5 @@ For example: Does the scientist pull all cod data then deal with the missing are
 1. Is this consistent for all scientists? and is the method of dealing with missing area  designations consistent?
 
 1. If everyone is using ADIOS then what are the scripts in the background (from the GUI) doing to answer these questions?
+
+1. 

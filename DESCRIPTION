@@ -17,4 +17,5 @@ Suggests:
 VignetteBuilder: knitr
 Imports: rgdal,
     RODBC,
-    cfdbs
+    cfdbs,
+    dplyr

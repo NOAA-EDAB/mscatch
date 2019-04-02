@@ -2,7 +2,7 @@
 #'
 #'Exploratory code to examine difference in number of unique trips between AA tables and ADIOS (mv_cf_landings).
 #'
-#'@param channel an RODBC object (see \code{\link{cfdbs::connect_to_database}})
+#'@param channel an RODBC object (see \code{\link{connect_to_database}})
 #'@param yearRange a vector or years. Default =1964:2017
 #'
 #'@return A matrix 54 x 3
