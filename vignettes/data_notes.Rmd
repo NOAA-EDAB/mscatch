@@ -72,6 +72,21 @@ Simplified to categories based on the species (Looking for definitions)
 
 eg Cod -> "UN", "LG", "MK", "SK"
 
+All market category descriptions are unique to each species. 
+eg. 
+Mackerel (NESPP3='212')
+```
+channel = cfdbs::connect_to_database("sole",username)
+table <- RODBC::sqlQuery(select nespp4,mktnm from cfdbs.CFSPP where nespp3 = '212' order by nespp4;)
+```
+vs Cod (NESPP3 = '081')
+```
+channel = cfdbs::connect_to_database("sole",username)
+table <- RODBC::sqlQuery(select nespp4,mktnm from cfdbs.CFSPP where nespp3 = '081' order by nespp4;)
+```
+
+
+
 
 ### Species (species_itis)
 

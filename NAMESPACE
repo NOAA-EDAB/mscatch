@@ -2,4 +2,5 @@
 
 export(aa_count_trips)
 export(test_aggregation)
+export(test_data_pull)
 importFrom(magrittr,"%>%")

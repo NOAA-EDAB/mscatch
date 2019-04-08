@@ -4,8 +4,11 @@
 \alias{test_aggregation}
 \title{Test aggregation}
 \usage{
-test_aggregation(channel)
+test_aggregation(landingsThreshold = c(1000, 10))
+}
+\arguments{
+\item{landingsThreshold}{vector (length 2). minimum landings (lbs) and minimum sample size to avoid combination of data}
 }
 \description{
-This will all change so no point documenting it!!
+This will all change so no point documenting it too much
 }

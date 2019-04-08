@@ -1,8 +1,10 @@
-inst/doc
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
 
+
 # folders
 other/
+# ignore data because this is where sensitive data is stored
+data/
