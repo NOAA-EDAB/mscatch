@@ -57,9 +57,9 @@ Allocation rules:
 
 1. All trips WITH missing AREA (='000') need to be assigned to an AREA
 
-1.  If most of the GIS_LAT and GIS_LON fields contain valid entires we can allocate these TRIPS to an EPU.
+1. If most of the GIS_LAT and GIS_LON fields contain valid entires we can allocate these TRIPS to an EPU.
 
-1. For those that do not (hopefully only 10%) we will need to allocate these trips to an EPU based on the AREA they fished.
+1. For those that do not (84%) we will need to allocate these trips to an EPU based on the AREA they fished.
 
 1. If they fished in an AREA that is entirely within an EPU, we can allocate to that EPU
 
@@ -85,12 +85,20 @@ channel = cfdbs::connect_to_database("sole",username)
 table <- RODBC::sqlQuery(select nespp4,mktnm from cfdbs.CFSPP where nespp3 = '081' order by nespp4;)
 ```
 
+### Species (species_itis) {.tabset .tabset-pills}
+
+Insignificant amount of missing species info (NULL, '000' or, '999') 
+Most assessments start in either 1982 (rec fishing data starts) or 1989 (discard data starts). Often discards are back calculated in some way from 1982-1988 when needed.
+
+#### Haddock 
+According to G. Shepherd has most complete data (landings, length, discards). This will be trial dataset
 
 
+#### Mackerel
 
-### Species (species_itis)
+K. Curti assessment from 1989.
+Result - aggregated to 2 areas (NE, MA) by semester. Really only 1 gear type
 
-How deal with missing species info? How much missing data ?
 
 ### Gear
 

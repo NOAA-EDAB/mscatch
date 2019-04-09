@@ -16,11 +16,26 @@ knitr::opts_chunk$set(
 )
 ```
 
-## General overview
-Aggregate data to landings by gear, quarter, market category, stat area assigned to proper ecoregion:
-Within year t:
-  *Combine* cells to increase sample sizes or *interpolate* individual missing cells? 
-Summarize biological samples by year, gear, quarter, market category, stat area. Compare to landings.
+# General overview
+
+1. From "RAW" landings data (mv_cf_landings, AA t/s tables) we need to:
+
+* Assign all missing areas and/or assign all trips to an EPU
+* missing gear type can be dealt with in length expansion. (Assume unknowns have proportional make up of the known gear types)
+* Aggregate landings by year, quarter, gear, market category, stat area assigned to proper ecoregion:
+
+2. From "RAW" length data (mv_cf_len, LEN AA tables) we need to 
+
+* Determine the number of length samples and total number of lengths by year, quarter, gear, market category, stat area assigned to proper ecoregion form Determin. (G.S -"Summarize biological samples by year, gear, quarter, market category, stat area. Compare to landings.")
+* Assign AREA to EPU. (May need to try and link "trip" to landings data after EPUs assigned to determin EPU)
+
+3. Then merge both data sets. This will be the starting dataset needed for the following rules by G.S.
+
+4. Now start to  *Combine* cells to increase sample sizes or *interpolate* individual missing cells? 
+
+# Rules of aggregation
+
+To determine "similar length distributions" we could use the two sample Kolmogorov-Smirnov test. The test compares empirical CDF's. We would construct the empirical CDF from the histogram of length's (over all samples) at 1 cm intervals. 
 
 ## Combine:
 * Are there *gear* types with total landings greater than 0 but total sample sizes less than *X*?  
@@ -28,8 +43,8 @@ Summarize biological samples by year, gear, quarter, market category, stat area.
         - Combine gear types (explore to see if combined lengths similar) to increase sample size  
         - or Ignore and continue (add to total at the end).  
     + if NO: Count your blessings and continue.  
-* Are there *market categories* with total landings greater than 0 but sample sizes less than *X*? (after combining gears)  
-	  + if YES: combine market categories with similar length distributions  
+* Are there *market categories* (may need to assign to an ordinal scale) with total landings greater than 0 but sample sizes less than *X*? (after combining gears)  
+	  + if YES: combine market categories with similar length distributions. 
 	  + if NO : Count your blessings and continue.  
 * Are there *quarters* with landings but sample sizes less than *X*?  
 	  + if YES: Create semesters?  
@@ -37,6 +52,7 @@ Summarize biological samples by year, gear, quarter, market category, stat area.
 * Are there *strata* with landings but sample sizes less than *X*?  
 	  + If YES: define groups of similar strata  
 	  + If NO: Count your blessings and continue.  
+	  
 * Interpolate remaining holes.  
 	  + Select length within year/market category from adjacent strata or strata group (after determining if appropriate).  
 	  + Select length within year/market category from adjacent quarter or semester (after determining if appropriate).  
@@ -46,6 +62,10 @@ Summarize biological samples by year, gear, quarter, market category, stat area.
 	  + Use appropriate observer length samples to apply to unclassified.  
 * If holes remain  
 	  + Calculate ratio of sampled to un-sampled landings and expand total length frequency such that expanded sample weight equals total landings weight for year t.
+
+
+
+
 
 ## Interpolate only:
 If examination of sample matrix shows only sporadic missing cells with landings but sample sizes less than *X*:  
@@ -79,7 +99,10 @@ Definitions to think about.
 	  + Market categories - could vary over port, time, 
 
 
-					
+# Discards
+
+Need to deal with discards in a similar fashion.
+It seems that Susan Wigley has a SAS script that most/some stock assessment scientists use to help with this.
 			
 	
 
