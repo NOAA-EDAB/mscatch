@@ -4,14 +4,20 @@
 \alias{test_data_pull}
 \title{sample Data pull}
 \usage{
-test_data_pull(channel, species = 212)
+test_data_pull(channel, species = 147)
 }
 \arguments{
 \item{channel}{obtained from logging into the sole database.}
 
-\item{species}{nespp3 code. default = 212 (atlantic mackerel)}
+\item{species}{nespp3 code. default = 147 (haddock - should be the easiest with most complete data)}
 }
 \description{
 All missing areas need to dealt with prior to pulling species data.
 Not the case in this sample. We aggregate all data as if from one EPU
 }
+\section{Other species of interest}{
+
+212 - atlantic mackerel - (K.Curti assessment)
+081 - cod (mike palmer assessment)
+}
+

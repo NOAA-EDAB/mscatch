@@ -19,4 +19,5 @@ Imports: rgdal,
     RODBC,
     cfdbs,
     dplyr,
-    magrittr
+    magrittr,
+    ggplot2
