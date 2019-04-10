@@ -13,7 +13,7 @@
 #'
 #' @importFrom magrittr "%>%"
 #'
-#'@export
+#'
 #'
 #channel <- cfdbs::connect_to_database("sole","abeet") eventually remove this
 
@@ -25,6 +25,8 @@ test_data_pull <- function(channel,species=147){
   lands <- testDataPullLandings$data %>% dplyr::group_by(YEAR, MONTH, NEGEAR, MARKET_CODE) %>% dplyr::summarize(landings=sum(as.numeric(SPPLNDLB)),n=n())
   lands <- dplyr::mutate(lands,QTR = as.character(ceiling(as.numeric(MONTH)/3 )))
   sampleLandings <- lands %>% dplyr::group_by(YEAR,QTR,NEGEAR, MARKET_CODE) %>% dplyr::summarize(landings_land = sum(landings),landings_nn=sum(n))
+  # this needs to be checked
+  sampleLandings <- sampleLandings %>% select_all() %>% filter(QTR != "0")
 
   # pull sample length data and massage it
   testDataPullLength <- cfdbs::get_landings_length(channel,year="all",species=species)
