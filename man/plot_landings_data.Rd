@@ -4,8 +4,9 @@
 \alias{plot_landings_data}
 \title{plot landings data as checks to aggregation rules}
 \usage{
-plot_landings_data(data, dataType, threshold)
+plot_landings_data(species, data, dataType, threshold)
 }
 \description{
-Select the variable to plot
+Select the variable to plot.
+Eventually have the option to print to file as diagnostics
 }

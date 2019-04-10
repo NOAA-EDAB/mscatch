@@ -1,6 +1,7 @@
 #' plot landings data as checks to aggregation rules
 #'
-#' Select the variable to plot
+#' Select the variable to plot.
+#' Eventually have the option to print to file as diagnostics
 #'
 #'
 #'
@@ -10,7 +11,7 @@
 #'
 #' @export
 
-plot_landings_data <- function(data,dataType,threshold) {
+plot_landings_data <- function(species,data,dataType,threshold) {
 
   # data <- sampleData_147
   # dataType <- "NEGEAR"
@@ -21,7 +22,7 @@ plot_landings_data <- function(data,dataType,threshold) {
   g1 <- ggplot2::ggplot() +
     geom_col(newD, mapping = aes_string(x="YEAR", y="totLand", fill = dataType)) +
     theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-    labs(title = paste0("landings by ",dataType," using a threshold of ",threshold)) +
+    labs(title = paste0("landings of ",species," by ",dataType," using a threshold of ",threshold)) +
     ylab("Total Landings (lbs)")
 
   print(g1)
