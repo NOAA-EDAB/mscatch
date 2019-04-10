@@ -4,10 +4,12 @@
 \alias{test_aggregation}
 \title{Test aggregation}
 \usage{
-test_aggregation(landingsThreshold = c(90, 1))
+test_aggregation(landingsThreshold = 0.9, nLengthSamples = 1)
 }
 \arguments{
-\item{landingsThreshold}{vector (length 2). minimum landings (\%) and minimum sample size to avoid combination of data. Default = c(90,1)}
+\item{landingsThreshold}{numeric scalar (proportion). Minimum proportion of cumulative landings to avoid aggregation of gear. Default = .9}
+
+\item{nLengthSamples}{numeric scalar. The minimum number of length sample sizes required to avoid combination of data. Dfault = 1}
 }
 \description{
 This will all change so no point documenting it too much
