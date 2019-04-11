@@ -93,21 +93,66 @@ Insignificant amount of missing species info (NULL, '000' or, '999')
 Most assessments start in either 1982 (rec fishing data starts) or 1989 (discard data starts). Often discards are back calculated in some way from 1982-1988 when needed.
 
 #### Haddock 
-According to G. Shepherd has most complete data (landings, length, discards). This will be trial dataset. Meet with Liz Brooks week of 15th april 2019
+
+According to G. Shepherd has most complete data (landings, length, discards).
+This will be trial dataset.
+
+Meet with Liz Brooks week of 15th april 2019
+
+nespp3 = 147
 
 
 #### Mackerel
 
 K. Curti assessment from 1989.
+
 Result - aggregated to 2 areas (NE, MA) by semester. Really only 1 gear type
+
+nespp3 = 212
+
+Data may come from other sources also
 
 #### Winter flounder
 
 Paul Nitschke
 
+nespp3 = 120
+
 #### Herring
 
 John Deroba
+
+#### Spiny Dogfish
+
+Kathy Sosebee
+
+nespp3 = 352 
+
+dogfish(nk) - 350. Are these used in the assesment
+
+#### winter skate
+
+skates = 365 (separated?)
+
+#### Yellowtail flounder
+
+nespp3 = 123
+
+#### gooosefish
+
+Ann Richards
+
+nespp3 = 013
+
+
+#### Cod
+
+Mike Palmer
+
+nespp3 = 081
+
+#### silver hake
+nespp3 = 509
 
 
 ### Gear

@@ -35,7 +35,7 @@ test_aggregation <- function(landingsThreshold = .90, nLengthSamples = 1) {
   filteredLandings <- landings %>% filter(NEGEAR %in% gearsChosen)
   theRestLandings <- landings %>% filter(!(NEGEAR %in% gearsChosen))
   #########################################################################################################################
-  # At this point may need to examine lengths distribution to determin if further grouping (plots of length distributions)
+  # At this point may need to examine lengths distribution to determine further grouping (plots of length distributions)
   #########################################################################################################################
   # aggregate all the other fleets to one fleet
   theRestLandings$NEGEAR <- "998"
