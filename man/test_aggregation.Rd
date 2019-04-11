@@ -12,5 +12,6 @@ test_aggregation(landingsThreshold = 0.9, nLengthSamples = 1)
 \item{nLengthSamples}{numeric scalar. The minimum number of length sample sizes required to avoid combination of data. Dfault = 1}
 }
 \description{
-This will all change so no point documenting it too much
+This will all change so no point documenting it too much.
+Eventually split each section into its own function for easier future development
 }

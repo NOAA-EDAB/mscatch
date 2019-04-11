@@ -14,16 +14,26 @@
 summary_stats <- function(data,species=147) {
 
   # market category by year
-  market <- data %>% group_by(YEAR,MARKET_CODE) %>% summarize(n=n())
+  # market <- data %>% group_by(YEAR,MARKET_CODE) %>% summarize(n=n())
+  # g <- ggplot() +
+  #   geom_col(market, mapping=aes(x=YEAR,y =n, fill = MARKET_CODE)) +
+  #   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  #   labs(title = paste0("MARKET_CODE summed over NEGEAR and QTR")) +
+  #   ylab("n")
+  #
+  # print(g)
+
+  # total landings by gear over time
+  gears <- data %>% group_by(YEAR,MARKET_CODE)%>%summarize(totLand=sum(landings_land,na.rm = TRUE))
   g <- ggplot() +
-    geom_col(market, mapping=aes(x=YEAR,y =n, fill = MARKET_CODE)) +
+    geom_col(gears, mapping = aes(x=YEAR, y=totLand, fill = MARKET_CODE)) +
     theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-    labs(title = paste0("MARKET_CODE summed over NEGEAR and QTR")) +
-    ylab("n")
+    labs(title = paste0("landings of ",species," by MARKET_CODE")) +
+    ylab("Total Landings (lbs)")
 
   print(g)
 
-  # total landings by gear over time
+  # total landings by market category over time
   gears <- data %>% group_by(YEAR,NEGEAR)%>%summarize(totLand=sum(landings_land,na.rm = TRUE))
   g <- ggplot() +
     geom_col(gears, mapping = aes(x=YEAR, y=totLand, fill = NEGEAR)) +
@@ -37,6 +47,16 @@ summary_stats <- function(data,species=147) {
   lengthSamples <- data %>% group_by(YEAR,QTR) %>% summarize(nSamples=sum(len_numLengthSamples,na.rm = TRUE))
   g <- ggplot() +
     geom_col(lengthSamples, mapping=aes(x=YEAR, y = nSamples, fill=QTR)) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    labs(title = paste0("number of length samples")) +
+    ylab("n")
+
+  print(g)
+
+  # length samples by market_category over time
+  lengthSamples <- data %>% group_by(YEAR,MARKET_CODE) %>% summarize(nSamples=sum(len_numLengthSamples,na.rm = TRUE))
+  g <- ggplot() +
+    geom_col(lengthSamples, mapping=aes(x=YEAR, y = nSamples, fill=MARKET_CODE)) +
     theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
     labs(title = paste0("number of length samples")) +
     ylab("n")
