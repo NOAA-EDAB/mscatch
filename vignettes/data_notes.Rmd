@@ -17,11 +17,13 @@ This is the database that the population dynamics (Pop Dy) branch use for their 
 
 The landing portion are stored in the Stockeff.MV_cf_Landings materialized view. (This is equivalent to AA Trip and AA Species tables joined). Each record represents trip and species data for a specific landed species. A trip will appear as many times as there are landed species in that trip
 
-* MV_CF_LANDINGS  - (WOLANDT/S,WODET/S, CFDETT/S tables combined)
+* STOCKEFF.MV_CF_LANDINGS  - (WOLANDT/S,WODET/S, CFDETT/S tables combined)
 
-* MV_CF_AGE - (WOAGE, CFAGE AA tables combined)
+* STOCKEFF.MV_CF_AGE - (WOAGE, CFAGE AA tables combined)
 
-* MV_CF_LEN (WOLEN, CFLEN AA tables combined)
+* STOCKEFF.MV_CF_LEN (WOLEN, CFLEN AA tables combined)
+
+* CFDBS.CFSPP (MKTCAT, MKTNM)
 
 ### Statistical Area
 
@@ -63,7 +65,7 @@ Allocation rules:
 
 1. If they fished in an AREA that is entirely within an EPU, we can allocate to that EPU
 
-1. Otherise the AREA straddles multiple EPUs so we will need to look at all trips already in associated with that AREA and allocate to an EPU based on most similar trips. HOW DO THIS? 
+1. Otherise the AREA straddles multiple EPUs so we will need to look at all trips already in associated with that AREA and allocate to an EPU based on most similar trips. Proceed in a similar fashion to how Sean Lucey allocates trips to missing AREA (step 1)
 
 
 ### Market Category
@@ -77,12 +79,12 @@ eg.
 Mackerel (NESPP3='212')
 ```
 channel = cfdbs::connect_to_database("sole",username)
-table <- RODBC::sqlQuery(select nespp4,mktnm from cfdbs.CFSPP where nespp3 = '212' order by nespp4;)
+table <- RODBC::sqlQuery(channel,"select nespp4,mktnm from cfdbs.CFSPP where nespp3 = '212' order by nespp4")
 ```
 vs Cod (NESPP3 = '081')
 ```
 channel = cfdbs::connect_to_database("sole",username)
-table <- RODBC::sqlQuery(select nespp4,mktnm from cfdbs.CFSPP where nespp3 = '081' order by nespp4;)
+table <- RODBC::sqlQuery(channel,"select nespp4,mktnm from cfdbs.CFSPP where nespp3 = '081' order by nespp4")
 ```
 
 ### Species (species_itis) {.tabset .tabset-pills}
@@ -91,13 +93,21 @@ Insignificant amount of missing species info (NULL, '000' or, '999')
 Most assessments start in either 1982 (rec fishing data starts) or 1989 (discard data starts). Often discards are back calculated in some way from 1982-1988 when needed.
 
 #### Haddock 
-According to G. Shepherd has most complete data (landings, length, discards). This will be trial dataset
+According to G. Shepherd has most complete data (landings, length, discards). This will be trial dataset. Meet with Liz Brooks week of 15th april 2019
 
 
 #### Mackerel
 
 K. Curti assessment from 1989.
 Result - aggregated to 2 areas (NE, MA) by semester. Really only 1 gear type
+
+#### Winter flounder
+
+Paul Nitschke
+
+#### Herring
+
+John Deroba
 
 
 ### Gear

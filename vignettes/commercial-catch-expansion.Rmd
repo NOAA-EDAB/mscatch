@@ -26,7 +26,7 @@ knitr::opts_chunk$set(
 
 2. From "RAW" length data (mv_cf_len, LEN AA tables) we need to 
 
-* Determine the number of length samples and total number of lengths by year, quarter, gear, market category, stat area assigned to proper ecoregion form Determin. (G.S -"Summarize biological samples by year, gear, quarter, market category, stat area. Compare to landings.")
+* Determine the number of length samples and total number of lengths by year, quarter, gear, market category, stat area assigned to proper ecoregion. (G.S -"Summarize biological samples by year, gear, quarter, market category, stat area. Compare to landings.")
 * Assign AREA to EPU. (May need to try and link "trip" to landings data after EPUs assigned to determin EPU)
 
 3. Then merge both data sets. This will be the starting dataset needed for the following rules by G.S.
@@ -37,13 +37,20 @@ knitr::opts_chunk$set(
 
 To determine "similar length distributions" we could use the two sample Kolmogorov-Smirnov test. The test compares empirical CDF's. We would construct the empirical CDF from the histogram of length's (over all samples) at 1 cm intervals. 
 
+
+
+In many stock assessments each year may result in a different level of aggregation (i.e quarters, semesters or different gear types).
+For the first pass here we will use the same aggregation level for all years. Maybe a good exercise to compare results.
+
+(Within each year t:)
+
 ## Combine:
 * Are there *gear* types with total landings greater than 0 but total sample sizes less than *X*?  
     + if YES: 
         - Combine gear types (explore to see if combined lengths similar) to increase sample size  
         - or Ignore and continue (add to total at the end).  
     + if NO: Count your blessings and continue.  
-* Are there *market categories* (may need to assign to an ordinal scale) with total landings greater than 0 but sample sizes less than *X*? (after combining gears)  
+* Are there *market categories* (will need to assign to an ordinal scale) with total landings greater than 0 but sample sizes less than *X*? (after combining gears)  
 	  + if YES: combine market categories with similar length distributions. 
 	  + if NO : Count your blessings and continue.  
 * Are there *quarters* with landings but sample sizes less than *X*?  
@@ -103,6 +110,7 @@ Definitions to think about.
 
 Need to deal with discards in a similar fashion.
 It seems that Susan Wigley has a SAS script that most/some stock assessment scientists use to help with this.
+Edit: Spoke to Susan Wigley she says that they will have all of the discard estimates over time for all of the species in a database similar to that of the landings, length, age databases. This will make life heck of a lot simpler for us.
 			
 	
 
