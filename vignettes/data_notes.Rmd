@@ -1,13 +1,27 @@
 ---
 title: "Data Notes"
-output: html_document
+output:
+  html_document:
+    collapsed: yes
+    number_sections: yes
+    smooth_scrol: yes
+    toc: yes
+    toc_float: yes
+  pdf_document:
+    toc: yes
+
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(
+  echo = TRUE,
+  collapse = TRUE,
+  comment = "#>"
+  )
+library(mscatch)
 ```
 
-## ADIOS!
+# ADIOS!
 
 This is the database that the population dynamics (Pop Dy) branch use for their stock assessments.  
 
@@ -25,7 +39,7 @@ The landing portion are stored in the Stockeff.MV_cf_Landings materialized view.
 
 * CFDBS.CFSPP (MKTCAT, MKTNM)
 
-### Statistical Area
+## Statistical Area
 
 In the database there are:
 
@@ -35,7 +49,7 @@ In the database there are:
 Pop Dy branch will assign these records to areas based on the species of interest. Of course this means that a trip could be assigned to several different areas depending on the species of interest. The algorithm for assigning the area is run "behind the scenes" when a scientist using the web GUI makes a request for data. [Methodology](file://155.206.139.2/home0/pdy/pub/STOCKEFF/documentation/references/Palmer_2008_unknown_apportionment.pdf) by Mike Palmer
 
 
-### Latitude and Longitude
+## Latitude and Longitude
 
 * 35,515,060 records
 * 14,288,139 records (40%) have valid GIS_LAT, GIS_LON
@@ -45,7 +59,7 @@ Pop Dy branch will assign these records to areas based on the species of interes
 * 1,482,958 records (4%) where LAT or LON are '00'
 * 17,791,806 records (50%) where LAT or LON are '0000'
 
-#### Trip level records
+### Trip level records
 
 Use link field as the unique identifier
 
@@ -68,7 +82,7 @@ Allocation rules:
 1. Otherise the AREA straddles multiple EPUs so we will need to look at all trips already in associated with that AREA and allocate to an EPU based on most similar trips. Proceed in a similar fashion to how Sean Lucey allocates trips to missing AREA (step 1)
 
 
-### Market Category
+## Market Category
 
 Simplified to categories based on the species (Looking for definitions)
 
@@ -87,84 +101,103 @@ channel = cfdbs::connect_to_database("sole",username)
 table <- RODBC::sqlQuery(channel,"select nespp4,mktnm from cfdbs.CFSPP where nespp3 = '081' order by nespp4")
 ```
 
-### Species (species_itis) {.tabset .tabset-pills}
+## Species (species_itis) {.tabset .tabset-pills}
 
 Insignificant amount of missing species info (NULL, '000' or, '999') 
 Most assessments start in either 1982 (rec fishing data starts) or 1989 (discard data starts). Often discards are back calculated in some way from 1982-1988 when needed.
 
-#### Haddock 
+### Spiny Dogfish
+
+Kathy Sosebee
+
+nespp3 = 352 
+species_itis = 164744
+
+dogfish(nk) - 350. Are these used in the assesment
+
+### winter skate
+
+nespp3 = 367 (365 too? Rajidae)
+species_itis = 564145 (160845 Rajidae)
+
+### Herring
+
+John Deroba
+HOW MUCH DATA IN CF?
+nespp3 = 168 
+species_itis = 161722
+
+### Cod
+
+Mike Palmer
+
+nespp3 = 081 (082 ALSO? 400+ rows) 
+species_itis = 164712
+
+### Haddock 
 
 According to G. Shepherd has most complete data (landings, length, discards).
 This will be trial dataset.
 
 Meet with Liz Brooks week of 15th april 2019
 
-nespp3 = 147
+nespp3 = 147 (148 too? Market Codes X1,X2,X3, 0 records)
+species_itis = 164744
 
+### Yellowtail flounder
 
-#### Mackerel
+nespp3 = 123
+species_itis = 172909
+
+### Winter flounder
+
+Paul Nitschke
+
+nespp3 = 119, (120 - 0 records)
+species_itis = 172905
+
+### Mackerel
 
 K. Curti assessment from 1989.
 
 Result - aggregated to 2 areas (NE, MA) by semester. Really only 1 gear type
 
 nespp3 = 212
+species_itis = 174414
 
 Data may come from other sources also
 
-#### Winter flounder
 
-Paul Nitschke
+### silver hake
 
-nespp3 = 120
+nespp3 = 509
 
-#### Herring
+species_itis = 164791
 
-John Deroba
-
-#### Spiny Dogfish
-
-Kathy Sosebee
-
-nespp3 = 352 
-
-dogfish(nk) - 350. Are these used in the assesment
-
-#### winter skate
-
-skates = 365 (separated?)
-
-#### Yellowtail flounder
-
-nespp3 = 123
-
-#### gooosefish
+### gooosefish
 
 Ann Richards
 
-nespp3 = 013
+nespp3 = 011, 012
+species_itis = 164499
 
+### Market Code Lookup Table
 
-#### Cod
+``` {r itis}
+knitr::kable(marketCodeLookupTable)
 
-Mike Palmer
+```
 
-nespp3 = 081
-
-#### silver hake
-nespp3 = 509
-
-
-### Gear
+## Gear
 
 How deal with missing gear info? How much is there ? 
 
-### Time
+## Time
 
 Some months = 00 but have landings data. what do with them?
 
 
-## Questions for Stock Assessment Scientists
+# Questions for Stock Assessment Scientists
 
 1. For areas defined as '000' (post AA table creation). How do they deal with them?
 For example: Does the scientist pull all cod data then deal with the missing areas from this reduced data set or are all missing areas dealt with THEN cod data are pulled?
