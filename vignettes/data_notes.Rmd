@@ -123,9 +123,10 @@ species_itis = 564145 (160845 Rajidae)
 ### Herring
 
 John Deroba
-HOW MUCH DATA IN CF?
-nespp3 = 168 
-species_itis = 161722
+
+nespp3 = 168, species_itis = 161722
+
+[SAW 54 CRD12-18 (2012)](https://www.nefsc.noaa.gov/publications/crd/crd1218/) p48 explains how data were collected and aggregated
 
 ### Cod
 
