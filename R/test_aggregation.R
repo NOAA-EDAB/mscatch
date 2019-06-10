@@ -46,7 +46,8 @@ test_aggregation <- function(landingsThreshold = .90, nLengthSamples = 1) {
   # look at the summary stats after aggregation
   summary_stats(filteredLandings)
 
-  # 2 . combine market category (This will be difficult) market category description are unique to species and not ordinal
+  # 2 . combine market category (This will be difficult) market category description are unique to species and not ordinal.
+  # Use distributions to aggregate instead of Market category
 
 
 
