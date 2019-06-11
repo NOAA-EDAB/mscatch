@@ -17,8 +17,8 @@
 test_aggregation <- function(landingsThreshold = .90, nLengthSamples = 1) {
 
   # sample Data is Haddock (147).
-  landings <- sampleData_147
-  speciesNESPP3 <- 147 # hard coded. will eventually make this a variable
+  landings <- sampleData_164744
+  #speciesNESPP3 <- 147 # hard coded. will eventually make this a variable
 
   # Now deal with Gary's schematic.
   # 1 . combine gears. look at gears contributing to top threshold % of landings
