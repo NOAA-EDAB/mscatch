@@ -35,7 +35,7 @@ test_data_pull <- function(channel,species=164744,species_itis = T){ # species =
   sampleLengths <- lengths %>% dplyr::group_by(YEAR, QTR, NEGEAR, MARKET_CODE) %>% dplyr::summarize(len_totalNumLen=sum(as.numeric(NUMLEN)),len_numLengthSamples=length(unique(tripid)))
 
   # full join of tables by common fields
-  sampleData <- dplyr::full_join(sampleLandings,sampleLengths, by=c("YEAR","QTR","NEGEAR","MARKET_CODE"))
+  sampleData <- as.data.frame(dplyr::full_join(sampleLandings,sampleLengths, by=c("YEAR","QTR","NEGEAR","MARKET_CODE")))
 
   # save data
   vName <- paste0("sampleData_",species)

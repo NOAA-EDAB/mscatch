@@ -26,7 +26,10 @@ test_aggregation <- function(landingsThreshold = .90, nLengthSamples = 1) {
 
   # find gears that make up "threshold" % of catch overall. Valid assumption?
   # totl landings by group
+
   aggTopPercent <- landings %>% group_by(NEGEAR) %>% summarise(totalLandings = sum(landings_land, na.rm = TRUE)) %>% arrange(desc(totalLandings))
+
+
   # convert to % of total and reorder
   aggTopPercent <- mutate(aggTopPercent,cumsum=cumsum(totalLandings),percent=cumsum/sum(totalLandings))
   # select the gear that make up at least threshold %
@@ -39,14 +42,15 @@ test_aggregation <- function(landingsThreshold = .90, nLengthSamples = 1) {
   #########################################################################################################################
   # aggregate all the other fleets to one fleet
   theRestLandings$NEGEAR <- "998"
+
   theRestLandings <- theRestLandings %>% group_by(YEAR,QTR,NEGEAR,MARKET_CODE) %>%
     summarize(landings_land=sum(landings_land),landings_nn=sum(landings_nn),len_totalNumLen= sum(len_totalNumLen),len_numLengthSamples=sum(len_numLengthSamples))
   # join 2 data frames
-  filteredLandings <- rbind(filteredLandings,theRestLandings)
+  filteredLandings <- rbind(filteredLandings,as.data.frame(theRestLandings))
   # look at the summary stats after aggregation
   summary_stats(filteredLandings)
 
-  # 2 . combine market category (This will be difficult) market category description are unique to species and not ordinal.
+    # 2 . combine market category (This will be difficult) market category description are unique to species and not ordinal.
   # Use distributions to aggregate instead of Market category
 
 
