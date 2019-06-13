@@ -5,14 +5,11 @@
 #'
 #'@param channel obtained from logging into the sole database.
 #'@param species species_itis or nespp3 code. default = 164744 (147) (haddock - should be the easiest with most complete data)
-#'@param species_itis. boolean. TRUE in cated species code is species_itis, FALSE = nespp3
+#'@param species_itis. boolean. TRUE indicates species code is species_itis, FALSE = nespp3
 #'
 #'@section Other species of interest:
 #'212 - atlantic mackerel - (K.Curti assessment)
 #'081 - cod (mike palmer assessment)
-#'
-#'
-#'
 #'
 
 #channel <- cfdbs::connect_to_database("sole","abeet") eventually remove this
@@ -23,7 +20,7 @@ test_data_pull <- function(channel,species=164744,species_itis = T){ # species =
   # pull sample landings data and massage it
   testDataPullLandings <- cfdbs::get_landings(channel,year="all",species=species,species_itis=species_itis)
   ## for test data assume we this is EPU data. To achive this we just sum over AREAS for now
-  lands <- testDataPullLandings$data %>% dplyr::group_by(YEAR, MONTH, NEGEAR, MARKET_CODE) %>% dplyr::summarize(landings=sum(as.numeric(SPPLNDLB)),n=n())
+  lands <- testDataPullLandings$data %>% dplyr::group_by(YEAR, MONTH, NEGEAR, MARKET_CODE) %>% dplyr::summarize(landings=sum(as.numeric(SPPLNDLB)),n=dplyr::n())
   lands <- dplyr::mutate(lands,QTR = as.character(ceiling(as.numeric(MONTH)/3 )))
   sampleLandings <- lands %>% dplyr::group_by(YEAR,QTR,NEGEAR, MARKET_CODE) %>% dplyr::summarize(landings_land = sum(landings),landings_nn=sum(n))
   # this needs to be checked
@@ -31,18 +28,25 @@ test_data_pull <- function(channel,species=164744,species_itis = T){ # species =
 
   # pull sample length data and massage it
   testDataPullLength <- cfdbs::get_landings_length(channel,year="all",species=species,species_itis=species_itis)
-  lengths <- dplyr::mutate(testDataPullLength$data,tripid = paste0(PERMIT,YEAR,MONTH,DAY)) # create unique tripid
-  sampleLengths <- lengths %>% dplyr::group_by(YEAR, QTR, NEGEAR, MARKET_CODE) %>% dplyr::summarize(len_totalNumLen=sum(as.numeric(NUMLEN)),len_numLengthSamples=length(unique(tripid)))
+  # create unique tripid since NUMSAMP is replicated for each species reported within a trip
+  lengths <- testDataPullLength$data %>% dplyr::mutate(tripid = paste0(PERMIT,YEAR,MONTH,DAY))
+  lengthsData <- lengths %>% dplyr::group_by(YEAR, QTR, NEGEAR, MARKET_CODE) %>% dplyr::summarize(len_totalNumLen=sum(as.numeric(NUMLEN)),len_numLengthSamples=length(unique(tripid)))
 
   # full join of tables by common fields
-  sampleData <- as.data.frame(dplyr::full_join(sampleLandings,sampleLengths, by=c("YEAR","QTR","NEGEAR","MARKET_CODE")))
+  sampleData <- as.data.frame(dplyr::full_join(sampleLandings,lengthsData, by=c("YEAR","QTR","NEGEAR","MARKET_CODE")))
+  # just extract the lengths and the number at length for the year, qrt etc
+  sampleLengths <- lengths %>% dplyr::select(YEAR,QTR,NEGEAR,MARKET_CODE,LENGTH,NUMLEN,tripid)
 
   # save data
   vName <- paste0("sampleData_",species)
   assign(vName,sampleData)
   save(list=vName,file=paste0(here::here("data"),"/sampleData_",species,".RData"))
 
-#  return(sampleData)
+  vName <- paste0("sampleLengths_",species)
+  assign(vName,sampleLengths)
+  save(list=vName,file=paste0(here::here("data"),"/sampleLengths_",species,".RData"))
+
+  #return(lengths)
 
 
 }

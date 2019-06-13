@@ -4,12 +4,15 @@
 \alias{test_aggregation}
 \title{Test aggregation}
 \usage{
-test_aggregation(landingsThreshold = 0.9, nLengthSamples = 1)
+test_aggregation(landingsThreshold = 0.9, nLengthSamples = 1,
+  outputDir = here::here("output"))
 }
 \arguments{
 \item{landingsThreshold}{numeric scalar (proportion). Minimum proportion of cumulative landings to avoid aggregation of gear. Default = .9}
 
 \item{nLengthSamples}{numeric scalar. The minimum number of length sample sizes required to avoid combination of data. Dfault = 1}
+
+\item{outputDir}{Character string. Path to output directory (png files saved here)}
 }
 \description{
 This will all change so no point documenting it too much.

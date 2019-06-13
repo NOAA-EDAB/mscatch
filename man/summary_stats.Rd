@@ -4,10 +4,14 @@
 \alias{summary_stats}
 \title{Summary Stats}
 \usage{
-summary_stats(data, species = 147)
+summary_stats(data, species_itis, outputDir)
 }
 \arguments{
 \item{data}{numeric scalar (proportion). Minimum proportion of cumulative landings to avoid aggregation of gear. Default = .9}
+
+\item{species_itis}{Numeric scalar. Species_itis code}
+
+\item{outputDir}{Character string. Path to output directory (png files saved here)}
 }
 \description{
 summarize the data by frequency of gears, number of market categories etc. Create tables and plots

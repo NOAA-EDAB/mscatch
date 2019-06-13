@@ -6,6 +6,7 @@
 #'
 #'@param landingsThreshold numeric scalar (proportion). Minimum proportion of cumulative landings to avoid aggregation of gear. Default = .9
 #'@param nLengthSamples numeric scalar. The minimum number of length sample sizes required to avoid combination of data. Dfault = 1
+#'@param outputDir Character string. Path to output directory (png files saved here)
 #'
 #'@importFrom dplyr "summarize" "summarise" "group_by" "filter" "select" "arrange" "mutate"
 #'@importFrom magrittr "%>%"
@@ -14,11 +15,13 @@
 
 #channel <- cfdbs::connect_to_database("sole","abeet") #eventually remove this
 
-test_aggregation <- function(landingsThreshold = .90, nLengthSamples = 1) {
+test_aggregation <- function(landingsThreshold = .90, nLengthSamples = 1, outputDir=here::here("output")) {
 
+  if (!dir.exists(outputDir)){dir.create(outputDir)} # create directory to store exploratory/informational plots
   # sample Data is Haddock (147).
-  landings <- sampleData_164744
-  #speciesNESPP3 <- 147 # hard coded. will eventually make this a variable
+  landings <- sampleData_164744            # eventually passed as argument
+  lengthsData <- sampleLengths_164744      # eventually passed as argument
+  species_itis <- 164744 # hard coded. will eventually make this a variable
 
   # Now deal with Gary's schematic.
   # 1 . combine gears. look at gears contributing to top threshold % of landings
@@ -26,9 +29,7 @@ test_aggregation <- function(landingsThreshold = .90, nLengthSamples = 1) {
 
   # find gears that make up "threshold" % of catch overall. Valid assumption?
   # totl landings by group
-
   aggTopPercent <- landings %>% group_by(NEGEAR) %>% summarise(totalLandings = sum(landings_land, na.rm = TRUE)) %>% arrange(desc(totalLandings))
-
 
   # convert to % of total and reorder
   aggTopPercent <- mutate(aggTopPercent,cumsum=cumsum(totalLandings),percent=cumsum/sum(totalLandings))
@@ -41,23 +42,24 @@ test_aggregation <- function(landingsThreshold = .90, nLengthSamples = 1) {
   # At this point may need to examine lengths distribution to determine further grouping (plots of length distributions)
   #########################################################################################################################
   # aggregate all the other fleets to one fleet
-  theRestLandings$NEGEAR <- "998"
-
+  theRestLandings$NEGEAR <- "998" # need to make sure we pick an unused code
   theRestLandings <- theRestLandings %>% group_by(YEAR,QTR,NEGEAR,MARKET_CODE) %>%
     summarize(landings_land=sum(landings_land),landings_nn=sum(landings_nn),len_totalNumLen= sum(len_totalNumLen),len_numLengthSamples=sum(len_numLengthSamples))
+
   # join 2 data frames
   filteredLandings <- rbind(filteredLandings,as.data.frame(theRestLandings))
-  # look at the summary stats after aggregation
-  summary_stats(filteredLandings)
+  # look at the summary stats/plots after aggregation
+  summary_stats(filteredLandings,species_itis,outputDir)
 
-    # 2 . combine market category (This will be difficult) market category description are unique to species and not ordinal.
+  # 2 . combine market category (This will be difficult) market category description are unique to species and not ordinal.
   # Use distributions to aggregate instead of Market category
 
 
 
 
 
-  #return(sampleData)
+
+  return(filteredLandings)
 
 
 }
