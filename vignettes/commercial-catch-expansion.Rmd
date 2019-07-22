@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 1. From "RAW" landings data (mv_cf_landings, AA t/s tables) we need to:
 
 * Assign all missing areas and/or assign all trips to an EPU
-* 10 min square designations exist in mv_cf_landings from 1994 onward. (Sean, Mike presentation in 2010 "Ecosystem – Based Fishery Management for the New England Fishery Management CouncilPart Deux: Spatial Considerations" shows landings by gear type from 1998-2009.Expanding to earlier years might not be possible.) So then how get landings to EPU for earlier years? If use trip characteristics to do this we are assuming the fishery has remained somewhat constant over time. Is this realistic? What to do?
+* 10 min square designations exist in mv_cf_landings from 1994 onward. (Sean, Mike presentation in 2010 "Ecosystem – Based Fishery Management for the New England Fishery Management Council: Part Deux: Spatial Considerations" shows landings by gear type from 1998-2009. Expanding to earlier years might not be possible.) So then how get landings to EPU for earlier years? If use trip characteristics to do this we are assuming the fishery has remained somewhat constant over time. Is this realistic? What to do?
 * missing gear type can be dealt with in length expansion. (Assume unknowns have proportional make up of the known gear types)
 * Aggregate landings by year, quarter, gear, market category, stat area assigned to proper ecoregion:
 
