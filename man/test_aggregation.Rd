@@ -5,7 +5,7 @@
 \title{Test aggregation}
 \usage{
 test_aggregation(landingsThresholdGear = 0.9, nLengthSamples = 1,
-  outputDir = here::here("output"))
+  outputDir = here::here("output"), outputPlots = F)
 }
 \arguments{
 \item{landingsThresholdGear}{numeric scalar (proportion). Minimum proportion of cumulative landings to avoid aggregation of gear. Default = .9}
@@ -13,6 +13,8 @@ test_aggregation(landingsThresholdGear = 0.9, nLengthSamples = 1,
 \item{nLengthSamples}{numeric scalar. The minimum number of length sample sizes required to avoid combination of data. Dfault = 1}
 
 \item{outputDir}{Character string. Path to output directory (png files saved here)}
+
+\item{outputPlots}{Boolean. Should plots be created. T or F (Default = F)}
 }
 \description{
 This will all change so no point documenting it too much.

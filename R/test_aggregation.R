@@ -7,6 +7,7 @@
 #'@param landingsThresholdGear numeric scalar (proportion). Minimum proportion of cumulative landings to avoid aggregation of gear. Default = .9
 #'@param nLengthSamples numeric scalar. The minimum number of length sample sizes required to avoid combination of data. Dfault = 1
 #'@param outputDir Character string. Path to output directory (png files saved here)
+#'@param outputPlots Boolean. Should plots be created. T or F (Default = F)
 #'
 #'@importFrom dplyr "summarize" "summarise" "group_by" "filter" "select" "arrange" "mutate"
 #'@importFrom magrittr "%>%"
@@ -15,7 +16,7 @@
 
 #channel <- cfdbs::connect_to_database("sole","abeet") #eventually remove this
 
-test_aggregation <- function(landingsThresholdGear = .90, nLengthSamples = 1, outputDir=here::here("output")) {
+test_aggregation <- function(landingsThresholdGear = .90, nLengthSamples = 1, outputDir=here::here("output"), outputPlots=F) {
 
   if (!dir.exists(outputDir)){dir.create(outputDir)} # create directory to store exploratory/informational plots
   # sample Data is Haddock (147).
@@ -47,36 +48,56 @@ test_aggregation <- function(landingsThresholdGear = .90, nLengthSamples = 1, ou
   theRestLandings <- theRestLandings %>% group_by(YEAR,QTR,NEGEAR,MARKET_CODE) %>%
     summarize(landings_land=sum(landings_land),landings_nn=sum(landings_nn),len_totalNumLen= sum(len_totalNumLen),len_numLengthSamples=sum(len_numLengthSamples))
 
-  # join 2 data frames
+  # concatenate 2 data frames
   filteredLandings <- rbind(filteredLandings,as.data.frame(theRestLandings))
 
   # update sample lengthsData to reflect gear aggregation
   lengthData$NEGEAR[!(lengthData$NEGEAR  %in% gearsChosen)] <- recodeOtherGear
-
-
-
+  #############################################################################################################
   ####### GEARs DONE . move to own function ####################################
+  #############################################################################################################
+
 
   # 2 . combine market category (This will be difficult) market category description are unique to species and not ordinal.
   # Use distributions to aggregate instead of Market category
+  # Need to keep Unclassified and Unknown categories separate from known market categories
 
   # take a look at length distribution of size categories
-  plot_length_histogram(lengthData,species_itis,outputDir)
+  plot_length_histogram(lengthData,species_itis,outputDir,outputPlots)
   # look at the summary stats/plots after aggregation
-  summary_stats(filteredLandings,species_itis,outputDir)
+  summary_stats(filteredLandings,species_itis,outputDir,outputPlots)
 
+  #
+  market <- filteredLandings %>%
+    group_by(MARKET_CODE) %>%
+    summarise(totalLandings = sum(landings_land, na.rm = TRUE),len_numLengthSamples=sum(len_numLengthSamples,na.rm=T)) %>%
+    arrange(desc(totalLandings))
 
-  market <- filteredLandings %>% group_by(MARKET_CODE) %>% summarise(totalLandings = sum(landings_land, na.rm = TRUE),len_numLengthSamples=sum(len_numLengthSamples,na.rm=T)) %>% arrange(desc(totalLandings))
   market <- mutate(market,cumsum=cumsum(totalLandings),percent=cumsum/sum(totalLandings))
   # write to a table
-  #print(market)
+
+  lg <- lengthData %>%
+    dplyr::select(NEGEAR,LENGTH,NUMLEN,MARKET_CODE) %>%
+    dplyr::filter(MARKET_CODE =="LG")
+  lg <- rep(lg$LENGTH,lg$NUMLEN)
+  un <- lengthData %>%
+    dplyr::select(NEGEAR,LENGTH,NUMLEN,MARKET_CODE) %>%
+    dplyr::filter(MARKET_CODE =="XG")
+  un <- rep(un$LENGTH,un$NUMLEN)
+
+  ks.test(lg,un)
+
+  #ks.test(x = )
+  # if market caegory has landings but no length data at all. Then the landings need to be lumped into a
+  # neighboring size class. Very subjective but dont lump into unclassified/ unknown
 
 
 
 
 
 
-  return(lengthData)
+
+  return(list(lg=lg,un=un))
 
 
 }
