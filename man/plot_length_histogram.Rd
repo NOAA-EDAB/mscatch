@@ -4,12 +4,16 @@
 \alias{plot_length_histogram}
 \title{plots length distributions}
 \usage{
-plot_length_histogram(lengthData, species_itis, outputDir)
+plot_length_histogram(lengthData, species_itis, outputDir, outputPlots)
 }
 \arguments{
 \item{lengthData}{data frame.}
 
 \item{species_itis}{Numeric scalar.  Species_itis code for species}
+
+\item{outputDir}{Character string. Path to output directory (png files saved here)}
+
+\item{outputPlots}{Boolean. Should plots be created. T or F}
 }
 \description{
 Creates a facet plot for each market category across all years for each gear type

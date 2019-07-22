@@ -6,6 +6,8 @@
 #'@param data numeric scalar (proportion). Minimum proportion of cumulative landings to avoid aggregation of gear. Default = .9
 #'@param species_itis Numeric scalar. Species_itis code
 #'@param outputDir Character string. Path to output directory (png files saved here)
+#'@param outputPlots Boolean. Should plots be created. T or F
+
 #'
 #' @importFrom ggplot2 "ggplot" "aes" "geom_bar" "geom_col" "theme" "element_text" "ylab" "xlab" "labs"
 #' @importFrom dplyr "summarize" "summarise" "group_by"
@@ -13,7 +15,9 @@
 #'
 #'@export
 
-summary_stats <- function(data,species_itis,outputDir) {
+summary_stats <- function(data,species_itis,outputDir,outputPlots) {
+
+  if (outputPlots == F) return()
 
   # market category by year
   # market <- data %>% group_by(YEAR,MARKET_CODE) %>% summarize(n=n())
@@ -24,6 +28,18 @@ summary_stats <- function(data,species_itis,outputDir) {
   #   ylab("n")
   #
   # print(g)
+
+  # total landings by gear over time
+  png(paste0(outputDir,"/1_landings_by_gear.png"))
+  gears <- data %>% group_by(YEAR,NEGEAR)%>%summarize(totLand=sum(landings_land,na.rm = TRUE))
+  g <- ggplot() +
+    geom_col(gears, mapping = aes(x=YEAR, y=totLand, fill = NEGEAR)) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    labs(title = paste0("landings of ",species_itis," by NEGEAR")) +
+    ylab("Total Landings (lbs)")
+
+  print(g)
+  dev.off()
 
   # total landings by market category over time
   png(paste0(outputDir,"/2_landings_by_market_cat.png"))
@@ -37,17 +53,6 @@ summary_stats <- function(data,species_itis,outputDir) {
   print(g)
   dev.off()
 
-  # total landings by gear over time
-  png(paste0(outputDir,"/1_landings_by_gear.png"))
-  gears <- data %>% group_by(YEAR,NEGEAR)%>%summarize(totLand=sum(landings_land,na.rm = TRUE))
-  g <- ggplot() +
-    geom_col(gears, mapping = aes(x=YEAR, y=totLand, fill = NEGEAR)) +
-    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-    labs(title = paste0("landings of ",species_itis," by NEGEAR")) +
-    ylab("Total Landings (lbs)")
-
-  print(g)
-  dev.off()
 
   # length samples by quarter over time
   png(paste0(outputDir,"/3_length_samples.png"))

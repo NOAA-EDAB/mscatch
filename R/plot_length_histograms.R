@@ -4,6 +4,9 @@
 #'
 #'@param lengthData data frame.
 #'@param species_itis Numeric scalar.  Species_itis code for species
+#'@param outputDir Character string. Path to output directory (png files saved here)
+#'@param outputPlots Boolean. Should plots be created. T or F
+
 #'
 #'@importFrom ggplot2 "ggplot" "aes" "geom_bar" "geom_histogram" "facet_wrap" "element_text" "ylab" "xlab" "labs" "scale_x_discrete"
 #'@importFrom dplyr "summarize" "summarise" "group_by"
@@ -11,7 +14,10 @@
 #'
 #' @export
 
-plot_length_histogram <- function(lengthData,species_itis,outputDir){
+plot_length_histogram <- function(lengthData,species_itis,outputDir,outputPlots){
+
+  if (outputPlots == F) return()
+
 
   png(paste0(outputDir,"/5_market_category_lengths.png"))
   p <- ggplot(data = lengthData) +
@@ -21,11 +27,5 @@ plot_length_histogram <- function(lengthData,species_itis,outputDir){
     scale_x_discrete(name="Length (cm)", breaks=seq(0, max(lengthData$LENGTH),10))
   print(p)
   dev.off()
-
-
-
-
-
-
 
 }
