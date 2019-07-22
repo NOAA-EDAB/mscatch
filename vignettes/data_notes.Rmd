@@ -147,6 +147,9 @@ species_itis = 164744
 
 ### Yellowtail flounder
 
+Chris Legauly: GB stock
+Assessment consists of Biomass from survey adjusted by catchability (q = .31). Then an exploitation rate applied to inform catch advice. No model is used
+
 nespp3 = 123
 species_itis = 172909
 
@@ -170,6 +173,8 @@ Data may come from other sources also
 
 
 ### silver hake
+
+Larry Alade: Hake species
 
 nespp3 = 509
 
