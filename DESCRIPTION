@@ -15,9 +15,11 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
-Imports: rgdal,
+Imports: 
+    rgdal,
     RODBC,
     cfdbs,
     dplyr,
     magrittr,
-    ggplot2
+    ggplot2,
+    gridExtra
