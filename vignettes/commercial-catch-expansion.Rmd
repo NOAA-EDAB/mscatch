@@ -34,41 +34,88 @@ knitr::opts_chunk$set(
 
 4. Now start to  *Combine* cells to increase sample sizes or *interpolate* individual missing cells? 
 
+For example: the data should be in this format (mv_cf_landings):
+``` {r table1 , echo = F}
+#library(mscatch)
+data <- mscatch::sampleData_164744
+knitr::kable(head(data))
+```
+
+where,
+
+**landings_land** = total landings for YEAR,QTR,NEGEAR,MARKET_CODE
+
+**landings_nn** = number of "trips" associated with landings
+
+**len_numLengthSamples** = number of trips where length samples were (unique **tripid**)
+
+**len_totalNumLen** = Total number of fish sampled in these trips (from table below).
+
+NA indicates no data
+
+with the length data in this format (mv_cf_len):
+
+``` {r table2 , echo = F}
+#library(mscatch)
+data <- mscatch::sampleLengths_164744
+#data$tripid <- NULL
+knitr::kable(head(data))
+```
+
+where,
+
+**tripid** = id for a trip where samples were taken
+
+**LENGTH** = length of a sampled fish
+
+**NUMLEN** = number of fish sampled for stated **LENGTH** in a given **tripid**
+
+
+
 # Rules of aggregation
 
-To determine "similar length distributions" we could use the two sample Kolmogorov-Smirnov test. The test compares empirical CDF's. We would construct the empirical CDF from the histogram of length's (over all samples) at 1 cm intervals. 
-
-
+To determine "similar length distributions" we could use the two sample Kolmogorov-Smirnov test. The test compares empirical CDF's. We would construct the empirical CDF from the histogram of length's (over all samples) at 1 cm intervals. Use stats::ks.test. Many ties - may need to perform a randomization test
 
 In many stock assessments each year may result in a different level of aggregation (i.e quarters, semesters or different gear types).
 For the first pass here we will use the same aggregation level for all years. Maybe a good exercise to compare results.
 
-(Within each year t:)
+(Within each year, t)
 
 ## Combine:
-* Are there *gear* types with total landings greater than 0 but total sample sizes less than *X*?  
-    + if YES: 
-        - Combine gear types (explore to see if combined lengths similar) to increase sample size  
-        - or Ignore and continue (add to total at the end).  
+
+* Are there *gear* types with total landings greater than 0 but total sample sizes less than *X*?
+
+    + if YES: Combine gear types (explore to see if combined lengths similar) to increase sample size or Ignore and continue (add to total at the end).
     + if NO: Count your blessings and continue.  
-* Are there *market categories* (will need to assign to an ordinal scale) with total landings greater than 0 but sample sizes less than *X*? (after combining gears)  
+    
+* Are there *market categories* (will need to assign to an ordinal scale) with total landings greater than 0 but sample sizes less than *X*? (after combining gears)
+
 	  + if YES: combine market categories with similar length distributions. 
 	  + if NO : Count your blessings and continue.  
+	  
 * Are there *quarters* with landings but sample sizes less than *X*?  
+
 	  + if YES: Create semesters?  
 	  + if NO: Count your blessings and continue.  
+	  
 * Are there *strata* with landings but sample sizes less than *X*?  
+
 	  + If YES: define groups of similar strata  
 	  + If NO: Count your blessings and continue.  
 	  
 * Interpolate remaining holes.  
+
 	  + Select length within year/market category from adjacent strata or strata group (after determining if appropriate).  
 	  + Select length within year/market category from adjacent quarter or semester (after determining if appropriate).  
 	  + Select length within year/market category from adjacent year (after determining if appropriate).  
+	  
 * If unclassified market category and no other information available:  
+
 	  + Combine market category samples to create an unclassified  
-	  + Use appropriate observer length samples to apply to unclassified.  
+	  + Use appropriate observer length samples to apply to unclassified. 
+	  
 * If holes remain  
+
 	  + Calculate ratio of sampled to un-sampled landings and expand total length frequency such that expanded sample weight equals total landings weight for year t.
 
 
