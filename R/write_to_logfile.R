@@ -4,7 +4,7 @@
 #'@param logfile Character string. Name of logfile
 #'@param data data to write to file
 #'@param label Character string. Description of the data being written
-#'@append Boolean. append to current logfile (T) or overwrite (F)
+#'@param append Boolean. append to current logfile (T) or overwrite (F)
 #'
 #'@export
 

@@ -14,6 +14,8 @@ write_to_logfile(outputDir, logfile, data, label, append = T)
 \item{data}{data to write to file}
 
 \item{label}{Character string. Description of the data being written}
+
+\item{append}{Boolean. append to current logfile (T) or overwrite (F)}
 }
 \description{
 Records entries to a logfile

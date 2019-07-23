@@ -16,7 +16,6 @@ Suggests:
     rmarkdown
 VignetteBuilder: knitr
 Imports: 
-    rgdal,
     RODBC,
     cfdbs,
     dplyr,
