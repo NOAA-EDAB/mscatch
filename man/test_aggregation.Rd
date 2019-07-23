@@ -5,7 +5,8 @@
 \title{Test aggregation}
 \usage{
 test_aggregation(landingsThresholdGear = 0.9, nLengthSamples = 1,
-  outputDir = here::here("output"), outputPlots = F)
+  outputDir = here::here("output"), outputPlots = F,
+  logfile = "logFile.txt")
 }
 \arguments{
 \item{landingsThresholdGear}{numeric scalar (proportion). Minimum proportion of cumulative landings to avoid aggregation of gear. Default = .9}
@@ -19,4 +20,5 @@ test_aggregation(landingsThresholdGear = 0.9, nLengthSamples = 1,
 \description{
 This will all change so no point documenting it too much.
 Eventually split each section into its own function for easier future development
+All plotting functions will need to be finined/generalized
 }

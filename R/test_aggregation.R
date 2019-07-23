@@ -2,6 +2,7 @@
 #'
 #'This will all change so no point documenting it too much.
 #'Eventually split each section into its own function for easier future development
+#'All plotting functions will need to be finined/generalized
 #'
 #'
 #'@param landingsThresholdGear numeric scalar (proportion). Minimum proportion of cumulative landings to avoid aggregation of gear. Default = .9
@@ -16,7 +17,7 @@
 
 #channel <- cfdbs::connect_to_database("sole","abeet") #eventually remove this
 
-test_aggregation <- function(landingsThresholdGear = .90, nLengthSamples = 1, outputDir=here::here("output"), outputPlots=F) {
+test_aggregation <- function(landingsThresholdGear = .90, nLengthSamples = 1, outputDir=here::here("output"), outputPlots=F, logfile="logFile.txt") {
 
   if (!dir.exists(outputDir)){dir.create(outputDir)} # create directory to store exploratory/informational plots
   # sample Data is Haddock (147).
@@ -53,39 +54,71 @@ test_aggregation <- function(landingsThresholdGear = .90, nLengthSamples = 1, ou
 
   # update sample lengthsData to reflect gear aggregation
   lengthData$NEGEAR[!(lengthData$NEGEAR  %in% gearsChosen)] <- recodeOtherGear
-  #############################################################################################################
+
+  # look at the summary stats/plots after aggregation
+  summary_stats(filteredLandings,species_itis,outputDir,outputPlots)
+  # take a look at length distribution of size categories
+  plot_length_histogram(lengthData,species_itis,outputDir,outputPlots)
+  ############################################################################################################
   ####### GEARs DONE . move to own function ####################################
   #############################################################################################################
-
 
   # 2 . combine market category (This will be difficult) market category description are unique to species and not ordinal.
   # Use distributions to aggregate instead of Market category
   # Need to keep Unclassified and Unknown categories separate from known market categories
 
-  # take a look at length distribution of size categories
-  plot_length_histogram(lengthData,species_itis,outputDir,outputPlots)
-  # look at the summary stats/plots after aggregation
-  summary_stats(filteredLandings,species_itis,outputDir,outputPlots)
-
-  #
+  # find market_codes contribution to landings
   market <- filteredLandings %>%
     group_by(MARKET_CODE) %>%
     summarise(totalLandings = sum(landings_land, na.rm = TRUE),len_numLengthSamples=sum(len_numLengthSamples,na.rm=T)) %>%
     arrange(desc(totalLandings))
+  market <- dplyr::mutate(market,percent = totalLandings/sum(totalLandings) , cumsum=cumsum(totalLandings),cum_percent=cumsum/sum(totalLandings))
+  # plot market data
+  plot_market_codes(market,outputDir,outputPlots)
 
-  market <- mutate(market,cumsum=cumsum(totalLandings),percent=cumsum/sum(totalLandings))
-  # write to a table
+  # IF NO LENGTH SAMPLES AT ALL FOR ANY MARKET CODE LUMP LANDINGS INTO NEIGHBORING SIZECLASS
+  # this is subjective. If landings are minimal, not really an issue, if substantial??
+  if (any (market$len_numLengthSamples == 0)) {
+    message("Some market codes have NO length samples. Below is a table of market codes and their relative contribution to landings \n")
+    print(market)
+    zeroLandings <- market$MARKET_CODE[market$len_numLengthSamples == 0]
+    message(paste0("As you can see, code = ",as.character(zeroLandings)," need to be combined with other market categories. \n" ))
+    message("We'll walk through each one in turn:\n")
+    mapCodes <- NULL
+    for (acode in zeroLandings) {
+      newCode <- readline(prompt=paste0("Which Market category should we combine with ",acode,"?: \n"))
+      message(paste0("OK. We will combine ",acode, " with ",newCode))
+      mapCodes <- rbind(mapCodes,c(acode,newCode))
+      # rename MARKET_CODES
+      print(sum(filteredLandings$MARKET_CODE == acode))
+      filteredLandings$MARKET_CODE[filteredLandings$MARKET_CODE == acode] <- newCode
+    }
+    write_to_logfile(outputDir,logfile,mapCodes,label="market code relabelling")
 
-  lg <- lengthData %>%
-    dplyr::select(NEGEAR,LENGTH,NUMLEN,MARKET_CODE) %>%
-    dplyr::filter(MARKET_CODE =="LG")
-  lg <- rep(lg$LENGTH,lg$NUMLEN)
-  un <- lengthData %>%
-    dplyr::select(NEGEAR,LENGTH,NUMLEN,MARKET_CODE) %>%
-    dplyr::filter(MARKET_CODE =="XG")
-  un <- rep(un$LENGTH,un$NUMLEN)
+    newmarket <- filteredLandings %>%
+      group_by(MARKET_CODE) %>%
+      summarise(totalLandings = sum(landings_land, na.rm = TRUE),len_numLengthSamples=sum(len_numLengthSamples,na.rm=T)) %>%
+      arrange(desc(totalLandings)) %>%
+      mutate(percent = totalLandings/sum(totalLandings) , cumsum=cumsum(totalLandings),cum_percent=cumsum/sum(totalLandings))
 
-  ks.test(lg,un)
+    print(newmarket)
+
+
+
+  }
+
+
+#
+#   lg <- lengthData %>%
+#     dplyr::select(NEGEAR,LENGTH,NUMLEN,MARKET_CODE) %>%
+#     dplyr::filter(MARKET_CODE =="LG")
+#   lg <- rep(lg$LENGTH,lg$NUMLEN)
+#   un <- lengthData %>%
+#     dplyr::select(NEGEAR,LENGTH,NUMLEN,MARKET_CODE) %>%
+#     dplyr::filter(MARKET_CODE =="XG")
+#   un <- rep(un$LENGTH,un$NUMLEN)
+#
+#   ks.test(as.numeric(lg),as.numeric(un))
 
   #ks.test(x = )
   # if market caegory has landings but no length data at all. Then the landings need to be lumped into a
@@ -97,7 +130,7 @@ test_aggregation <- function(landingsThresholdGear = .90, nLengthSamples = 1, ou
 
 
 
-  return(list(lg=lg,un=un))
+  return(list(f =filteredLandings,n=newmarket))
 
 
 }
