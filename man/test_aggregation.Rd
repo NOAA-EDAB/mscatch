@@ -5,7 +5,7 @@
 \title{Test aggregation}
 \usage{
 test_aggregation(landingsThresholdGear = 0.9, nLengthSamples = 1,
-  outputDir = here::here("output"), outputPlots = F,
+  pValue = 0.05, outputDir = here::here("output"), outputPlots = F,
   logfile = "logFile.txt")
 }
 \arguments{
@@ -13,9 +13,13 @@ test_aggregation(landingsThresholdGear = 0.9, nLengthSamples = 1,
 
 \item{nLengthSamples}{numeric scalar. The minimum number of length sample sizes required to avoid combination of data. Dfault = 1}
 
+\item{pValue}{numeric scalar. Threshold pvalue for determining significance of ks test for length samples}
+
 \item{outputDir}{Character string. Path to output directory (png files saved here)}
 
 \item{outputPlots}{Boolean. Should plots be created. T or F (Default = F)}
+
+\item{logFile}{character string. Specify the name for the log file generated describing all decisions made.}
 }
 \description{
 This will all change so no point documenting it too much.

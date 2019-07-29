@@ -7,8 +7,10 @@
 #'
 #'@param landingsThresholdGear numeric scalar (proportion). Minimum proportion of cumulative landings to avoid aggregation of gear. Default = .9
 #'@param nLengthSamples numeric scalar. The minimum number of length sample sizes required to avoid combination of data. Dfault = 1
+#'@param pValue numeric scalar. Threshold pvalue for determining significance of ks test for length samples
 #'@param outputDir Character string. Path to output directory (png files saved here)
 #'@param outputPlots Boolean. Should plots be created. T or F (Default = F)
+#'@param logFile character string. Specify the name for the log file generated describing all decisions made.
 #'
 #'@importFrom dplyr "summarize" "summarise" "group_by" "filter" "select" "arrange" "mutate"
 #'@importFrom magrittr "%>%"
@@ -17,7 +19,7 @@
 
 #channel <- cfdbs::connect_to_database("sole","abeet") #eventually remove this
 
-test_aggregation <- function(landingsThresholdGear = .90, nLengthSamples = 1, outputDir=here::here("output"), outputPlots=F, logfile="logFile.txt") {
+test_aggregation <- function(landingsThresholdGear = .90, nLengthSamples = 1, pValue = 0.05, outputDir=here::here("output"), outputPlots=F, logfile="logFile.txt") {
 
   if (!dir.exists(outputDir)){dir.create(outputDir)} # create directory to store exploratory/informational plots
   # sample Data is Haddock (147).
@@ -102,25 +104,34 @@ test_aggregation <- function(landingsThresholdGear = .90, nLengthSamples = 1, ou
       mutate(percent = totalLandings/sum(totalLandings) , cumsum=cumsum(totalLandings),cum_percent=cumsum/sum(totalLandings))
 
     print(newmarket)
+  }
 
+  # now test similarities of market codes length distributions
+  marketCodes <- unique(filteredLandings$MARKET_CODE)
+  for (icode in 1:(length(marketCodes)-1)) {
+    for (jcode in (icode+1):length(marketCodes)) {
+      acode <- marketCodes[icode]
+      bcode <- marketCodes[jcode]
+      if (acode == bcode) next # dont test against self
+      if ((acode =="UN") | (bcode == "UN")) next # leave unclassified alone
 
+      print(paste0(acode,"_",bcode)      )
+      sizeA <- lengthData %>% dplyr::select(NEGEAR,LENGTH,NUMLEN,MARKET_CODE) %>% dplyr::filter(MARKET_CODE == acode)
+      sizeA <- as.numeric(rep(sizeA$LENGTH,sizeA$NUMLEN))
+      sizeB <- lengthData %>% dplyr::select(NEGEAR,LENGTH,NUMLEN,MARKET_CODE) %>% dplyr::filter(MARKET_CODE == bcode)
+      sizeB <- as.numeric(rep(sizeB$LENGTH,sizeB$NUMLEN))
+
+      res <- ks.test(sizeA,sizeB)
+
+      if(res$p.value > pValue) {  # length distributions are the same
+        write_to_logfile(outputDir,logfile,paste("combine",acode,"with",bcode,". SIG = ",res$p.value,"\n"),label="ks test aggregation",append = T)
+      }
+
+    }
 
   }
 
 
-#
-#   lg <- lengthData %>%
-#     dplyr::select(NEGEAR,LENGTH,NUMLEN,MARKET_CODE) %>%
-#     dplyr::filter(MARKET_CODE =="LG")
-#   lg <- rep(lg$LENGTH,lg$NUMLEN)
-#   un <- lengthData %>%
-#     dplyr::select(NEGEAR,LENGTH,NUMLEN,MARKET_CODE) %>%
-#     dplyr::filter(MARKET_CODE =="XG")
-#   un <- rep(un$LENGTH,un$NUMLEN)
-#
-#   ks.test(as.numeric(lg),as.numeric(un))
-
-  #ks.test(x = )
   # if market caegory has landings but no length data at all. Then the landings need to be lumped into a
   # neighboring size class. Very subjective but dont lump into unclassified/ unknown
 
@@ -130,7 +141,7 @@ test_aggregation <- function(landingsThresholdGear = .90, nLengthSamples = 1, ou
 
 
 
-  return(list(f =filteredLandings,n=newmarket))
+  return(list(f =filteredLandings,l=lengthData))
 
 
 }
