@@ -4,7 +4,7 @@
 \alias{write_to_logfile}
 \title{Records entries to a logfile}
 \usage{
-write_to_logfile(outputDir, logfile, data, label, append = T)
+write_to_logfile(outputDir, logfile, data, label, append = F)
 }
 \arguments{
 \item{outputDir}{Character string. directory to save output}

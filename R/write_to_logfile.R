@@ -9,7 +9,7 @@
 #'@export
 
 
-write_to_logfile <- function(outputDir,logfile,data,label,append = T) {
+write_to_logfile <- function(outputDir,logfile,data,label,append = F) {
 
   if (append == F){ # open file
     fileConn<-file(paste0(outputDir,"/",logfile),open="w")
