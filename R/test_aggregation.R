@@ -69,6 +69,8 @@ test_aggregation <- function(landingsThresholdGear = .90, nLengthSamples = 1, pV
   # 2 . combine market category (This will be difficult) market category description are unique to species and not ordinal.
   # Use distributions to aggregate instead of Market category
   # Need to keep Unclassified and Unknown categories separate from known market categories
+  # if market category has landings but no length data at all. Then the landings need to be lumped into a
+  # neighboring size class. Very subjective but dont lump into unclassified/ unknown
 
   # find market_codes contribution to landings
   market <- filteredLandings %>%
@@ -107,16 +109,25 @@ test_aggregation <- function(landingsThresholdGear = .90, nLengthSamples = 1, pV
     print(newmarket)
   }
 
-  # now test similarities of market codes length distributions
-  codesToAggregate <- compare_length_distributions(filteredLandings,lengthData,"MARKET_CODE",pValue,outputDir,logfile)
-  print(codesToAggregate)
+  # now test similarities of market codes length distributions.
+  # aggregate until can no longer
+  while (1) {
+    codesToAggregate <- compare_length_distributions(filteredLandings,lengthData,"MARKET_CODE",pValue,outputDir,logfile)
+    print(codesToAggregate)
+    if (is.null(codesToAggregate)) {
+      break
+    } else {
+      filteredLandings <- aggregate_data_by_class(filteredLandings,variable="MARKET_CODE",codesToAggregate,dataset="landings")
+      lengthData <- aggregate_data_by_class(lengthData,variable="MARKET_CODE",codesToAggregate,dataset="lengths")
+      #return(filteredLandings)
+    }
+  }
 
-  filteredLandings <- aggregate_data_by_class(filteredLandings,variable="MARKET_CODE",codesToAggregate,dataset="landings")
-  lengthData <- aggregate_data_by_class(lengthData,variable="MARKET_CODE",codesToAggregate,dataset="lengths")
+  # 3. look at QTR to see if need to lump quarters or borrow from other years
+  # plot all diagnostics again with current aggregated data
 
+  plot_market_code_by_qtr(filteredLandings,outputDir,outputPlots)
 
-  # if market caegory has landings but no length data at all. Then the landings need to be lumped into a
-  # neighboring size class. Very subjective but dont lump into unclassified/ unknown
 
 
 

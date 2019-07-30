@@ -34,7 +34,7 @@ knitr::opts_chunk$set(
 
 4. Now start to  *Combine* cells to increase sample sizes or *interpolate* individual missing cells? 
 
-For example: the data should be in this format (mv_cf_landings):
+For example: the data should be in this format (mv_cf_landings: species_itis = 164744, Haddock):
 ``` {r table1 , echo = F}
 #library(mscatch)
 data <- mscatch::sampleData_164744

@@ -142,7 +142,7 @@ This will be trial dataset.
 
 Meet with Liz Brooks week of 15th april 2019
 
-nespp3 = 147 (148 too? Market Codes X1,X2,X3, 0 records)
+nespp3 = 147 (148 too? Market Codes X1,X2,MK,MD, 0 length samples small landings. Appear in later years 2002+)
 species_itis = 164744
 
 ### Yellowtail flounder
