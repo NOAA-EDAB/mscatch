@@ -3,6 +3,7 @@
 #'This will all change so no point documenting it too much.
 #'Eventually split each section into its own function for easier future development
 #'All plotting functions will need to be finined/generalized
+#'Also need to adapt code to allow user to process on a year by year basis
 #'
 #'
 #'@param landingsThresholdGear numeric scalar (proportion). Minimum proportion of cumulative landings to avoid aggregation of gear. Default = .9
@@ -107,29 +108,11 @@ test_aggregation <- function(landingsThresholdGear = .90, nLengthSamples = 1, pV
   }
 
   # now test similarities of market codes length distributions
-  marketCodes <- unique(filteredLandings$MARKET_CODE)
-  for (icode in 1:(length(marketCodes)-1)) {
-    for (jcode in (icode+1):length(marketCodes)) {
-      acode <- marketCodes[icode]
-      bcode <- marketCodes[jcode]
-      if (acode == bcode) next # dont test against self
-      if ((acode =="UN") | (bcode == "UN")) next # leave unclassified alone
+  codesToAggregate <- compare_length_distributions(filteredLandings,lengthData,"MARKET_CODE",pValue,outputDir,logfile)
+  print(codesToAggregate)
 
-      print(paste0(acode,"_",bcode)      )
-      sizeA <- lengthData %>% dplyr::select(NEGEAR,LENGTH,NUMLEN,MARKET_CODE) %>% dplyr::filter(MARKET_CODE == acode)
-      sizeA <- as.numeric(rep(sizeA$LENGTH,sizeA$NUMLEN))
-      sizeB <- lengthData %>% dplyr::select(NEGEAR,LENGTH,NUMLEN,MARKET_CODE) %>% dplyr::filter(MARKET_CODE == bcode)
-      sizeB <- as.numeric(rep(sizeB$LENGTH,sizeB$NUMLEN))
-
-      res <- ks.test(sizeA,sizeB)
-
-      if(res$p.value > pValue) {  # length distributions are the same
-        write_to_logfile(outputDir,logfile,paste("combine",acode,"with",bcode,". SIG = ",res$p.value,"\n"),label="ks test aggregation",append = T)
-      }
-
-    }
-
-  }
+  filteredLandings <- aggregate_data_by_class(filteredLandings,variable="MARKET_CODE",codesToAggregate,dataset="landings")
+  lengthData <- aggregate_data_by_class(lengthData,variable="MARKET_CODE",codesToAggregate,dataset="lengths")
 
 
   # if market caegory has landings but no length data at all. Then the landings need to be lumped into a

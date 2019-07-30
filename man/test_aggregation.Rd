@@ -25,4 +25,5 @@ test_aggregation(landingsThresholdGear = 0.9, nLengthSamples = 1,
 This will all change so no point documenting it too much.
 Eventually split each section into its own function for easier future development
 All plotting functions will need to be finined/generalized
+Also need to adapt code to allow user to process on a year by year basis
 }
