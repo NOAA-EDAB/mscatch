@@ -17,8 +17,10 @@
 
 compare_length_distributions <- function(landings,lengthData,variableToAggreagte,pValue,outputDir,logfile) {
 
-  mapCodes <- NULL
-  codes <- unique(landings[,variableToAggreagte])
+  mapCodes <- NULL ;  stop <-  F
+
+  codes <- unique(landings[[variableToAggreagte]])
+  print(codes)
   for (icode in 1:(length(codes)-1)) {
     for (jcode in (icode+1):length(codes)) {
       acode <- codes[icode]
@@ -26,15 +28,15 @@ compare_length_distributions <- function(landings,lengthData,variableToAggreagte
       if (acode == bcode) next # dont test against self
       if ((acode =="UN") | (bcode == "UN")) next # leave unclassified alone
 
-          print(paste0(acode,"_",bcode)      )
+     #     print(paste0(acode,"_",bcode)      )
       sizeA <- lengthData %>% dplyr::select(NEGEAR,LENGTH,NUMLEN,MARKET_CODE) %>% dplyr::filter(MARKET_CODE == acode)
       sizeA <- as.numeric(rep(sizeA$LENGTH,sizeA$NUMLEN))
       sizeB <- lengthData %>% dplyr::select(NEGEAR,LENGTH,NUMLEN,MARKET_CODE) %>% dplyr::filter(MARKET_CODE == bcode)
       sizeB <- as.numeric(rep(sizeB$LENGTH,sizeB$NUMLEN))
 
       res <- ks.test(sizeA,sizeB)
-
       if(res$p.value > pValue) {  # length distributions are the same
+        print("aggregate")
         write_to_logfile(outputDir,logfile,paste("combine",acode,"with",bcode,". SIG = ",res$p.value,"\n"),label="ks test aggregation",append = T)
         mapCodes <- c(acode,bcode)
         stop <- TRUE
