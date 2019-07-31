@@ -4,10 +4,12 @@
 \alias{plot_market_codes}
 \title{plots landings by market code}
 \usage{
-plot_market_codes(marketData, outputDir, outputPlots)
+plot_market_codes(marketData, plotID, outputDir, outputPlots)
 }
 \arguments{
 \item{marketData}{data frame.}
+
+\item{plotID}{numeric scalar. number ID of plot}
 
 \item{outputDir}{Character string. Path to output directory (png files saved here)}
 

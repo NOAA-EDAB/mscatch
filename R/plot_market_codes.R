@@ -4,6 +4,7 @@
 #'
 #'
 #'@param marketData data frame.
+#'@param plotID numeric scalar. number ID of plot
 #'@param outputDir Character string. Path to output directory (png files saved here)
 #'@param outputPlots Boolean. Should plots be created. T or F
 
@@ -14,11 +15,11 @@
 #'
 #' @export
 
-plot_market_codes <- function(marketData,outputDir,outputPlots){
+plot_market_codes <- function(marketData,plotID,outputDir,outputPlots){
 
   if (outputPlots == F) return()
 
-  png(paste0(outputDir,"/7_market_category_landings.png"))
+  png(paste0(outputDir,"/",plotID,"_market_category_landings.png"))
 
   # landings grob
   pLand <- ggplot2::ggplot(data = marketData) +

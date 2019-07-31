@@ -17,18 +17,19 @@ write_to_logfile <- function(outputDir,logfile,data,label,append = F) {
     fileConn<-file(paste0(outputDir,"/",logfile),open="a")
 
   )
-
-  writeLines(label, fileConn)
+  if (!is.null(label)) {writeLines(label, fileConn)}
 
   if(is.vector(data)){
     cat(data, file=fileConn)
-  } else {
+  } else if (length(dim(data))==2){ # matrix or dataframe
 
     for (irow in 1:nrow(data)){
       cat(data[irow,], file=fileConn, append=T)
       cat("\n", file=fileConn, append=T)
     }
 
+  } else{
+    stop("Can only pass vectors or matrices to logfile")
   }
 
   close(fileConn)

@@ -2,6 +2,8 @@
 
 export(aa_count_trips)
 export(aggregate_data_by_class)
+export(aggregate_gear)
+export(aggregate_market_codes)
 export(compare_length_distributions)
 export(plot_landings_data)
 export(plot_length_histogram)

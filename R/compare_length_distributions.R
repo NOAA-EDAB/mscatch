@@ -1,26 +1,24 @@
 #' Compare length distributions across categories
 #'
-#'@param landings tibble. landings data in form described below
-#'@param lengthData tibble. length data in form described below
+#'@param data List. Landings and length data in form described below
 #'@param variableToAggreagte character string. Denote the variable to aggregate based on length distribution
 #'@param pValue numeric scalar. Threshold pvalue for determining significance of ks test for length samples
 #'@param outputDir Character string. Directory where output is saved
 #'@param logfile Cahracter string. Name of logfile
 #'
-#'@return Updated landings and lengthsData object reflecting changes of aggregating categories over length
-#'
-#'
-#'
-#'
+#'@return Character vector
+#'\item{codes}{Two market category codes not significantly different}
 #'
 #'@export
 
-compare_length_distributions <- function(landings,lengthData,variableToAggreagte,pValue,outputDir,logfile) {
+compare_length_distributions <- function(data,variableToAggreagte,pValue,outputDir,logfile) {
+
+  landings <- data$landings
+  lengthData <- data$lengthData
 
   mapCodes <- NULL ;  stop <-  F
 
   codes <- unique(landings[[variableToAggreagte]])
-  print(codes)
   for (icode in 1:(length(codes)-1)) {
     for (jcode in (icode+1):length(codes)) {
       acode <- codes[icode]
@@ -36,7 +34,6 @@ compare_length_distributions <- function(landings,lengthData,variableToAggreagte
 
       res <- ks.test(sizeA,sizeB)
       if(res$p.value > pValue) {  # length distributions are the same
-        print("aggregate")
         write_to_logfile(outputDir,logfile,paste("combine",acode,"with",bcode,". SIG = ",res$p.value,"\n"),label="ks test aggregation",append = T)
         mapCodes <- c(acode,bcode)
         stop <- TRUE

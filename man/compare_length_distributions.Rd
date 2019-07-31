@@ -4,13 +4,11 @@
 \alias{compare_length_distributions}
 \title{Compare length distributions across categories}
 \usage{
-compare_length_distributions(landings, lengthData, variableToAggreagte,
-  pValue, outputDir, logfile)
+compare_length_distributions(data, variableToAggreagte, pValue, outputDir,
+  logfile)
 }
 \arguments{
-\item{landings}{tibble. landings data in form described below}
-
-\item{lengthData}{tibble. length data in form described below}
+\item{data}{List. Landings and length data in form described below}
 
 \item{variableToAggreagte}{character string. Denote the variable to aggregate based on length distribution}
 
@@ -21,7 +19,8 @@ compare_length_distributions(landings, lengthData, variableToAggreagte,
 \item{logfile}{Cahracter string. Name of logfile}
 }
 \value{
-Updated landings and lengthsData object reflecting changes of aggregating categories over length
+Character vector
+\item{codes}{Two market category codes not significantly different}
 }
 \description{
 Compare length distributions across categories
