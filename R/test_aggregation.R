@@ -35,17 +35,20 @@ test_aggregation <- function(landingsThresholdGear = .90, nLengthSamples = 1, pV
   data$landings <- landings
   data$lengthData <- lengthData
 
+  #######################################################
+  ####### GEARs #########################################
+  #######################################################
   # Now deal with Gary's schematic.
   # 1. aggregate the gears based on landings
   data <- aggregate_gear(data,recodeOtherGear,landingsThresholdGear)
-
+  gearList <- unique(data$landings$NEGEAR)
   # look at the summary stats/plots after aggregation
   summary_stats(data$landings,species_itis,outputDir,outputPlots)
   # take a look at length distribution of size categories
   plot_length_histogram(data$lengthData,species_itis,outputDir,outputPlots)
 
   #######################################################
-  ####### GEARs DONE ####################################
+  ####### MARKET CODES ##################################
   #######################################################
 
   # 2 . combine market category (This will be difficult) market category description are unique to species and not ordinal.
@@ -55,7 +58,9 @@ test_aggregation <- function(landingsThresholdGear = .90, nLengthSamples = 1, pV
   # neighboring size class. Very subjective but dont lump into unclassified/ unknown
   data <- aggregate_market_codes(data,pValue,outputDir,outputPlots,logfile)
 
-
+  #######################################################
+  ####### QTR, SEMESTER, ANNUAL #########################
+  #######################################################
 
   # 3. look at QTR to see if need to lump quarters or borrow from other years
   # plot all diagnostics again with current aggregated data
@@ -63,14 +68,34 @@ test_aggregation <- function(landingsThresholdGear = .90, nLengthSamples = 1, pV
   write_to_logfile(outputDir,logfile,paste0("Length samples started in ",as.character(min(lengthData$YEAR)),". All landings prior to this year will use this years data \n"),label=NULL,append = T)
   write_to_logfile(outputDir,logfile,"Other gear (code 998) will be aggregated similarly to other gears\n",label="market code by qrt",append = T)
 
+  # Take a look at length distribution by QTR and MARKET CODE
+  d <- data$lengthData %>% dplyr::filter(NEGEAR == "050") %>% dplyr::group_by(MARKET_CODE,QTR,LENGTH) %>% summarise(numlens=sum(as.numeric(NUMLEN)))
+  p <-   ggplot2::ggplot(data = d) +
+    ggplot2::geom_bar(stat="identity",mapping= ggplot2::aes(x=LENGTH,y=numlens),na.rm=T) +
+    ggplot2::facet_wrap(~QTR+MARKET_CODE)
+  print(p)
+
+  # Need to start in latest year and work backward, filling in for each gear type
+  yrsList <- unique(data$landings$YEAR)
+  for (gearType in gearList) {
+    QTRData <- data$landings %>% dplyr::filter(NEGEAR == gearType & MARKET_CODE !="UN")
+    if (gearType == "998") next
+    for (ayear in rev(yrsList) ) {
+      yrData <- QTRData %>% dplyr::filter(YEAR == ayear)
+      if (any(yrData$len_numLengthSamples == 0)) {
+        print(ayear)
+        print(yrData)
+        return(yrData)
+        # fill in gaps
+      }
+    }
+
+    }
 
 
 
 
-#  write_to_logfile(outputDir,logfile,"Other gear (code 998) will be aggregated similarly to other gears\n",label=NULL,append = T)
-
-
-
+  #  write_to_logfile(outputDir,logfile,"Other gear (code 998) will be aggregated similarly to other gears\n",label=NULL,append = T)
   message(paste0("Check the logfile = ",outputDir,"/",logfile," for details regarding aggregation choices") )
 
 
