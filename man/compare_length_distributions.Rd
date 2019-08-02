@@ -4,19 +4,19 @@
 \alias{compare_length_distributions}
 \title{Compare length distributions across categories}
 \usage{
-compare_length_distributions(data, variableToAggreagte, pValue, outputDir,
-  logfile)
+compare_length_distributions(data, variableToAggregate, groupBy, pValue,
+  outputDir, logfile)
 }
 \arguments{
 \item{data}{List. Landings and length data in form described below}
-
-\item{variableToAggreagte}{character string. Denote the variable to aggregate based on length distribution}
 
 \item{pValue}{numeric scalar. Threshold pvalue for determining significance of ks test for length samples}
 
 \item{outputDir}{Character string. Directory where output is saved}
 
 \item{logfile}{Cahracter string. Name of logfile}
+
+\item{variableToAggreagte}{character string. Denote the variable to aggregate based on length distribution}
 }
 \value{
 Character vector

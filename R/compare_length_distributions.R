@@ -11,14 +11,14 @@
 #'
 #'@export
 
-compare_length_distributions <- function(data,variableToAggreagte,pValue,outputDir,logfile) {
+compare_length_distributions <- function(data,variableToAggregate,groupBy,pValue,outputDir,logfile) {
 
   landings <- data$landings
   lengthData <- data$lengthData
 
   mapCodes <- NULL ;  stop <-  F
 
-  codes <- unique(landings[[variableToAggreagte]])
+  codes <- unique(landings[[variableToAggregate]])
   for (icode in 1:(length(codes)-1)) {
     for (jcode in (icode+1):length(codes)) {
       acode <- codes[icode]
@@ -27,9 +27,9 @@ compare_length_distributions <- function(data,variableToAggreagte,pValue,outputD
       if ((acode =="UN") | (bcode == "UN")) next # leave unclassified alone
 
      #     print(paste0(acode,"_",bcode)      )
-      sizeA <- lengthData %>% dplyr::select(NEGEAR,LENGTH,NUMLEN,MARKET_CODE) %>% dplyr::filter(MARKET_CODE == acode)
+      sizeA <- lengthData %>% dplyr::select(!!groupBy) %>% dplyr::filter(UQ(as.name(variableToAggregate)) == acode)
       sizeA <- as.numeric(rep(sizeA$LENGTH,sizeA$NUMLEN))
-      sizeB <- lengthData %>% dplyr::select(NEGEAR,LENGTH,NUMLEN,MARKET_CODE) %>% dplyr::filter(MARKET_CODE == bcode)
+      sizeB <- lengthData %>% dplyr::select(!!groupBy) %>% dplyr::filter(UQ(as.name(variableToAggregate)) == bcode)
       sizeB <- as.numeric(rep(sizeB$LENGTH,sizeB$NUMLEN))
 
       res <- ks.test(sizeA,sizeB)
