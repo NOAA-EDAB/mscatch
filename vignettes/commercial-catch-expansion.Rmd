@@ -85,10 +85,12 @@ For the first pass here we will use the same aggregation level for all years. Ma
 
 * Are there *gear* types with total landings greater than 0 but total sample sizes less than *X*?
 
+    This step ignores time (YEAR, QTR) and  MARKET_CODE and looks at aggregated landings by gear type to determine dominant gear types in fishery. Number of distinct gear types controlled by a parameter indicating the % of landings to be accounted for by distinct gear types. (Others lumped in _otherGear_ category)
+    
     + if YES: Combine gear types (explore to see if combined lengths similar) to increase sample size or Ignore and continue (add to total at the end).
     + if NO: Count your blessings and continue.  
     
-* Are there *market categories* (will need to assign to an ordinal scale) with total landings greater than 0 but sample sizes less than *X*? (after combining gears)
+* Are there *market categories* (they are not on ordinal scale) with total landings greater than 0 but sample sizes less than *X*? (after combining gears). If there are market categories with 0 length samples the user must decide which category to combine. Often these MARKET_CODEs have small landings. We then compare length distributions (Kolmogorov-Smirnov test) of remaining MARKET_CODES to determine aggregation. Currently this is done aggregating length samples over YEAR and QTR. (This can be relaxed at a later date)
 
 	  + if YES: combine market categories with similar length distributions. 
 	  + if NO : Count your blessings and continue.  

@@ -111,7 +111,7 @@ Most assessments start in either 1982 (rec fishing data starts) or 1989 (discard
 Kathy Sosebee
 
 nespp3 = 352 
-species_itis = 164744
+species_itis = 160617
 
 dogfish(nk) - 350. Are these used in the assesment
 
@@ -167,9 +167,11 @@ K. Curti assessment from 1989.
 Result - aggregated to 2 areas (NE, MA) by semester. Really only 1 gear type
 
 nespp3 = 212
-species_itis = 174414
+species_itis = 172414
 
-Data may come from other sources also
+Data may come from other sources also. NAFO.
+
+Prior to 1992 Joint venture. CF tables landings dont match up with prior assessments since Joint venture data is stored in databases (servers = FishA, FishB). (Tables something like FFJV) which are old and were not converted to oracle databases. So to tease them apart from US landings is near impossible. For mackerel assessment data from < 1992 found in prior assessments are assumed as true since recreation is not possible.
 
 
 ### silver hake
