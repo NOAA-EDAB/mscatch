@@ -4,16 +4,16 @@
 \alias{plot_market_code_by_qtr}
 \title{plots Number of length samples}
 \usage{
-plot_market_code_by_qtr(landings, plotID, outputDir, outputPlots = T)
+plot_market_code_by_qtr(data, plotID, outputDir, outputPlots = T)
 }
 \arguments{
-\item{landings}{landings data aggregated to some level}
-
 \item{plotID}{numeric scalar. number ID of plot}
 
 \item{outputDir}{Character string. Path to output directory (png files saved here)}
 
 \item{outputPlots}{Boolean. Should plots be created. T or F}
+
+\item{landings}{landings data aggregated to some level}
 }
 \value{
 Nothing

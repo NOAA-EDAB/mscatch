@@ -28,7 +28,7 @@ test_aggregation <- function(landingsThresholdGear = .90, nLengthSamples = 1, pV
   # sample Data is Haddock (147).
   landings <- sampleData_164744            # eventually passed as argument
   lengthData <- sampleLengths_164744      # eventually passed as argument
-  recodeOtherGear <- "998"
+  otherGear <- "998"
   species_itis <- 164744 # hard coded. will eventually make this a variable
 
   data <- list()
@@ -40,7 +40,7 @@ test_aggregation <- function(landingsThresholdGear = .90, nLengthSamples = 1, pV
   #######################################################
   # Now deal with Gary's schematic.
   # 1. aggregate the gears based on landings
-  data <- aggregate_gear(data,recodeOtherGear,landingsThresholdGear)
+  data <- aggregate_gear(data,otherGear,landingsThresholdGear)
   gearList <- unique(data$landings$NEGEAR)
   # look at the summary stats/plots after aggregation
   summary_stats(data$landings,species_itis,outputDir,outputPlots)
@@ -64,33 +64,29 @@ test_aggregation <- function(landingsThresholdGear = .90, nLengthSamples = 1, pV
 
   # 3. look at QTR to see if need to lump quarters or borrow from other years
   # plot all diagnostics again with current aggregated data
-  plot_market_code_by_qtr(data$landings,9,outputDir,outputPlots)
+  plot_market_code_by_qtr(data,9,outputDir,outputPlots)
   write_to_logfile(outputDir,logfile,paste0("Length samples started in ",as.character(min(lengthData$YEAR)),". All landings prior to this year will use this years data \n"),label=NULL,append = T)
   write_to_logfile(outputDir,logfile,"Other gear (code 998) will be aggregated similarly to other gears\n",label="market code by qrt",append = T)
 
-  # Take a look at length distribution by QTR and MARKET CODE
-  d <- data$lengthData %>% dplyr::filter(NEGEAR == "050") %>% dplyr::group_by(MARKET_CODE,QTR,LENGTH) %>% summarise(numlens=sum(as.numeric(NUMLEN)))
-  p <-   ggplot2::ggplot(data = d) +
-    ggplot2::geom_bar(stat="identity",mapping= ggplot2::aes(x=LENGTH,y=numlens),na.rm=T) +
-    ggplot2::facet_wrap(~QTR+MARKET_CODE)
-  print(p)
+
+
 
   # Need to start in latest year and work backward, filling in for each gear type
   yrsList <- unique(data$landings$YEAR)
   for (gearType in gearList) {
     QTRData <- data$landings %>% dplyr::filter(NEGEAR == gearType & MARKET_CODE !="UN")
-    if (gearType == "998") next
+    if (gearType == otherGear) next
     for (ayear in rev(yrsList) ) {
       yrData <- QTRData %>% dplyr::filter(YEAR == ayear)
       if (any(yrData$len_numLengthSamples == 0)) {
-        print(ayear)
-        print(yrData)
-        return(yrData)
+        # print(ayear)
+        # print(yrData)
+#        return(yrData)
         # fill in gaps
       }
     }
 
-    }
+  }
 
 
 
