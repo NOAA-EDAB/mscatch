@@ -46,12 +46,13 @@ plot_market_code_by_qtr <- function(data,plotID,outputDir,outputPlots=T) {
 
     png(paste0(outputDir,"/",plotID+2,"_market_category_qtr_number_samples_",as.character(gearType),",.png"))
 
-    d <- data$landings %>% dplyr::filter(NEGEAR == "050") %>% dplyr::group_by(MARKET_CODE,QTR) %>% summarise(numlens=sum(as.numeric(len_numLengthSamples)==0))
+    d <- data$landings %>% dplyr::filter(NEGEAR == gearType) %>% dplyr::group_by(MARKET_CODE,QTR) %>% summarise(numlens=sum(as.numeric(len_numLengthSamples)==0))
     p <-   ggplot2::ggplot(data = d) +
       ggplot2::geom_bar(stat="identity",mapping = ggplot2::aes(x=1,y=numlens),na.rm=T) +
       ggplot2::facet_wrap(~QTR+MARKET_CODE) +
       ggplot2::ggtitle(paste0("By QRT and MARKET_CODE  (gear type = ",as.character(gearType),")")) +
       ggplot2::ylab("Number of years with missing length samples")
+    print(p)
 
     dev.off()
 
