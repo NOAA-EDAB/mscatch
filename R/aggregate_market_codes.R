@@ -40,14 +40,14 @@ aggregate_market_codes <- function(data,pValue,outputDir,outputPlots,logfile) {
     mapCodes <- NULL
     for (acode in zeroLandings) {
       newCode <- readline(prompt=paste0("Which Market category should we combine with ",acode,"?: \n"))
-      message(paste0("OK. We will combine ",acode, " with ",newCode))
+      message(paste0("OK. We will combine ",sum(data$landings$MARKET_CODE == acode)," records for ",acode, " with ",newCode))
       mapCodes <- rbind(mapCodes,c(acode,newCode))
       # rename MARKET_CODES
-      print(sum(data$landings$MARKET_CODE == acode))
+      #print(sum(data$landings$MARKET_CODE == acode))
       data$landings$MARKET_CODE[data$landings$MARKET_CODE == acode] <- newCode
     }
 
-    write_to_logfile(outputDir,logfile,mapCodes,label="market code relabelling",append=T)
+    write_to_logfile(outputDir,logfile,mapCodes,label="market code relabelling, from:to",append=T)
 
     newmarket <- data$landings %>%
       group_by(MARKET_CODE) %>%
@@ -55,20 +55,21 @@ aggregate_market_codes <- function(data,pValue,outputDir,outputPlots,logfile) {
       arrange(desc(totalLandings)) %>%
       mutate(percent = totalLandings/sum(totalLandings) , cumsum=cumsum(totalLandings),cum_percent=cumsum/sum(totalLandings))
 
-    print(newmarket)
   }
   plot_market_codes(newmarket,8,outputDir,outputPlots)
 
   # now test for equality of length distributions.
   # aggregate until can no longer
+  message("Performing KS tests to compare length distributions of market codes")
   while (1) {
-    codesToAggregate <- compare_length_distributions(data,"MARKET_CODE",pValue,outputDir,logfile)
+    codesToAggregate <- compare_length_distributions(data,variableToAggregate = "MARKET_CODE", groupBy=c("NEGEAR","LENGTH","NUMLEN","MARKET_CODE"), pValue,outputDir,logfile)
     if (is.null(codesToAggregate)) {
       break
     } else {
-      filteredLandings <- aggregate_data_by_class(data$landings,variable="MARKET_CODE",codesToAggregate,dataset="landings")
+      codes <- codesToAggregate[1,]
+      filteredLandings <- aggregate_data_by_class(data$landings,variable="MARKET_CODE",codes,dataset="landings")
       data$landings <- filteredLandings
-      lengthData <- aggregate_data_by_class(data$lengthData,variable="MARKET_CODE",codesToAggregate,dataset="lengths")
+      lengthData <- aggregate_data_by_class(data$lengthData,variable="MARKET_CODE",codes,dataset="lengths")
       data$lengthData <- lengthData
       #return(filteredLandings)
     }

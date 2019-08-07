@@ -34,15 +34,16 @@ compare_length_distributions <- function(data,variableToAggregate,groupBy,pValue
 
       res <- ks.test(sizeA,sizeB)
       if(res$p.value > pValue) {  # length distributions are the same
-        write_to_logfile(outputDir,logfile,paste("combine",acode,"with",bcode,". SIG = ",res$p.value,"\n"),label="ks test aggregation",append = T)
-        mapCodes <- c(acode,bcode)
-        stop <- TRUE
-        break
+        write_to_logfile(outputDir,logfile,paste(" Combine",acode,"with",bcode,". SIG = ",res$p.value,"\n"),label="ks test aggregation",append = T)
+        mapCodes <- rbind(mapCodes,c(acode,bcode))
+        print(mapCodes)
+        #stop <- TRUE
+        #break
       }
     }
-    if (stop==T) break
+    #if (stop==T) break
   }
-
+  # return all pairs that are significantly different
   return(mapCodes)
 }
 
