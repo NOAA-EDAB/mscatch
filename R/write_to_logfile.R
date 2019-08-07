@@ -32,6 +32,9 @@ write_to_logfile <- function(outputDir,logfile,data,label,append = F) {
     stop("Can only pass vectors or matrices to logfile")
   }
 
+  cat("---------------\n", file=fileConn, append=T)
+
+
   close(fileConn)
 
 }

@@ -9,3 +9,4 @@ other/
 output/
 # ignore data because this is where sensitive data is stored
 data/
+tests/
