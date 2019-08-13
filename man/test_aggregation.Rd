@@ -5,7 +5,8 @@
 \title{Test aggregation}
 \usage{
 test_aggregation(landingsThresholdGear = 0.9, nLengthSamples = 1,
-  pValue = 0.05, outputDir = here::here("output"), outputPlots = F,
+  pValue = 0.05, proportionMissing = 0.2,
+  outputDir = here::here("output"), outputPlots = F,
   logfile = "logFile.txt")
 }
 \arguments{
@@ -14,6 +15,8 @@ test_aggregation(landingsThresholdGear = 0.9, nLengthSamples = 1,
 \item{nLengthSamples}{numeric scalar. The minimum number of length sample sizes required to avoid combination of data. Dfault = 1}
 
 \item{pValue}{numeric scalar. Threshold pvalue for determining significance of ks test for length samples}
+
+\item{proportionMissing}{numeric scalar. Proportion of missing samples allowed per YEAR for each MARKET_CODE/GEAR combination). Default = 0.2}
 
 \item{outputDir}{Character string. Path to output directory (png files saved here)}
 
