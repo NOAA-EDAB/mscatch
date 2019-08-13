@@ -52,9 +52,14 @@ test_data_pull <- function(channel,species=164744,species_itis = T){ # species =
 
   # full join of tables by common fields
   sampleData <- as.data.frame(dplyr::full_join(sampleLandings,lengthsData, by=c("YEAR","QTR","NEGEAR","MARKET_CODE")))
+  sampleData$YEAR <- as.integer(sampleData$YEAR)
+  sampleData$QTR <- as.integer(sampleData$QTR)
   # just extract the lengths and the number at length for the year, qrt etc
   sampleLengths <- lengths %>% dplyr::select(YEAR,QTR,NEGEAR,MARKET_CODE,LENGTH,NUMLEN,tripid)
-
+  sampleLengths$YEAR <- as.integer(sampleLengths$YEAR)
+  sampleLengths$QTR <- as.integer(sampleLengths$QTR)
+  sampleLengths$LENGTH <- as.numeric(sampleLengths$LENGTH)
+  sampleLengths$NUMLEN <- as.integer(sampleLengths$NUMLEN)
   # save data
   vName <- paste0("sampleData_",species)
   assign(vName,sampleData)
