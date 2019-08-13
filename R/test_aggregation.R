@@ -84,6 +84,10 @@ test_aggregation <- function(landingsThresholdGear = .90, nLengthSamples = 1, pV
   #   }
   # }
 
+  # find set of years where samples were not taken but landings were. Early years
+  landYrs <- unique(data$landings$YEAR)
+  missingYears <- seq(min(landYrs),sampleStartYear-1)
+
   # Need to start in latest year and work backward, filling in for each gear type
   write_to_logfile(outputDir,logfile,data="\n",label="Length samples by QTR.  YEAR-QRT missing: YEAR-QTR used",append=T)
   yrsList <- unique(data$landings$YEAR) # full list of years in landings data
@@ -102,7 +106,6 @@ test_aggregation <- function(landingsThresholdGear = .90, nLengthSamples = 1, pV
         # fill in missing QTRS using previous QTR(s)
         missingQTRs <- QTRData %>% dplyr::group_by(YEAR,QTR) %>% dplyr::summarize(numSamples = sum(len_numLengthSamples < 1)) %>% dplyr::filter(numSamples > 0)
         print(missingQTRs)
-        print(dim(missingQTRs))
         for (iyear in 1:dim(missingQTRs)[1]) {
           # select same quarter in the previous year if not zero
           numSamples <- missing_length_by_qtr(QTRData,missingQTRs,iyear)
@@ -115,12 +118,24 @@ test_aggregation <- function(landingsThresholdGear = .90, nLengthSamples = 1, pV
           # write to logfile
           write_to_logfile(outputDir,logfile,data=paste0(missingQTRs$YEAR[iyear],"-",missingQTRs$QTR[iyear]," used length samples from ",numSamples$YEAR,"-",numSamples$QTR,"   - MARKET_CODE:",marketCode,"\n"),label=NULL,append=T)
         }
+        # now deal with Early Years where we have landings data but no length samples were taken
+        # repeat the length samples from the first year of sampling to all earlier years.
+        # populate len_numLengthSamples in landings data
+        for (iyear in missingYears) {
+          for (iqtr in 1:4) {
+            missingRow <- expand.grid(YEAR=iyear,QTR=iqtr)
+            numSamples <- QTRData %>% dplyr::filter(YEAR==(max(missingYears)+1) & QTR==iqtr) %>%
+              dplyr::select(YEAR,QTR,len_totalNumLen,len_numLengthSamples)
 
+            data <- update_length_samples(data,missingRow,gearType,marketCode,numSamples)
+          }
+          write_to_logfile(outputDir,logfile,data=paste0(iyear," used length samples from ",max(missingYears)+1," for all QTRS   - MARKET_CODE:",marketCode,"\n"),label=NULL,append=T)
+        }
 
-      } else { # aggragate to annual data since too many QTRs missing
+      } else { # aggregate the entire MARKET_CODE to annual data since too many QTRs missing
         # recode all QTRS to 0
-        print(paste0("Aggregate to year-",marketCode))
 
+        print(paste0("Aggregate to year-",marketCode))
 
       }
 
@@ -136,7 +151,7 @@ test_aggregation <- function(landingsThresholdGear = .90, nLengthSamples = 1, pV
 
 
 
-  return(aggData)
+  return(data)
 
 
 }
