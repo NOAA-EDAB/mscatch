@@ -21,6 +21,7 @@ write_to_logfile <- function(outputDir,logfile,data,label,append = F) {
 
   if(is.vector(data)){
     cat(data, file=fileConn)
+    cat("\n", file=fileConn, append=T)
   } else if (length(dim(data))==2){ # matrix or dataframe
 
     for (irow in 1:nrow(data)){
