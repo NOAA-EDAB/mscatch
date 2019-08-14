@@ -11,7 +11,7 @@ aggregate_data_by_class(data, variable, classes, dataset)
 
 \item{variable}{Character string. Name of the variable to aggregate over}
 
-\item{classes}{Character vector. Two codes (from the variable) to aggregate}
+\item{classes}{Character vector. Two codes (from the variable) to aggregate (Assign 1st to 2nd)}
 
 \item{dataset}{Characterstring. Denoting the type of data set. "landings" or "lengths}
 }

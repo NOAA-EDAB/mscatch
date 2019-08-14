@@ -2,7 +2,7 @@
 % Please edit documentation in R/aggregate_market_codes.R
 \name{aggregate_market_codes}
 \alias{aggregate_market_codes}
-\title{Aggregates landings and length data based on gear}
+\title{Aggregates landings and length data based on MARKET_CODE}
 \usage{
 aggregate_market_codes(data, pValue, outputDir, outputPlots, logfile)
 }
@@ -24,5 +24,5 @@ List
 \item{lengthData}{Same as input}
 }
 \description{
-Aggregates landings and length data based on gear
+Aggregates data by MARKET_CODE. User intervention is required since this is prety subjective
 }

@@ -4,7 +4,7 @@
 #'
 #'@param data tibble. Data set to aggreate
 #'@param variable Character string. Name of the variable to aggregate over
-#'@param classes Character vector. Two codes (from the variable) to aggregate
+#'@param classes Character vector. Two codes (from the variable) to aggregate (Assign 1st to 2nd)
 #'@param dataset Characterstring. Denoting the type of data set. "landings" or "lengths
 #'
 #'

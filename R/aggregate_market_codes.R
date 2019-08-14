@@ -1,6 +1,6 @@
-#' Aggregates landings and length data based on gear
+#' Aggregates landings and length data based on MARKET_CODE
 #'
-#'
+#' Aggregates data by MARKET_CODE. User intervention is required since this is prety subjective
 #'
 #'@param data List. Landings data and length data
 #'@param pValue numeric scalar. Threshold pvalue for determining significance of ks test for length samples
@@ -18,7 +18,7 @@
 
 aggregate_market_codes <- function(data,pValue,outputDir,outputPlots,logfile) {
 
-  # group by code to look at total landings by market codd
+  # group by code to look at total landings by market code
   market <- data$landings %>%
     group_by(MARKET_CODE) %>%
     summarise(totalLandings = sum(landings_land, na.rm = TRUE),len_numLengthSamples=sum(len_numLengthSamples,na.rm=T)) %>%
@@ -42,9 +42,9 @@ aggregate_market_codes <- function(data,pValue,outputDir,outputPlots,logfile) {
       newCode <- readline(prompt=paste0("Which Market category should we combine with ",acode,"?: \n"))
       message(paste0("OK. We will combine ",sum(data$landings$MARKET_CODE == acode)," records for ",acode, " with ",newCode))
       mapCodes <- rbind(mapCodes,c(acode,newCode))
-      # rename MARKET_CODES
-      #print(sum(data$landings$MARKET_CODE == acode))
+      # rename MARKET_CODES in landings data
       data$landings$MARKET_CODE[data$landings$MARKET_CODE == acode] <- newCode
+      # since this if for MARKET_CODES without any length samples, lengthData is unaffected
     }
 
     write_to_logfile(outputDir,logfile,mapCodes,label="market code relabelling, from:to",append=T)
