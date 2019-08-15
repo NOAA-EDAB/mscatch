@@ -4,12 +4,19 @@
 \alias{test_aggregation}
 \title{Test aggregation}
 \usage{
-test_aggregation(landingsThresholdGear = 0.9, nLengthSamples = 1,
-  pValue = 0.05, proportionMissing = 0.2,
-  outputDir = here::here("output"), outputPlots = F,
-  logfile = "logFile.txt")
+test_aggregation(landingsData = sampleData_164744,
+  lengthData = sampleLengths_164744, species_itis = 164744,
+  landingsThresholdGear = 0.9, nLengthSamples = 1, pValue = 0.05,
+  proportionMissing = 0.2, outputDir = here::here("output"),
+  outputPlots = F, logfile = "logFile.txt")
 }
 \arguments{
+\item{landingsData}{tidy data frame. Landings by YEAR,QTR,NEGEAR,MARKET_CODE,landings_land,landings_nn,len_totalNumLen,len_numLengthSampls}
+
+\item{lengthData}{tidy data frame. Length data by YEAR,QTR,NEGEAR,MARKET_CODE, LENGTH, NUMLEN}
+
+\item{species_itis}{numeric scalar. species_itis code relating to the landings and length data}
+
 \item{landingsThresholdGear}{numeric scalar (proportion). Minimum proportion of cumulative landings to avoid aggregation of gear. Default = .9}
 
 \item{nLengthSamples}{numeric scalar. The minimum number of length sample sizes required to avoid combination of data. Dfault = 1}
