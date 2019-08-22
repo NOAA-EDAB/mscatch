@@ -67,9 +67,9 @@ aggregate_market_codes <- function(data,pValue,outputDir,outputPlots,logfile) {
       break
     } else {
       codes <- codesToAggregate[1,]
-      filteredLandings <- aggregate_data_by_class(data$landings,variable="MARKET_CODE",codes,dataset="landings")
+      filteredLandings <- aggregate_data_by_class(data$landings,variable="MARKET_CODE",classes=codes,dataset="landings")
       data$landings <- filteredLandings
-      lengthData <- aggregate_data_by_class(data$lengthData,variable="MARKET_CODE",codes,dataset="lengths")
+      lengthData <- aggregate_data_by_class(data$lengthData,variable="MARKET_CODE",classes=codes,dataset="lengths")
       data$lengthData <- lengthData
       #return(filteredLandings)
     }

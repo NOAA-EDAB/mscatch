@@ -7,7 +7,8 @@
 update_length_samples(data, missingRow, gearType, marketCode, numSamples)
 }
 \description{
-For each YEAR/QRT/NEGEAR/MARKET_CODE with missing length samples we update with previous years data
+For each YEAR/QRT/NEGEAR/MARKET_CODE with missing length samples we update with previous years data.
+No aggregation is undertaken. Simply populating empty cells or adding length data to previously omitted cells.
 }
 \details{
 internal
