@@ -1,20 +1,27 @@
 #' Aggregates rows of data by a given variable
 #'
-#'Collapses the data based on variables to collapse over
+#'The landings or length data are aggregated over a variable (for example MARKET_CODE) conditional on another variable (eg NEGAR == "050")
 #'
 #'@param data tibble. Data set to aggreate
 #'@param variable Character string. Name of the variable to aggregate over
 #'@param classes Character vector. Two codes (from the variable) to aggregate (Assign 1st to 2nd)
+#'@param conditionalOn Character Vector. Name and value of variable to condition the aggregation on eg. c("NEGEAR","050"). Default = NULL
 #'@param dataset Characterstring. Denoting the type of data set. "landings" or "lengths
 #'
 #'
 #'@export
 
-aggregate_data_by_class <- function(data,variable,classes,dataset) {
+aggregate_data_by_class <- function(data,variable,classes,conditionalOn=NULL,dataset) {
 
-  # rename class
+  # rename class conditional on anothe variable
   ind <- data[,variable]==classes[1]
-  data[ind,variable] <- classes[2]
+  if(is.null(conditionalOn)) {
+    indCond <- 1
+  } else {
+    indCond <- data[,conditionalOn[1]] == conditionalOn[2]
+  }
+  data[as.logical(ind*indCond),variable] <- classes[2]
+
   # aggregate classes
   if (dataset == "landings") {
     data <- data %>% dplyr::group_by(YEAR,QTR,NEGEAR,MARKET_CODE) %>%
