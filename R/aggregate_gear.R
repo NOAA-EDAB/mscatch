@@ -38,7 +38,7 @@ aggregate_gear <- function(data,recodeOtherGear,landingsThresholdGear) {
   # aggregate all the other fleets to one fleet
   theRestLandings$NEGEAR <- recodeOtherGear # need to make sure we pick an unused code
   theRestLandings <- theRestLandings %>% group_by(YEAR,QTR,NEGEAR,MARKET_CODE) %>%
-    summarize(landings_land=sum(landings_land),landings_nn=sum(landings_nn),len_totalNumLen= sum(len_totalNumLen),len_numLengthSamples=sum(len_numLengthSamples))
+    summarize(landings_land=sum(landings_land,na.rm=T),landings_nn=sum(landings_nn,na.rm=T),len_totalNumLen= sum(len_totalNumLen,na.rm=T),len_numLengthSamples=sum(len_numLengthSamples,na.rm=T))
 
   # concatenate 2 data frames
   filteredLandings <- rbind(filteredLandings,as.data.frame(theRestLandings))
