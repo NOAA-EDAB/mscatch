@@ -34,10 +34,10 @@ plot_market_code_by_qtr <- function(data,plotID,outputDir,outputPlots=T) {
     png(paste0(outputDir,"/",plotID+1,"_market_category_qtr_length_distribution_",as.character(gearType),",.png"))
 
     # Take a look at length distribution by QTR and MARKET CODE
-    d <- data$lengthData %>% dplyr::filter(NEGEAR == gearType) %>% dplyr::group_by(MARKET_CODE,QTR,LENGTH) %>% summarise(numlens=sum(as.numeric(NUMLEN)))
+    d <- data$lengthData %>% dplyr::filter(NEGEAR == gearType) %>% dplyr::group_by(MARKET_CODE,QTR,LENGTH) %>% dplyr::summarise(numlens=sum(as.numeric(NUMLEN)))
     p <-   ggplot2::ggplot(data = d) +
       ggplot2::geom_bar(stat="identity",mapping= ggplot2::aes(x=LENGTH,y=numlens),na.rm=T) +
-      ggplot2::facet_wrap(~QTR+MARKET_CODE) +
+      ggplot2::facet_grid(rows=ggplot2::vars(QTR),cols=ggplot2::vars(MARKET_CODE)) +
       ggplot2::ggtitle(paste0("By QRT and MARKET_CODE  (gear type = ",as.character(gearType),")")) +
       ggplot2::ylab("Distribution of all length samples")
     print(p)
