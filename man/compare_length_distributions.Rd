@@ -4,11 +4,13 @@
 \alias{compare_length_distributions}
 \title{Compare length distributions across categories}
 \usage{
-compare_length_distributions(data, variableToAggregate, groupBy, pValue,
-  outputDir, logfile)
+compare_length_distributions(landings, lengthData, variableToAggregate,
+  groupBy, pValue, outputDir, logfile)
 }
 \arguments{
-\item{data}{List. Landings and length data in form described below}
+\item{landings}{List. Landings data in form described below}
+
+\item{lengthData}{List. length data in form described below}
 
 \item{pValue}{numeric scalar. Threshold pvalue for determining significance of ks test for length samples}
 
