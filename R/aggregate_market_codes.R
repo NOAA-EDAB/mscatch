@@ -62,7 +62,7 @@ aggregate_market_codes <- function(data,pValue,outputDir,outputPlots,logfile) {
   # aggregate until can no longer
   message("Performing KS tests to compare length distributions of market codes")
   while (1) {
-    codesToAggregate <- compare_length_distributions(data,variableToAggregate = "MARKET_CODE", groupBy=c("NEGEAR","LENGTH","NUMLEN","MARKET_CODE"), pValue,outputDir,logfile)
+    codesToAggregate <- compare_length_distributions(data$landings,data$lengthData,variableToAggregate = "MARKET_CODE", groupBy=c("NEGEAR","LENGTH","NUMLEN","MARKET_CODE"), pValue,outputDir,logfile)
     if (is.null(codesToAggregate)) {
       break
     } else {
