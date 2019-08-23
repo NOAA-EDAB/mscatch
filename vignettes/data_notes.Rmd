@@ -115,10 +115,17 @@ species_itis = 160617
 
 dogfish(nk) - 350. Are these used in the assesment
 
+Mean length over all samples is calculated and applied to landings. No length expansion done
+
 ### winter skate
+
+Kathy Sosebee
 
 nespp3 = 367 (365 too? Rajidae)
 species_itis = 564145 (160845 Rajidae)
+
+Multiple market categories. Large (for wings), small for something else (size cutoff about 60cm)
+Skate complex. Apportion out different species based on Survey landings
 
 ### Herring
 
@@ -135,6 +142,11 @@ Mike Palmer
 nespp3 = 081 (082 ALSO? 400+ rows) 
 species_itis = 164712
 
+### Pollock
+
+Brian Linton
+
+
 ### Haddock 
 
 According to G. Shepherd has most complete data (landings, length, discards).
@@ -147,7 +159,7 @@ species_itis = 164744
 
 ### Yellowtail flounder
 
-Chris Legauly: GB stock
+Chris Legault (GB)
 Assessment consists of Biomass from survey adjusted by catchability (q = .31). Then an exploitation rate applied to inform catch advice. No model is used
 
 nespp3 = 123
@@ -155,7 +167,8 @@ species_itis = 172909
 
 ### Winter flounder
 
-Paul Nitschke
+Paul Nitschke (GOM)
+Lisa Hendrickson (GB)
 
 nespp3 = 119, (120 - 0 records)
 species_itis = 172905
@@ -173,6 +186,11 @@ Data may come from other sources also. NAFO.
 
 Prior to 1992 Joint venture. CF tables landings dont match up with prior assessments since Joint venture data is stored in databases (servers = FishA, FishB). (Tables something like FFJV) which are old and were not converted to oracle databases. So to tease them apart from US landings is near impossible. For mackerel assessment data from < 1992 found in prior assessments are assumed as true since recreation is not possible.
 
+### White Hake
+
+Kathy sosebee
+
+Length expansions to YEAR, SEMESTER, MARKET_CODE. Same structure for all years (many size classes icluding headed and gutted)
 
 ### silver hake
 
@@ -181,6 +199,10 @@ Larry Alade: Hake species
 nespp3 = 509
 
 species_itis = 164791
+
+### Red Hake
+
+Michelle Traver
 
 ### gooosefish
 
