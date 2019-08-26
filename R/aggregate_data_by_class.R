@@ -13,12 +13,14 @@
 
 aggregate_data_by_class <- function(data,variable,classes,conditionalOn=NULL,dataset) {
 
+  nrows <- dim(conditionalOn)[1]
   # rename class conditional on anothe variable
   ind <- data[,variable]==classes[1]
-  if(is.null(conditionalOn)) {
-    indCond <- 1
-  } else {
-    indCond <- data[,conditionalOn[1]] == conditionalOn[2]
+  indCond <- 1
+  if(!is.null(conditionalOn)) { # multiple condionals
+    for (irow in 1:nrows){
+      indCond <- as.logical(indCond) * (data[,conditionalOn[irow,1]] == conditionalOn[irow,2])
+    }
   }
   data[as.logical(ind*indCond),variable] <- classes[2]
 

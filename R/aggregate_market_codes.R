@@ -71,7 +71,6 @@ aggregate_market_codes <- function(data,pValue,outputDir,outputPlots,logfile) {
       data$landings <- filteredLandings
       lengthData <- aggregate_data_by_class(data$lengthData,variable="MARKET_CODE",classes=codes,dataset="lengths")
       data$lengthData <- lengthData
-      #return(filteredLandings)
     }
   }
 
