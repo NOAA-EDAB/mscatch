@@ -6,10 +6,18 @@
 \usage{
 update_length_samples(data, missingRow, gearType, marketCode, numSamples)
 }
+\arguments{
+\item{data}{list. landings and lengthData}
+
+\item{missingRow}{dataframe. Specifies the YEAR and QTR where length samples are missing}
+
+\item{gearType}{character string. Name of NEGEAR}
+
+\item{marketCode}{character string. Name of MARKET_CODE}
+
+\item{numSamples}{}
+}
 \description{
 For each YEAR/QRT/NEGEAR/MARKET_CODE with missing length samples we update with previous years data.
 No aggregation is undertaken. Simply populating empty cells or adding length data to previously omitted cells.
-}
-\details{
-internal
 }

@@ -6,11 +6,18 @@
 \usage{
 missing_length_by_year(YEARData, targetYEAR, minNumSamples)
 }
+\arguments{
+\item{YEARData}{dataframe. YEAR and number of length samples for the year}
+
+\item{minNumSamples}{numeric scalar. Threshold for number of samples (This is set in main function and passed)}
+
+\item{targetYear}{numeric scalar. Year with missing length samples}
+}
+\value{
+\item{numSampels}{description}
+}
 \description{
 Obtain the YEAR length samples to be used for missing YEAR data
 Assuption is the data has been aggregated to YEAR from QTR.
 The closest year that contains length samples is chosen
-}
-\details{
-Internal function
 }

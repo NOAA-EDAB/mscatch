@@ -4,17 +4,31 @@
 #' Assuption is the data has been aggregated to YEAR from QTR.
 #' The closest year that contains length samples is chosen
 #'
+#'@param YEARData dataframe. YEAR and number of length samples for the year
+#'@param targetYear numeric scalar. Year with missing length samples
+#'@param minNumSamples numeric scalar. Threshold for number of samples (This is set in main function and passed)
 #'
-#' Internal function
+#'@return
+#'
+#'\item{numSampels}{description}
+#'
 #' @export
 
 missing_length_by_year <- function(YEARData,targetYEAR,minNumSamples) {
 
-  closestYears <- dplyr::pull(YEARData %>% dplyr::filter(numSamples > minNumSamples) %>% dplyr::select(YEAR),YEAR)
+  # select a vector of Years with +ve number of length samples
+  closestYears <- YEARData %>%
+    dplyr::filter(len_numLengthSamples > minNumSamples) %>%
+    dplyr::select(YEAR) %>%
+    dplyr::pull(YEAR)
+  # find closest YEAR to target
   diffYear <- abs(targetYEAR-closestYears)
   useYear <- min(closestYears[which(diffYear == min(diffYear))])
-  print(c(targetYEAR,useYear))
-  return(useYear)
 
+  numSamples <- YEARData %>% dplyr::filter(YEAR==useYear) %>%
+    dplyr::select(YEAR,QTR,len_totalNumLen,len_numLengthSamples)
+
+
+  return(numSamples)
 
 }

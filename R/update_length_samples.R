@@ -3,11 +3,16 @@
 #' For each YEAR/QRT/NEGEAR/MARKET_CODE with missing length samples we update with previous years data.
 #' No aggregation is undertaken. Simply populating empty cells or adding length data to previously omitted cells.
 #'
+#' @param data list. landings and lengthData
+#' @param missingRow dataframe. Specifies the YEAR and QTR where length samples are missing
+#' @param gearType character string. Name of NEGEAR
+#' @param marketCode character string. Name of MARKET_CODE
+#' @param numSamples
 #'
 #'
 #'
 #'
-#'internal
+#'@export
 
 update_length_samples <- function(data,missingRow,gearType,marketCode,numSamples) {
 
