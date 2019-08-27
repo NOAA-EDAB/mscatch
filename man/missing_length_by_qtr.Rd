@@ -9,6 +9,3 @@ missing_length_by_qtr(QTRData, missingQTRs, iyear)
 \description{
 Obtain the YEAR and QTR length samples to be used for missing YEAR/QTR data
 }
-\details{
-Internal function
-}
