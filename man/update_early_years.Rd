@@ -4,7 +4,7 @@
 \alias{update_early_years}
 \title{Fill in missing length sample data for early years}
 \usage{
-update_early_years(QTRData, maxEarlyYear, iqtr)
+update_early_years(QTRData, maxEarlyYear, iqtr, nLengthSamples)
 }
 \arguments{
 \item{QTRData}{data}
@@ -12,9 +12,11 @@ update_early_years(QTRData, maxEarlyYear, iqtr)
 \item{maxEarlyYear}{numeric scalar. The last year before length samplings began}
 
 \item{iqtr}{numic scalar. QTR in which to pull length data from}
+
+\item{nLengthSamples}{numeric scalar.The minimum number of length sample sizes required to avoid combination of data. Dfeault = 1}
 }
 \value{
-\item{numSamples}{description}
+\item{numSamples}{tibble (nx4). Columns =  YEAR, QTR, len_totalNumLen, len_numLengthSamples}
 }
 \description{
 Data shows landings recorded prior to a time when length samples were taken.

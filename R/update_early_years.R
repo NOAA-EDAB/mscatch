@@ -7,24 +7,26 @@
 #'@param QTRData data
 #'@param maxEarlyYear numeric scalar. The last year before length samplings began
 #'@param iqtr numic scalar. QTR in which to pull length data from
+#'@param nLengthSamples numeric scalar.The minimum number of length sample sizes required to avoid combination of data. Dfeault = 1
 #'
 #'@return
-#'\item{numSamples}{description}
+#'\item{numSamples}{tibble (nx4). Columns =  YEAR, QTR, len_totalNumLen, len_numLengthSamples}
 #'
 #'
 #'
 #' @export
 
-update_early_years <- function(QTRData,maxEarlyYear,iqtr) {
+update_early_years <- function(QTRData,maxEarlyYear,iqtr,nLengthSamples) {
 
   numSamples <- QTRData %>% dplyr::filter(YEAR==(maxEarlyYear+1) & QTR==iqtr) %>%
   dplyr::select(YEAR,QTR,len_totalNumLen,len_numLengthSamples)
 
   if (dim(numSamples)[1] == 0)  { # empty tibble or zero length samples
     # look another year back
-    numSamples <- update_early_years(QTRData,maxEarlyYear+1,iqtr)
-  } else if (numSamples$len_numLengthSamples == 0) {
-    numSamples <- update_early_years(QTRData,maxEarlyYear+1,iqtr)
+    numSamples <- update_early_years(QTRData,maxEarlyYear+1,iqtr,nLengthSamples)
+
+  } else if (numSamples$len_numLengthSamples < nLengthSamples) { # look back a year
+    numSamples <- update_early_years(QTRData,maxEarlyYear+1,iqtr,nLengthSamples)
   }
 
 

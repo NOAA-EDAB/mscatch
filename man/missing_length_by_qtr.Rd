@@ -4,7 +4,19 @@
 \alias{missing_length_by_qtr}
 \title{Recursive function to fill in missing sample lengths by quarter}
 \usage{
-missing_length_by_qtr(QTRData, missingQTRs, iyear)
+missing_length_by_qtr(QTRData, iyear, iqtr, nLengthSamples)
+}
+\arguments{
+\item{QTRData}{description}
+
+\item{iyear}{numic scalar. YEAR in which length data are missing and need to be replaced}
+
+\item{iqtr}{numic scalar. QTR of YEAR in which length data are missing and need to be replaced}
+
+\item{nLengthSamples}{numeric scalar. The minimum number of length sample sizes required to avoid combination of data. Dfault = 1}
+}
+\value{
+\item{numSamples}{tibble (nx4). Columns =  YEAR, QTR, len_totalNumLen, len_numLengthSamples}
 }
 \description{
 Obtain the YEAR and QTR length samples to be used for missing YEAR/QTR data

@@ -10,7 +10,7 @@
 #'
 #'@return
 #'
-#'\item{numSampels}{description}
+#'\item{numSamples}{tibble (nx4). Columns =  YEAR, QTR, len_totalNumLen, len_numLengthSamples}
 #'
 #' @export
 

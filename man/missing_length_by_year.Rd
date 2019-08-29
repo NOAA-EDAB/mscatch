@@ -14,7 +14,7 @@ missing_length_by_year(YEARData, targetYEAR, minNumSamples)
 \item{targetYear}{numeric scalar. Year with missing length samples}
 }
 \value{
-\item{numSampels}{description}
+\item{numSamples}{tibble (nx4). Columns =  YEAR, QTR, len_totalNumLen, len_numLengthSamples}
 }
 \description{
 Obtain the YEAR length samples to be used for missing YEAR data
