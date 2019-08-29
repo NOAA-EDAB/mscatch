@@ -91,9 +91,9 @@ test_aggregation <- function(landingsData=sampleData_164744,lengthData=sampleLen
   yrsList <- unique(data$landings$YEAR) # full list of years in landings data
 
 
-  for (gearType in gearList[2]) { # loop over gear types
+  for (gearType in gearList) { # loop over gear types
     print(gearType)
-    for (marketCode in marketCodeList[2]) { # loop over market category
+    for (marketCode in marketCodeList) { # loop over market category
       if (marketCode == "UN") next
       print(marketCode)
 
@@ -221,12 +221,11 @@ test_aggregation <- function(landingsData=sampleData_164744,lengthData=sampleLen
 
             # for each year with missing length find closest year with length samples
             missingYrs <- aggYEARData %>% dplyr::filter(numSamples == T)
-            print(missingYrs)
 
             for (iyear in 1:dim(missingYrs)[1]) {
               targetYEAR <- missingYrs$YEAR[iyear]
               numSamples <- missing_length_by_year(YEARData,targetYEAR,nLengthSamples)
-              print(numSamples)
+
               #duplicate length samples to missing year
               missingRow <- expand.grid(YEAR=targetYEAR,QTR=0)
               data <- update_length_samples(data,missingRow,gearType,marketCode,numSamples)
@@ -237,16 +236,17 @@ test_aggregation <- function(landingsData=sampleData_164744,lengthData=sampleLen
             # repeat the length samples from the first year of sampling to all earlier years.
             # populate len_numLengthSamples in landings data
 
+
             for (iyear in missingEarlyYears) {
               for (iqtr in 0) {
                 missingRow <- expand.grid(YEAR=iyear,QTR=iqtr)
-                print(missingRow)
+
                 # check to see if any landings were recorded. if not then dont need lengths
                 earlyData <- data$landings %>% dplyr::filter(YEAR == iyear & QTR == iqtr & NEGEAR == gearType & MARKET_CODE == marketCode )
                 if (dim(earlyData)[1] == 0) { # not recorded landings
                   next
                 }
-                numSamples <- update_early_years(QTRData,max(missingEarlyYears),iqtr,nLengthSamples)
+                numSamples <- update_early_years(YEARData,max(missingEarlyYears),iqtr,nLengthSamples)
                 # numSamples <- QTRData %>% dplyr::filter(YEAR==(max(missingEarlyYears)+1) & QTR==iqtr) %>%
                 #   dplyr::select(YEAR,QTR,len_totalNumLen,len_numLengthSamples)
                 data <- update_length_samples(data,missingRow,gearType,marketCode,numSamples)
@@ -256,7 +256,6 @@ test_aggregation <- function(landingsData=sampleData_164744,lengthData=sampleLen
 
             }
           }
-          print("here")
 
         } else {
           # need to aggregate MARKET_CODE over QTRs to YEAR

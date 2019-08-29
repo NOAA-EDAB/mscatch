@@ -6,7 +6,7 @@ Author:  person("Andy", "Beet", , "andrew.beet@noaa.gov", c("aut", "cre")),
         person("Laurel", "Smith", , "laurel.smith@noaa.gov", c("aut")),
          person("Sean", "Lucey", , "sean.lucey@noaa.gov", c("aut"))
 Description: Attributes length distribution of market codes to commercial landings. 
-Landings are aggregated (based on data avilability) over time, space, gear types, market codes
+    Landings are aggregated (based on data avilability) over time, space, gear types, market codes
 License: What license is it under?
 URL: https://github.com/NOAA-EDAB/mscatch
 BugReports: https://github.com/NOAA-EDAB/mscatch/issues
