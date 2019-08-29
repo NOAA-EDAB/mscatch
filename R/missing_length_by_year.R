@@ -18,7 +18,7 @@ missing_length_by_year <- function(YEARData,targetYEAR,minNumSamples) {
 
   # select a vector of Years with +ve number of length samples
   closestYears <- YEARData %>%
-    dplyr::filter(len_numLengthSamples > minNumSamples) %>%
+    dplyr::filter(len_numLengthSamples >= minNumSamples) %>%
     dplyr::select(YEAR) %>%
     dplyr::pull(YEAR)
   # find closest YEAR to target
