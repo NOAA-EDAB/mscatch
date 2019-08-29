@@ -19,7 +19,7 @@ test_aggregation(landingsData = sampleData_164744,
 
 \item{landingsThresholdGear}{numeric scalar (proportion). Minimum proportion of cumulative landings to avoid aggregation of gear. Default = .9}
 
-\item{nLengthSamples}{numeric scalar. The minimum number of length sample sizes required to avoid combination of data. Dfault = 1}
+\item{nLengthSamples}{numeric scalar. The minimum number of length sample sizes required to avoid combination of data. Default = 1}
 
 \item{pValue}{numeric scalar. Threshold pvalue for determining significance of ks test for length samples}
 
