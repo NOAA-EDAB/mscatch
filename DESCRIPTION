@@ -1,12 +1,15 @@
 Package: mscatch
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Multispecies Length Expansion
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Author:  person("Andy", "Beet", , "andrew.beet@noaa.gov", c("aut", "cre")),
+        person("Laurel", "Smith", , "laurel.smith@noaa.gov", c("aut")),
+         person("Sean", "Lucey", , "sean.lucey@noaa.gov", c("aut"))
+Description: Attributes length distribution of market codes to commercial landings. 
+Landings are aggregated (based on data avilability) over time, space, gear types, market codes
 License: What license is it under?
+URL: https://github.com/NOAA-EDAB/mscatch
+BugReports: https://github.com/NOAA-EDAB/mscatch/issues
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
