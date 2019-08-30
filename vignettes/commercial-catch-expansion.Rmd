@@ -88,15 +88,17 @@ Note: minimum number of length samples ~ 1 per 200 metric tonnes landed. (unwrit
 
     This step ignores time (YEAR, QTR) and  MARKET_CODE and looks at aggregated landings by gear type to determine dominant gear types in fishery. Number of distinct gear types controlled by a parameter indicating the % of landings to be accounted for by distinct gear types. (Others lumped in _otherGear_ category)
     
-    
+    ```
     + if YES: Combine gear types (explore to see if combined lengths similar) to increase sample size or Ignore and continue (add to total at the end).
     + if NO: Count your blessings and continue.  
-    
+    ```
     
 * Are there *market categories* (they are not on ordinal scale) with total landings greater than 0 but sample sizes less than *X*? (after combining gears). If there are market categories with length samples < *X* the user must decide which categories to combine. Often these MARKET_CODEs have small landings. We then compare length distributions (Kolmogorov-Smirnov test) of remaining MARKET_CODES to determine further aggregation. Currently this is done by aggregating length samples over YEAR and QTR. (This can and should be relaxed at a later date)
 
+    
 	  + if YES: combine market categories with similar length distributions. 
 	  + if NO : Count your blessings and continue.  
+	  
 	  
 * Are there *quarters* with landings but sample sizes less than *X*? A threshold for percentage missing samples "allowed" is implemented. For each NEGEAR/MARKET_CODE combo we determine, for each QTR, the number years that have length samples. The mean of this is used as a measure of "completeness" (The ~# years with samples). If this mean exceeds a user defined threshold then we borrow length sample data for missing QTRs from the previous years equivalent QTR. (If this is also missing we look back another year and so on). If the mean falls below the defined threshold (too many missing length samples at QTR level) the data is aggregated to the YEARly level and we follow a similar process. However prior to aggregation we test (ks-test) for differences in length distributions among market categories. If distributions are sig different we do not aggregate MARKET_CODEs and proceed. Otherwise MARKET_CODEs are aggregated - not complete yet. The YEARs with missing length samples borrow from the closest YEAR with length samples (either direction). In most cases length sampling began at a point in time after landings were recored. For the YEARs with landings prior the length sampling start date we borrow length samples either by QTR or by YEAR (as explained above) from the most recent YEAR with length samples.
 
