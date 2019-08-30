@@ -81,7 +81,6 @@ test_aggregation <- function(landingsData=sampleData_164744,lengthData=sampleLen
   write_to_logfile(outputDir,logfile,paste0("Length samples started in ",as.character(sampleStartYear),". All landings prior to this year will use this years data"),label=NULL,append = T)
   #write_to_logfile(outputDir,logfile,"Other gear (code 998) will be aggregated similarly to other gears",label="market code by qrt",append = T)
 
-
   # find set of years where samples were not taken but landings were. Early years
   landYrs <- unique(data$landings$YEAR)
   missingEarlyYears <- seq(min(landYrs),sampleStartYear-1)
@@ -90,7 +89,8 @@ test_aggregation <- function(landingsData=sampleData_164744,lengthData=sampleLen
   write_to_logfile(outputDir,logfile,data="",label="Length samples by QTR.  YEAR-QRT missing: YEAR-QTR used",append=T)
   yrsList <- unique(data$landings$YEAR) # full list of years in landings data
 
-
+  # loop through NEGEAR / MARKET_CODE combinations to determine where to borrow length samples from
+  # rules
   for (gearType in gearList) { # loop over gear types
     print(gearType)
     for (marketCode in marketCodeList) { # loop over market category
@@ -99,12 +99,12 @@ test_aggregation <- function(landingsData=sampleData_164744,lengthData=sampleLen
 
       # filter data by gear, market code and years where samples were taken
       QTRData <- data$landings %>% dplyr::filter(YEAR >= sampleStartYear & NEGEAR == gearType & MARKET_CODE == marketCode)
-      # find number of times no samples seen by QTR
+      # find number of times no samples seen by QTR and YEAR
       aggQTRData <- QTRData %>% dplyr::group_by(QTR) %>% dplyr::summarise(numSamples=sum(len_numLengthSamples < nLengthSamples))
       aggYEARData <- QTRData %>% dplyr::group_by(YEAR) %>% dplyr::summarize(totLand=sum(landings_land),numSamples=all(len_numLengthSamples < nLengthSamples))
       # determines if number of years missing data is small enough to borrow data from other years
-      write_to_logfile(outputDir,logfile,data=paste0("NEGEAR: ",gearType," - MARKET_CODE: ",marketCode," - Approx : ",mean(aggQTRData$numSamples)," years have NO length samples"),label=NULL,append=T)
-      write_to_logfile(outputDir,logfile,data=paste0("NEGEAR: ",gearType," - MARKET_CODE: ",marketCode," - There are ",sum(aggYEARData$numSamples)," years out of ",length(aggYEARData$numSamples)," (in which there are landings) where no length samples exist"),label=NULL,append=T)
+      write_to_logfile(outputDir,logfile,data=paste0("NEGEAR: ",gearType," - MARKET_CODE: ",marketCode," - Approx : ",mean(aggQTRData$numSamples)," years have NO length samples - based on mean(QTRs)"),label=NULL,append=T)
+      write_to_logfile(outputDir,logfile,data=paste0("NEGEAR: ",gearType," - MARKET_CODE: ",marketCode," - There are ",sum(aggYEARData$numSamples)," years out of ",length(aggYEARData$numSamples)," (in which there are landings) where no length samples exist - based on # YEARS"),label=NULL,append=T)
 
       numYearsLengthsStarted <-  length(unique(QTRData$YEAR))
       if (mean(aggQTRData$numSamples) < proportionMissing*numYearsLengthsStarted) { # if mean number of missing years < specified tolerance
@@ -181,6 +181,7 @@ test_aggregation <- function(landingsData=sampleData_164744,lengthData=sampleLen
           # plot number of samples by year
           if (!is.null(codesToAggregate)) {
             # we need to aggregate size classes
+            message("length distributions (by MARKET_CODE for gear = ",gearType,") are NOT significantly different. You CAN aggregate based on lengths.")
           } else {
             message("length distributions (by MARKET_CODE for gear = ",gearType,") are significantly different. Can not aggregate based on lengths.")
           }
