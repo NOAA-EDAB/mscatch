@@ -1,29 +1,32 @@
-#' Test aggregation
+#' Landings data aggregated based on length sample availability
 #'
-#'This will all change so no point documenting it too much.
-#'Eventually split each section into its own function for easier future development
+#'Landings data analysed to determine NEGEAR aggregation, MARKET_CODE descriptions analysed over time to determine aggregation all subject to
+#'length sample availability. Output document created and a logfile to inform the user what steps were taken during aggregation
+#'
 #'All plotting functions will need to be finined/generalized
-#'Also need to adapt code to allow user to process on a year by year basis
+#'rmd file needs to be created to report all decisions
 #'
-#'@param landingsData tidy data frame. Landings by YEAR,QTR,NEGEAR,MARKET_CODE,landings_land,landings_nn,len_totalNumLen,len_numLengthSampls
-#'@param lengthData tidy data frame. Length data by YEAR,QTR,NEGEAR,MARKET_CODE, LENGTH, NUMLEN
-#'@param species_itis numeric scalar. species_itis code relating to the landings and length data
-#'@param landingsThresholdGear numeric scalar (proportion). Minimum proportion of cumulative landings to avoid aggregation of gear. Default = .9
-#'@param nLengthSamples numeric scalar. The minimum number of length sample sizes required to avoid combination of data. Default = 1
-#'@param pValue numeric scalar. Threshold pvalue for determining significance of ks test for length samples
-#'@param proportionMissing numeric scalar. Proportion of missing samples allowed per YEAR for each MARKET_CODE/GEAR combination). Default = 0.2
+#'@param landingsData Tidy data frame. Landings by YEAR,QTR,NEGEAR,MARKET_CODE,landings_land,landings_nn,len_totalNumLen,len_numLengthSampls
+#'@param lengthData Tidy data frame. Length data by YEAR,QTR,NEGEAR,MARKET_CODE, LENGTH, NUMLEN
+#'@param species_itis Numeric scalar. species_itis code relating to the landings and length data
+#'@param landingsThresholdGear Numeric scalar (proportion). Minimum proportion of cumulative landings to avoid aggregation of gear. Default = .9
+#'@param nLengthSamples Numeric scalar. The minimum number of length sample sizes required to avoid combination of data. Default = 1
+#'@param pValue Numeric scalar. Threshold pvalue for determining significance of ks test for length samples
+#'@param proportionMissing Numeric scalar. Proportion of missing samples allowed per YEAR for each MARKET_CODE/GEAR combination). Default = 0.2
 #'@param outputDir Character string. Path to output directory (png files saved here)
 #'@param outputPlots Boolean. Should plots be created. T or F (Default = F)
-#'@param logFile character string. Specify the name for the log file generated describing all decisions made.
+#'@param logFile Character string. Specify the name for the log file generated describing all decisions made.
 #'
 #'@importFrom dplyr "summarize" "summarise" "group_by" "filter" "select" "arrange" "mutate"
 #'@importFrom magrittr "%>%"
 #'
+#' @return List of landings and associated length samples
+#' \item{landings}{Tibble (n x 8). Aggregated landings data. YEAR, QTR, NEGEAR, MARKET_CODE,landings_land (metric tonnes), landings_nn (# trips), len_totalNumLen (# fish lengths), len_numLengthSamples (# independent samples) }
+#' \item{lengthData}{Tibble (m x 8 ). Aggregated length data. YEAR, QTR, NEGEAR, MARKET_CODE, LENGTH (length of fish), NUMLEN (# fish at LENGTH)}
+#'
 #'@export
 
-#channel <- cfdbs::connect_to_database("sole","abeet") #eventually remove this
-
-test_aggregation <- function(landingsData=sampleData_164744,lengthData=sampleLengths_164744,species_itis=164744,
+aggregate_landings <- function(landingsData=sampleData_164744,lengthData=sampleLengths_164744,species_itis=164744,
                               landingsThresholdGear = .90, nLengthSamples = 1, pValue = 0.05, proportionMissing= .2,
                               outputDir=here::here("output"), outputPlots=F, logfile="logFile.txt") {
 
