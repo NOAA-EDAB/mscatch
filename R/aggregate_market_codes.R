@@ -14,8 +14,7 @@
 #'\item{landings}{same as input}
 #'\item{lengthData}{Same as input}
 #'
-#'
-#'@export
+
 
 aggregate_market_codes <- function(data,pValue,outputDir,outputPlots,logfile) {
 

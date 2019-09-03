@@ -7,15 +7,20 @@
 update_length_samples(data, missingRow, gearType, marketCode, numSamples)
 }
 \arguments{
-\item{data}{list. landings and lengthData}
+\item{data}{List. landings and lengthData}
 
-\item{missingRow}{dataframe. Specifies the YEAR and QTR where length samples are missing}
+\item{missingRow}{Dataframe. Specifies the YEAR and QTR where length samples are missing}
 
-\item{gearType}{character string. Name of NEGEAR}
+\item{gearType}{Character string. Name of NEGEAR}
 
-\item{marketCode}{character string. Name of MARKET_CODE}
+\item{marketCode}{Character string. Name of MARKET_CODE}
 
-\item{numSamples}{}
+\item{numSamples}{Tibble. Filtered landings data (YEAR, QTR, len_totalNumLen, len_numLengthSamples) by NEGEAR, MARKET_CODE}
+}
+\value{
+List of landings and associated length samples .Same as input data
+\item{landings}{Tibble (n x 8). Aggregated landings data. YEAR, QTR, NEGEAR, MARKET_CODE,landings_land (metric tonnes), landings_nn (# trips), len_totalNumLen (# fish lengths), len_numLengthSamples (# independent samples) }
+\item{lengthData}{Tibble (m x 8 ). Aggregated length data. YEAR, QTR, NEGEAR, MARKET_CODE, LENGTH (length of fish), NUMLEN (# fish at LENGTH)}
 }
 \description{
 For each YEAR/QRT/NEGEAR/MARKET_CODE with missing length samples we update with previous years data.

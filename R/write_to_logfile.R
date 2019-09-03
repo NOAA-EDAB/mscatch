@@ -8,7 +8,7 @@
 #'
 #'@return Nothing: outout written to log file
 #'
-#'@export
+
 
 
 write_to_logfile <- function(outputDir,logfile,data,label,append = F) {

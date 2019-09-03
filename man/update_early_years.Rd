@@ -7,7 +7,7 @@
 update_early_years(QTRData, maxEarlyYear, iqtr, nLengthSamples)
 }
 \arguments{
-\item{QTRData}{data}
+\item{QTRData}{Tibble. (n x 8). Filtered landings data by NEGEAR, MARKET_CODE, YEARs > earlyYears}
 
 \item{maxEarlyYear}{numeric scalar. The last year before length samplings began}
 

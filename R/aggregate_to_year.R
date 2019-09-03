@@ -18,8 +18,7 @@
 #'
 #' @return List. Same as input data
 #'
-#'
-#'@export
+
 
 aggregate_to_year <- function(data,gearType,marketCode,aggYEARData,sampleStartYear,missingEarlyYears,proportionMissing,nLengthSamples,pValue,outputDir,logfile) {
   # recode all QTRS to 0

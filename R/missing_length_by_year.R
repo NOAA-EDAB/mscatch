@@ -12,7 +12,7 @@
 #'
 #'\item{numSamples}{tibble (nx4). Columns =  YEAR, QTR, len_totalNumLen, len_numLengthSamples}
 #'
-#' @export
+
 
 missing_length_by_year <- function(YEARData,targetYEAR,minNumSamples) {
 

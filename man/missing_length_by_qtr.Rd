@@ -7,11 +7,11 @@
 missing_length_by_qtr(QTRData, iyear, iqtr, nLengthSamples)
 }
 \arguments{
-\item{QTRData}{description}
+\item{QTRData}{Tibble. (n x 8). Filtered landings data by NEGEAR, MARKET_CODE, YEARs > earlyYears}
 
-\item{iyear}{numic scalar. YEAR in which length data are missing and need to be replaced}
+\item{iyear}{Numeric scalar. YEAR in which length data are missing and need to be replaced}
 
-\item{iqtr}{numic scalar. QTR of YEAR in which length data are missing and need to be replaced}
+\item{iqtr}{Numeric scalar. QTR of YEAR in which length data are missing and need to be replaced}
 
 \item{nLengthSamples}{numeric scalar. The minimum number of length sample sizes required to avoid combination of data. Dfault = 1}
 }

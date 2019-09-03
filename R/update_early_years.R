@@ -12,9 +12,7 @@
 #'@return
 #'\item{numSamples}{tibble (nx4). Columns =  YEAR, QTR, len_totalNumLen, len_numLengthSamples}
 #'
-#'
-#'
-#' @export
+
 
 update_early_years <- function(QTRData,maxEarlyYear,iqtr,nLengthSamples) {
 

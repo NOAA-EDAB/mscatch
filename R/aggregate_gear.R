@@ -14,7 +14,6 @@
 #'\item{lengthData}{Same as input}
 #'
 #'
-#'@export
 
 aggregate_gear <- function(data,recodeOtherGear,landingsThresholdGear) {
 

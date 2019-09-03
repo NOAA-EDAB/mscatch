@@ -12,13 +12,13 @@ compare_length_distributions(landings, lengthData, variableToAggregate,
 
 \item{lengthData}{List. length data in form described below}
 
-\item{pValue}{numeric scalar. Threshold pvalue for determining significance of ks test for length samples}
+\item{pValue}{Numeric scalar. Threshold pvalue for determining significance of ks test for length samples}
 
 \item{outputDir}{Character string. Directory where output is saved}
 
 \item{logfile}{Cahracter string. Name of logfile}
 
-\item{variableToAggreagte}{character string. Denote the variable to aggregate based on length distribution}
+\item{variableToAggreagte}{Character string. Denote the variable to aggregate based on length distribution}
 }
 \value{
 Character vector
