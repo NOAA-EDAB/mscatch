@@ -24,5 +24,5 @@ List
 \item{lengthData}{Same as input}
 }
 \description{
-Aggregates data by MARKET_CODE. User intervention is required since this is prety subjective
+Aggregates data by MARKET_CODE. User intervention is required since this is prety subjective.
 }

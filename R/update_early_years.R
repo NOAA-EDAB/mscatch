@@ -4,7 +4,7 @@
 #' eg. Landings in 1965 but length sampling began in 1969. Length samples are asscoiated with these earlier
 #' landings.
 #'
-#'@param QTRData data
+#'@param QTRData Tibble. (n x 8). Filtered landings data by NEGEAR, MARKET_CODE, YEARs > earlyYears
 #'@param maxEarlyYear numeric scalar. The last year before length samplings began
 #'@param iqtr numic scalar. QTR in which to pull length data from
 #'@param nLengthSamples numeric scalar.The minimum number of length sample sizes required to avoid combination of data. Dfeault = 1

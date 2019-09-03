@@ -6,6 +6,8 @@
 #'@param label Character string. Description of the data being written
 #'@param append Boolean. append to current logfile (T) or overwrite (F)
 #'
+#'@return Nothing: outout written to log file
+#'
 #'@export
 
 

@@ -3,13 +3,15 @@
 #' For each YEAR/QRT/NEGEAR/MARKET_CODE with missing length samples we update with previous years data.
 #' No aggregation is undertaken. Simply populating empty cells or adding length data to previously omitted cells.
 #'
-#' @param data list. landings and lengthData
-#' @param missingRow dataframe. Specifies the YEAR and QTR where length samples are missing
-#' @param gearType character string. Name of NEGEAR
-#' @param marketCode character string. Name of MARKET_CODE
-#' @param numSamples
+#' @param data List. landings and lengthData
+#' @param missingRow Dataframe. Specifies the YEAR and QTR where length samples are missing
+#' @param gearType Character string. Name of NEGEAR
+#' @param marketCode Character string. Name of MARKET_CODE
+#' @param numSamples Tibble. Filtered landings data (YEAR, QTR, len_totalNumLen, len_numLengthSamples) by NEGEAR, MARKET_CODE
 #'
-#'
+##' @return List of landings and associated length samples .Same as input data
+#' \item{landings}{Tibble (n x 8). Aggregated landings data. YEAR, QTR, NEGEAR, MARKET_CODE,landings_land (metric tonnes), landings_nn (# trips), len_totalNumLen (# fish lengths), len_numLengthSamples (# independent samples) }
+#' \item{lengthData}{Tibble (m x 8 ). Aggregated length data. YEAR, QTR, NEGEAR, MARKET_CODE, LENGTH (length of fish), NUMLEN (# fish at LENGTH)}
 #'
 #'
 #'@export

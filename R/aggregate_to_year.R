@@ -1,15 +1,22 @@
 #' Aggregate data to YEAR and borrow length samples from other years
 #'
-#'Data is too sparse at NEGEAR/MARKET_CODE level to retain at QTR year so it
-#'is aggregated to YEAR level. YEARs with missing length samples are filled with length sample data from neighboring years
+#'If the number of length samples are too sparse at NEGEAR/MARKET_CODE level to retain at QTR year then landings are aggregated
+#'to YEAR level. YEARs with missing length samples are filled with length sample data from the closest YEAR
 #'
 #'
+#' @param data List. Landings data and length data
+#' @param geatType Character string. NEGEAR gear code
+#' @param marketCode Character string. MARKET_CODE designation from cfdbs
+#' @param aggYearData Tibble. (n x 3). YEAR, total landings, presence/absence of min mumber of samples
+#' @param sampleStartYear Numeric scalar. Year first length sample was taken
+#' @param missingEarlyYears Numeric vector. Years prior to first length sample was taken
+#' @param proportionMissing numeric scalar. Proportion of missing samples allowed per YEAR for each MARKET_CODE/GEAR combination). Passed from \code{aggregate_landings}
+#' @param nLenthSampels Numeric scalar. Number of length samples deemed to be "enough" for calculations. This is passed from \code{aggregate_landings}
+#' @param pValue Numeric scalar. Threshold pvalue for determining significance of ks test for length samples
+#' @param outputDir Character string. Path to output directory (png files saved here)
+#' @param logFile Character string. Specify the name for the log file generated describing all decisions made.
 #'
-#'
-#'
-#'
-#'
-#'
+#' @return List. Same as input data
 #'
 #'
 #'@export

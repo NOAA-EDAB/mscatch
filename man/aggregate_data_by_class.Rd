@@ -18,6 +18,10 @@ aggregate_data_by_class(data, variable, classes, conditionalOn = NULL,
 
 \item{dataset}{Characterstring. Denoting the type of data set. "landings" or "lengths}
 }
+\value{
+tibble
+\item{data}{The same form and content as the input tibble, just aggregated}
+}
 \description{
 The landings or length data are aggregated over a variable (for example MARKET_CODE) conditional on another variable (eg NEGAR == "050")
 }

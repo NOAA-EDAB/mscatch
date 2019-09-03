@@ -1,10 +1,12 @@
 #' Aggregates landings and length data based on gear
 #'
-#'
+#' Selects unique gear types that comprise a certain percentage of total landings. All landings by other gear types are deemed minor
+#'  and thus aggregated into an "other gear" category. The percentage is an function argument
 #'
 #'@param data List. Landings data and length data
 #'@param recodeOtherGear Numeric scalar. Arbitrary code to use for "other gears" that contribute little to landings
-#'@param landingsThresholdGear Numeric scalar. (Proportion). Determins the proportion of landings that have to be satisfied before all other landings by gear are lumped into "other gear" category
+#'@param landingsThresholdGear Numeric scalar. (Proportion). Determines the proportion of landings that have to be satisfied before all other landings by gear are lumped into "other gear" category.
+#'This is passed via the main function (\code{aggregate_landings})
 #'
 #'@return List
 #'

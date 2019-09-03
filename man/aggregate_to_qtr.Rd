@@ -7,6 +7,31 @@
 aggregate_to_qtr(data, gearType, marketCode, QTRData, missingEarlyYears,
   nLengthSamples, pValue, outputDir, logfile)
 }
+\arguments{
+\item{data}{List. Landings data and length data}
+
+\item{marketCode}{Character string. MARKET_CODE designation from cfdbs}
+
+\item{QTRData}{Tibble. (n x 8). Filtered landings data by NEGEAR, MARKET_CODE, YEARs > earlyYears}
+
+\item{missingEarlyYears}{Numeric vector. Years prior to first length sample was taken}
+
+\item{pValue}{Numeric scalar. Threshold pvalue for determining significance of ks test for length samples}
+
+\item{outputDir}{Character string. Path to output directory (png files saved here)}
+
+\item{geatType}{Character string. NEGEAR gear code}
+
+\item{nLenthSampels}{Numeric scalar. Number of length samples deemed to be "enough" for calculations. This is passed from \code{aggregate_landings}}
+
+\item{logFile}{Character string. Specify the name for the log file generated describing all decisions made.}
+}
+\value{
+List. Same as input data
+}
 \description{
-Missing QTR length samples are filled using previous years QTR
+Fills in missing length samples for YEAR/QTR combinations by using the previous YEARs value for the same QTR.
+If this is also missing, then the previous YEARs value for the same QTR is used and so on.
+For YEARs where there are landings before any length samples were taken all YEAR/QTRs are assigned the length samples
+from the most recent YEAR where length samples were taken (from the same QTR)
 }

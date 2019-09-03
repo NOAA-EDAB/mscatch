@@ -8,6 +8,8 @@
 #'@param conditionalOn Character Vector. Name and value of variable to condition the aggregation on eg. c("NEGEAR","050"). Default = NULL
 #'@param dataset Characterstring. Denoting the type of data set. "landings" or "lengths
 #'
+#'@return tibble
+#'\item{data}{The same form and content as the input tibble, just aggregated}
 #'
 #'@export
 

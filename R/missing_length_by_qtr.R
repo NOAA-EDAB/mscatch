@@ -2,9 +2,9 @@
 #'
 #' Obtain the YEAR and QTR length samples to be used for missing YEAR/QTR data
 #'
-#' @param QTRData description
-#' @param iyear numic scalar. YEAR in which length data are missing and need to be replaced
-#' @param iqtr numic scalar. QTR of YEAR in which length data are missing and need to be replaced
+#' @param QTRData Tibble. (n x 8). Filtered landings data by NEGEAR, MARKET_CODE, YEARs > earlyYears
+#' @param iyear Numeric scalar. YEAR in which length data are missing and need to be replaced
+#' @param iqtr Numeric scalar. QTR of YEAR in which length data are missing and need to be replaced
 #' @param nLengthSamples numeric scalar. The minimum number of length sample sizes required to avoid combination of data. Dfault = 1
 #'
 #' @return

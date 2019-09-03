@@ -1,8 +1,21 @@
 #' Missing QTR length samples are filled using previous years QTR
 #'
+#' Fills in missing length samples for YEAR/QTR combinations by using the previous YEARs value for the same QTR.
+#' If this is also missing, then the previous YEARs value for the same QTR is used and so on.
+#' For YEARs where there are landings before any length samples were taken all YEAR/QTRs are assigned the length samples
+#' from the most recent YEAR where length samples were taken (from the same QTR)
 #'
+#' @param data List. Landings data and length data
+#' @param geatType Character string. NEGEAR gear code
+#' @param marketCode Character string. MARKET_CODE designation from cfdbs
+#' @param QTRData Tibble. (n x 8). Filtered landings data by NEGEAR, MARKET_CODE, YEARs > earlyYears
+#' @param missingEarlyYears Numeric vector. Years prior to first length sample was taken
+#' @param nLenthSampels Numeric scalar. Number of length samples deemed to be "enough" for calculations. This is passed from \code{aggregate_landings}
+#' @param pValue Numeric scalar. Threshold pvalue for determining significance of ks test for length samples
+#' @param outputDir Character string. Path to output directory (png files saved here)
+#' @param logFile Character string. Specify the name for the log file generated describing all decisions made.
 #'
-#'
+#' @return List. Same as input data
 #'
 #'@export
 

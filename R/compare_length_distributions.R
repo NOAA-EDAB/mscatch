@@ -2,8 +2,8 @@
 #'
 #'@param landings List. Landings data in form described below
 #'@param lengthData List. length data in form described below
-#'@param variableToAggreagte character string. Denote the variable to aggregate based on length distribution
-#'@param pValue numeric scalar. Threshold pvalue for determining significance of ks test for length samples
+#'@param variableToAggreagte Character string. Denote the variable to aggregate based on length distribution
+#'@param pValue Numeric scalar. Threshold pvalue for determining significance of ks test for length samples
 #'@param outputDir Character string. Directory where output is saved
 #'@param logfile Cahracter string. Name of logfile
 #'

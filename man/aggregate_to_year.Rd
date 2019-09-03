@@ -8,7 +8,33 @@ aggregate_to_year(data, gearType, marketCode, aggYEARData, sampleStartYear,
   missingEarlyYears, proportionMissing, nLengthSamples, pValue, outputDir,
   logfile)
 }
+\arguments{
+\item{data}{List. Landings data and length data}
+
+\item{marketCode}{Character string. MARKET_CODE designation from cfdbs}
+
+\item{sampleStartYear}{Numeric scalar. Year first length sample was taken}
+
+\item{missingEarlyYears}{Numeric vector. Years prior to first length sample was taken}
+
+\item{proportionMissing}{numeric scalar. Proportion of missing samples allowed per YEAR for each MARKET_CODE/GEAR combination). Passed from \code{aggregate_landings}}
+
+\item{pValue}{Numeric scalar. Threshold pvalue for determining significance of ks test for length samples}
+
+\item{outputDir}{Character string. Path to output directory (png files saved here)}
+
+\item{geatType}{Character string. NEGEAR gear code}
+
+\item{aggYearData}{Tibble. (n x 3). YEAR, total landings, presence/absence of min mumber of samples}
+
+\item{nLenthSampels}{Numeric scalar. Number of length samples deemed to be "enough" for calculations. This is passed from \code{aggregate_landings}}
+
+\item{logFile}{Character string. Specify the name for the log file generated describing all decisions made.}
+}
+\value{
+List. Same as input data
+}
 \description{
-Data is too sparse at NEGEAR/MARKET_CODE level to retain at QTR year so it
-is aggregated to YEAR level. YEARs with missing length samples are filled with length sample data from neighboring years
+If the number of length samples are too sparse at NEGEAR/MARKET_CODE level to retain at QTR year then landings are aggregated
+to YEAR level. YEARs with missing length samples are filled with length sample data from the closest YEAR
 }

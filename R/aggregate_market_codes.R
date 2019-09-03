@@ -1,6 +1,7 @@
 #' Aggregates landings and length data based on MARKET_CODE
 #'
-#' Aggregates data by MARKET_CODE. User intervention is required since this is prety subjective
+#' Aggregates data by MARKET_CODE. User intervention is required since this is prety subjective.
+#'
 #'
 #'@param data List. Landings data and length data
 #'@param pValue numeric scalar. Threshold pvalue for determining significance of ks test for length samples
