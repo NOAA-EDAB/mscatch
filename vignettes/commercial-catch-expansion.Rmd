@@ -69,6 +69,8 @@ where,
 
 **NUMLEN** = number of fish sampled for stated **LENGTH** in a given **tripid**
 
+5. apply length-weight key to length distributions and split aggregated landings accordingly (will need to access SVDBS to extract length and weight data for species, fit to find length-weight relationship)
+
 
 
 # Rules of aggregation

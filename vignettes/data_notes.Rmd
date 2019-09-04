@@ -101,16 +101,23 @@ channel = cfdbs::connect_to_database("sole",username)
 table <- RODBC::sqlQuery(channel,"select nespp4,mktnm from cfdbs.CFSPP where nespp3 = '081' order by nespp4")
 ```
 
+
+
 ## Species (species_itis) {.tabset .tabset-pills}
 
 Insignificant amount of missing species info (NULL, '000' or, '999') 
 Most assessments start in either 1982 (rec fishing data starts) or 1989 (discard data starts). Often discards are back calculated in some way from 1982-1988 when needed.
 
+``` {r specieslookup, echo=F,eval=T}
+knitr::kable(speciesLookupTable)
+```
+
 ### Spiny Dogfish
 
 Kathy Sosebee
 
-nespp3 = 352 
+nespp3 = 352  (cfdbs)
+svspp =  (svdbs)
 species_itis = 160617
 
 dogfish(nk) - 350. Are these used in the assesment
