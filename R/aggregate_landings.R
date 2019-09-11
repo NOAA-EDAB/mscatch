@@ -30,10 +30,7 @@ aggregate_landings <- function(landingsData=sampleData_164744,lengthData=sampleL
                               landingsThresholdGear = .90, nLengthSamples = 1, pValue = 0.05, proportionMissing= .2,
                               outputDir=here::here("output"), outputPlots=F, logfile="logFile.txt") {
 
-  # this table need to be accessed elsewhere
-  speciesName <- as.character(mscatch::marketCodeLookupTable %>% dplyr::filter(SPECIES_ITIS == species_itis) %>% dplyr::select(COMMON_NAME)  %>% dplyr::distinct())
-  outputDir <- paste0(outputDir,"/",speciesName)
-  if (!dir.exists(outputDir)){dir.create(outputDir)} # create directory to store exploratory/informational plots
+
   write_to_logfile(outputDir,logfile,"",label="DECISIONS MADE DURING AGGREGATION OF DATA")
   write_to_logfile(outputDir,logfile,data=as.character(species_itis),label="Species_itis",append=T)
 
