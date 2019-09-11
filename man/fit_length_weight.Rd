@@ -4,16 +4,20 @@
 \alias{fit_length_weight}
 \title{Fit length weight relationship to species data from SVDBS}
 \usage{
-fit_length_weight()
+fit_length_weight(lengthWeightData, outputDir, logfile)
 }
 \arguments{
 \item{lengthWeight}{Data frame. length-weight pairs. Each row represents an individual fish}
 }
 \value{
-Vector of parameters
-\item{a}{}
-\item{b}{}
+List of model fit objects
+\item{commonSlope}{\code{\url{lm}} fit for single slope (beta)}
+\item{seasonalSlope}{\code{\url{lm}} fit for seasonal slopes}
 }
 \description{
 Fits a length weight relationship for use in length expansion
 }
+\section{Notes on model fitting}{
+NA
+}
+
