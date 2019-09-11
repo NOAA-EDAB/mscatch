@@ -66,8 +66,8 @@ fit_length_weight <- function(lengthWeightData,outputDir,logfile){
     ggplot2::xlab("Length (cm)") +
     ggplot2::ylab("Weight (kg)") +
     ggplot2::ggtitle(paste0("Length-weight relationship for ",speciesName)) +
-    ggplot2::geom_text(data = figText,ggplot2::aes(x=x,y=y,label = text ),show.legend = F,size=3,color="black") +
-    ggplot2::geom_text(data = figText,ggplot2::aes(x=x,y=.9*y,label = textSeas ),show.legend = F,size=3,color="black")
+    ggplot2::geom_text(data = figText,ggplot2::aes(x=x,y=y,label = text ),show.legend = F,size=3,color="black",hjust="inward") +
+    ggplot2::geom_text(data = figText,ggplot2::aes(x=x,y=.9*y,label = textSeas ),show.legend = F,size=3,color="black",hjust="inward")
 
   print(p)
   dev.off()
