@@ -6,8 +6,8 @@
 #
 #'
 #'@return List of model fit objects
-#'\item{commonSlope}{\code{\url{lm}} fit for single slope (beta)}
-#'\item{seasonalSlope}{\code{\url{lm}} fit for seasonal slopes}
+#'\item{commonSlope}{\code{\url{lm}} object. Fit for single slope (beta)}
+#'\item{seasonalSlope}{\code{\url{lm}} object. Fit for seasonal slopes}
 #'
 #'@section Notes on model fitting :
 #'
@@ -29,11 +29,7 @@
 fit_length_weight <- function(lengthWeightData,outputDir,logfile){
 
   # filter for null values
-  lwd <- lengthWeightData$data %>% dplyr::filter(as.numeric(INDWT) > 0) %>% dplyr::select(INDWT,LENGTH,SEX,SEASON)
-  lwd$INDWT <- as.numeric(lwd$INDWT)
-  lwd$LENGTH <- as.numeric(lwd$LENGTH)
-  lwd$SEX <- as.factor(lwd$SEX)
-  lwd$SEASON <- as.factor(lwd$SEASON)
+  lwd <- lengthWeightData %>% dplyr::filter(INDWT > 0) %>% dplyr::select(INDWT,LENGTH,SEX,SEASON)
 
   # fit Weight = a.Length^b.exp(E)  where E ~ N(0,sig^2)
   # fit  no seasonal effect
@@ -45,7 +41,7 @@ fit_length_weight <- function(lengthWeightData,outputDir,logfile){
   evar <- sum(fit2$residuals^2)/fit2$df.residual
   lwd$predSeasWt <- exp(fit2$fitted.values + evar/2)
 
-
+  # test the null H0: bi=b vs alternative H1: bi != b
   reductionSS <- sum(fit$residuals^2) - sum(fit2$residuals^2)
   dfModel <- fit$df.residual- fit2$df.residual
   SSR <- sum(fit2$residuals^2)
@@ -56,6 +52,7 @@ fit_length_weight <- function(lengthWeightData,outputDir,logfile){
   write_to_logfile(outputDir,logfile,"",label="LENGTH-WEIGHT RELATIONSHIPS from SVDBS",append=T)
   write_to_logfile(outputDir,logfile,data=pVal,label="pvalue: H0: single slope (beta) vs H1:seasonal (beta)",append=T)
 
+  # plots common slope fit and separate seasonal fits on facet plot
   figText <- data.frame(SEASON = sort(unique(lwd$SEASON)),
                         x = c(rep(min(lwd$LENGTH),4)),
                         y = c(rep(max(lwd$INDWT),4)),
@@ -75,7 +72,7 @@ fit_length_weight <- function(lengthWeightData,outputDir,logfile){
     ggplot2::geom_line(ggplot2::aes(y = predSeasWt),color = "blue") +
     ggplot2::xlab("Length (cm)") +
     ggplot2::ylab("Weight (kg)") +
-    ggplot2::ggtitle(paste0("Length-weight relationship for ",speciesName)) +
+    ggplot2::ggtitle(paste0("Length-weight (SVDBS) relationship for ",speciesName)) +
     ggplot2::geom_text(data = figText,ggplot2::aes(x=x,y=y,label = text ),show.legend = F,size=3,color="black",hjust="inward") +
     ggplot2::geom_text(data = figText,ggplot2::aes(x=x,y=.9*y,label = textSeas ),show.legend = F,size=3,color="black",hjust="inward")
 
