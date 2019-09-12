@@ -4,14 +4,14 @@
 \alias{expand_landings_to_lengths}
 \title{Proportions commercial landings based on length sample distribution}
 \usage{
-expand_landings_to_lengths(landingsData, lengthData, lengthWeightKey)
+expand_landings_to_lengths(landingsData, lengthData, lengthWeightParams)
 }
 \arguments{
 \item{landingsData}{Tibble. Aggregated landings data. YEAR, QTR, NEGEAR, MARKET_CODE,landings_land (metric tonnes), landings_nn (# trips), len_totalNumLen (# fish lengths), len_numLengthSamples (# independent samples).}
 
 \item{lengthData}{Tibble. Aggregated length data. YEAR, QTR, NEGEAR, MARKET_CODE, LENGTH (length of fish), NUMLEN (# fish at LENGTH)}
 
-\item{lengthWeightKey}{how define this? one over all time, time varying?}
+\item{lengthWeightParams}{List. alpha = intercept, betas = slope(s), var = residual variance used to formulate the mean (see Notes section below)}
 }
 \value{
 Tibble
@@ -20,3 +20,12 @@ Tibble
 \description{
 Proportions commercial landings based on length sample distribution
 }
+\section{Notes}{
+
+
+The length weight relationship (see \code{\url{fit_length_weight}}) was fit assuming log normal errors (normal on the log scale)
+Therefor when exponentiation we need to correct for the mean:
+
+E(W) = \eqn{ L^\beta exp(\alpha + \sigma^2 / 2)}
+}
+

@@ -1,11 +1,11 @@
 ---
 title: "Commercial catch expansion"
-output: html_document
-#output: rmarkdown::html_vignette
-#vignette: >
-#  %\VignetteIndexEntry{Commercial catch expansion}
-#  %\VignetteEngine{knitr::rmarkdown}
-#  %\VignetteEncoding{UTF-8}
+#output: html_document
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Commercial catch expansion}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include = FALSE}
@@ -95,11 +95,9 @@ Note: minimum number of length samples ~ 1 per 200 metric tonnes landed. (unwrit
 
 ## Combine:
 
-* Are there *gear* types with total landings greater than 0 but total sample sizes less than *X*?
+* Are there *gear* types with total landings greater than 0 but total sample sizes less than *X*?  This step ignores time (YEAR, QTR) and  MARKET_CODE and looks at aggregated landings by gear type to determine dominant gear types in fishery. Number of distinct gear types controlled by a parameter indicating the % of landings to be accounted for by distinct gear types. (Others lumped in _otherGear_ category)
 
-    This step ignores time (YEAR, QTR) and  MARKET_CODE and looks at aggregated landings by gear type to determine dominant gear types in fishery. Number of distinct gear types controlled by a parameter indicating the % of landings to be accounted for by distinct gear types. (Others lumped in _otherGear_ category)
-    
-    ```
+  ```
     + if YES: Combine gear types (explore to see if combined lengths similar) to increase sample size or Ignore and continue (add to total at the end).
     + if NO: Count your blessings and continue.  
     ```
@@ -143,7 +141,8 @@ Note: minimum number of length samples ~ 1 per 200 metric tonnes landed. (unwrit
 ## Interpolate only:
 If examination of sample matrix shows only sporadic missing cells with landings but sample sizes less than *X*:  
 
-* Samples by year/gear/quarter/stat area/market category  
+* Samples by year/gear/quarter/stat area/market category
+
 	  + Nearest stat area within market category/quarter/gear/year  
 	  	  + Keeping year/market category constant:  
 	  	  	  + Adjacent quarter/ same stat area  
@@ -160,15 +159,21 @@ If examination of sample matrix shows only sporadic missing cells with landings 
 
 ## Vocabulary
 Definitions to think about.
+
 * Area - could be stock area or EPU
+
 	  + Stat area - smallest unit that the landings are reported to 
 	  + Stock area - stock assessment footprint (combined stat areas)
 	  + EPU - ecological production unit
+	  
 * Time - quarter, semester, annual	
+
 	  + Quarter - 3 month
 	  + Semester - 6 month
 	  + Annual - 12 month
+	  
 * Length - market categories, cm, 
+
 	  + Market categories - could vary over port, time, 
 
 

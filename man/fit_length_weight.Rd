@@ -11,8 +11,8 @@ fit_length_weight(lengthWeightData, outputDir, logfile)
 }
 \value{
 List of model fit objects
-\item{commonSlope}{\code{\url{lm}} fit for single slope (beta)}
-\item{seasonalSlope}{\code{\url{lm}} fit for seasonal slopes}
+\item{commonSlope}{\code{\url{lm}} object. Fit for single slope (beta)}
+\item{seasonalSlope}{\code{\url{lm}} object. Fit for seasonal slopes}
 }
 \description{
 Fits a length weight relationship for use in length expansion
