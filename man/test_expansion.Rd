@@ -4,7 +4,7 @@
 \alias{test_expansion}
 \title{test function: devel mode}
 \usage{
-test_expansion()
+test_expansion(channel, species_itis = 164744)
 }
 \description{
 test function: devel mode

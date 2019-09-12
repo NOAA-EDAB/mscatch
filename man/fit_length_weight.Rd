@@ -4,10 +4,12 @@
 \alias{fit_length_weight}
 \title{Fit length weight relationship to species data from SVDBS}
 \usage{
-fit_length_weight(lengthWeightData, outputDir, logfile)
+fit_length_weight(lengthWeightData, speciesName, outputDir, logfile)
 }
 \arguments{
 \item{lengthWeightData}{Data frame. length-weight pairs. Each row represents an individual fish}
+
+\item{speciesName}{Character string. Common name for species}
 }
 \value{
 List of model fit objects

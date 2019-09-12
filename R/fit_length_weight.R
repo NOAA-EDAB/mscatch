@@ -3,7 +3,8 @@
 #'Fits a length weight relationship for use in length expansion
 #'
 #'@param lengthWeightData Data frame. length-weight pairs. Each row represents an individual fish
-#
+#'@param speciesName Character string. Common name for species
+## #' @inheritParams get_species
 #'
 #'@return List of model fit objects
 #'\item{commonSlope}{\code{\url{lm}} object. Fit for single slope (beta)}
@@ -26,7 +27,7 @@
 #'
 #' @export
 
-fit_length_weight <- function(lengthWeightData,outputDir,logfile){
+fit_length_weight <- function(lengthWeightData,speciesName,outputDir,logfile){
 
   # filter for null values
   lwd <- lengthWeightData %>% dplyr::filter(INDWT > 0) %>% dplyr::select(INDWT,LENGTH,SEX,SEASON)

@@ -11,10 +11,10 @@ expand_landings_to_lengths(landingsData, lengthData, lengthWeightParams)
 
 \item{lengthData}{Tibble. Aggregated length data. YEAR, QTR, NEGEAR, MARKET_CODE, LENGTH (length of fish), NUMLEN (# fish at LENGTH)}
 
-\item{lengthWeightParams}{List. alpha = intercept, betas = slope(s), var = residual variance used to formulate the mean (see Notes section below)}
+\item{lengthWeightParams}{List. alpha = intercept, betas = slope(s), var = residual variance used to formulate the mean (?see Notes section below)}
 }
 \value{
-Tibble
+A Tibble with same columns as \code{landingsData}
 \item{expandedLandings}{landingsData expanded to represent weight of landings by length}
 }
 \description{
