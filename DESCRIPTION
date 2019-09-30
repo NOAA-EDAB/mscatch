@@ -2,7 +2,7 @@ Package: mscatch
 Type: Package
 Title: Multispecies Length Expansion
 Version: 0.1.0
-Author:  person("Andy", "Beet", , "andrew.beet@noaa.gov", c("aut", "cre")),
+Author: person("Andy", "Beet", , "andrew.beet@noaa.gov", c("aut", "cre")),
         person("Laurel", "Smith", , "laurel.smith@noaa.gov", c("aut")),
          person("Sean", "Lucey", , "sean.lucey@noaa.gov", c("aut"))
 Description: Attributes length distribution of market codes to commercial landings. 
@@ -25,4 +25,6 @@ Imports:
     magrittr,
     ggplot2,
     gridExtra,
-    here
+    here,
+    purrr,
+    stringr

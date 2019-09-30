@@ -3,6 +3,7 @@
 export(aa_count_trips)
 export(aggregate_landings)
 export(compare_length_distributions)
+export(create_filter_expression)
 export(expand_landings_to_lengths)
 export(fit_length_weight)
 export(plot_landings_data)
