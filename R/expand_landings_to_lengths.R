@@ -15,12 +15,33 @@
 #'
 #'E(W) = \eqn{ L^\beta exp(\alpha + \sigma^2 / 2)}
 #'
+#'@section Expansion calculations:
+#'
+#' For each unique category (YEAR, QTR, NEGEAR, MARKET_CODE) weights (mean weights, metric tons) are attributed to the sampled individuals lengths using the weight-length relationship above.
+#' This distribution of weights by length is then scaled such that the sum of weights (over lengths) = the total landed weight from the landingsData.
+#' This scaling assumes that the landed (commercial) fish have the same length distribution as the sampled fish.
 #'
 #'
 #'@export
 
 expand_landings_to_lengths <- function(landingsData,lengthData,lengthWeightParams){
   print(lengthWeightParams)
+  weightData <- lengthData %>% dplyr::mutate(weight = NULL)
 
-  return()
+  categories <- head(names(lengthData),2) # last two are LENGTH and NUMLEN
+  nCategories <- length(categories)
+  nUniqueRows <- dim(landingsData)[1]
+
+  #for each row in the landingsData assign landings_land to length distribution in lengthData
+  for (irow in 1:nUniqueRows) {
+    d <- landingsData[irow,]
+    filterExpression <- create_filter_expression(d,categories)
+
+    lengthData %>% dplyr::filter(eval(filterExpression))
+
+  }
+
+
+
+  return(list(weightData=weightData,landingsData=landingsData,lengthData=lengthData))
 }
