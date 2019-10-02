@@ -31,5 +31,7 @@ expand_landings_to_lengths <- function(landingsData,lengthData,lengthWeightParam
   # atribute weight to each fish in group and scale up by "expansion factor
   master <- joined %>% dplyr::group_by(YEAR,QTR,NEGEAR,MARKET_CODE) %>% dplyr::mutate(weight = expand_to_weight(LENGTH,NUMLEN,landings_land,lengthWeightParams))
 
+  ## now deal with unclassified that didnt have a length sample
+
   return(master)
 }
