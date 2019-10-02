@@ -25,23 +25,11 @@
 #'@export
 
 expand_landings_to_lengths <- function(landingsData,lengthData,lengthWeightParams){
-  print(lengthWeightParams)
-  weightData <- lengthData %>% dplyr::mutate(weight = NULL)
 
-  categories <- head(names(lengthData),2) # last two are LENGTH and NUMLEN
-  nCategories <- length(categories)
-  nUniqueRows <- dim(landingsData)[1]
+  # join tables together for length and landings
+  joined <- dplyr::left_join(lengthData,landingsData,by=c("YEAR","QTR","NEGEAR","MARKET_CODE"))
+  # atribute weight to each fish in group and scale up by "expansion factor
+  master <- joined %>% dplyr::group_by(YEAR,QTR,NEGEAR,MARKET_CODE) %>% dplyr::mutate(weight = expand_to_weight(LENGTH,NUMLEN,landings_land,lengthWeightParams))
 
-  #for each row in the landingsData assign landings_land to length distribution in lengthData
-  for (irow in 1:nUniqueRows) {
-    d <- landingsData[irow,]
-    filterExpression <- create_filter_expression(d,categories)
-
-    lengthData %>% dplyr::filter(eval(filterExpression))
-
-  }
-
-
-
-  return(list(weightData=weightData,landingsData=landingsData,lengthData=lengthData))
+  return(master)
 }
