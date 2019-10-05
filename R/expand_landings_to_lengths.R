@@ -4,7 +4,6 @@
 #'@param lengthData Tibble. Aggregated length data. YEAR, QTR, NEGEAR, MARKET_CODE, LENGTH (length of fish), NUMLEN (# fish at LENGTH)
 #'@param lengthWeightParams List. alpha = intercept, betas = slope(s), var = residual variance used to formulate the mean (?see Notes section below)
 #'
-#'
 #'@return A Tibble with same columns as \code{landingsData}
 #'\item{expandedLandings}{landingsData expanded to represent weight of landings by length}
 #'
@@ -29,9 +28,10 @@ expand_landings_to_lengths <- function(landingsData,lengthData,lengthWeightParam
   # join tables together for length and landings
   joined <- dplyr::left_join(lengthData,landingsData,by=c("YEAR","QTR","NEGEAR","MARKET_CODE"))
   # atribute weight to each fish in group and scale up by "expansion factor
-  master <- joined %>% dplyr::group_by(YEAR,QTR,NEGEAR,MARKET_CODE) %>% dplyr::mutate(weight = expand_to_weight(LENGTH,NUMLEN,landings_land,lengthWeightParams))
+  master <- joined %>%
+    dplyr::group_by(YEAR,QTR,NEGEAR,MARKET_CODE) %>%
+    dplyr::mutate(weight = expand_to_weight(LENGTH,NUMLEN,landings_land,lengthWeightParams)) %>%
+    dplyr::select(YEAR,QTR,NEGEAR,MARKET_CODE,LENGTH,NUMLEN,weight)
 
-  ## now deal with unclassified that didnt have a length sample
-
-  return(master)
+  return(list(landings = landingsData,lengthData = master))
 }
