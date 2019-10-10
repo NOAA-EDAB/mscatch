@@ -4,7 +4,12 @@
 \alias{expand_unclassified_landings}
 \title{Expand unclassified landings}
 \usage{
-expand_unclassified_landings()
+expand_unclassified_landings(landingsData, lengthData)
+}
+\arguments{
+\item{landingsData}{Tibble. Aggregated landings data. YEAR, QTR, NEGEAR, MARKET_CODE,landings_land (metric tonnes), landings_nn (# trips), len_totalNumLen (# fish lengths), len_numLengthSamples (# independent samples).}
+
+\item{lengthData}{Tibble. Aggregated length data. YEAR, QTR, NEGEAR, MARKET_CODE, LENGTH (length of fish), NUMLEN (# fish at LENGTH)}
 }
 \description{
 Expand unclassified landings
