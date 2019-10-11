@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# General overview
+# General overview {#gen}
 
 1. From "RAW" landings data (mv_cf_landings, AA t/s tables) we need to:
 
@@ -69,8 +69,11 @@ where,
 
 **NUMLEN** = number of fish sampled for stated **LENGTH** in a given **tripid**
 
-5. Obtain length-weight data (from SVDBS) and fit length-weight relationship (or get param values from database svdbs.LENGTH_WEIGHT_COEFFICIENTS)
-$$ W_i = \alpha L_i ^ \beta e^{z_i} $$
+5. Obtain length-weight data (from SVDBS) and fit length-weight relationship (or get param values from database svdbs.LENGTH_WEIGHT_COEFFICIENTS) 
+
+$$ W_i = \alpha L_i ^ \beta e^{z_i}$$
+
+
 for fish i, where $\alpha$ and $\beta$ are intercept and slope parameters (on log scale) and $z_i \sim N(0,\sigma^2)$ 
 
 This model can be extended to :
@@ -79,7 +82,8 @@ $$ W_{ji} = \alpha L_{ji} ^ {\beta_j} e^{z_i} $$
 for season j, j= 1, ..., 4 (spring, summer, fall, winter) or sex j, j = 1, ..., 3 (0, 1, 2 categories) or extended further to include season:sex combinations. These models are all nested and can therefore be tested using standard statistical methods.
 
 
-6. apply length-weight relationship to length distributions and split aggregated landings accordingly
+6. apply length-weight relationship to length distributions and split aggregated landings accordingly. See the [method for expanding lengths ](#expand) section below
+
 
 
 # Rules of aggregation
@@ -157,6 +161,8 @@ If examination of sample matrix shows only sporadic missing cells with landings 
 
 *Or combination of both approaches*
 
+
+
 ## Vocabulary
 Definitions to think about.
 
@@ -175,6 +181,19 @@ Definitions to think about.
 * Length - market categories, cm, 
 
 	  + Market categories - could vary over port, time, 
+
+## Method to expand lengths  {#expand}
+
+For each unique category (YEAR, QTR, NEGEAR, MARKET_CODE) we have both total landings (metric tons) and a sample of fish lengths for this category. The sampled fish lengths are converted to weights using the [weight-length relationship](#gen) found in the gerneral overview. The resulting sample fish weights are mean weights (metric tons). The weight distribution of sampled fish is then scaled to the weight of total landings. This scaling assumes that the landed (commercial) fish have the same length distribution as the sampled fish.
+
+For each unique category we define 
+
+$$expansion \; factor = \frac{total \; landings}{\sum sampled \; fish \; weigths} $$
+Therefore the expanded weights of the sample (to meet the total landings)
+
+$$expanded \; sample\; weights \; = expansion \; factor \;*\; sampled \; fish \; weights$$
+
+
 
 
 # Discards
