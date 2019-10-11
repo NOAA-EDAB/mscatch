@@ -4,11 +4,11 @@
 \alias{aggregate_landings}
 \title{Landings data aggregated based on length sample availability}
 \usage{
-aggregate_landings(landingsData = sampleData_164744,
-  lengthData = sampleLengths_164744, species_itis = 164744,
+aggregate_landings(landingsData, lengthData, species_itis,
   landingsThresholdGear = 0.9, nLengthSamples = 1, pValue = 0.05,
-  proportionMissing = 0.2, outputDir = here::here("output"),
-  outputPlots = F, logfile = "logFile.txt")
+  aggregate_to = "QTR", proportionMissing = 0.2,
+  outputDir = here::here("output"), outputPlots = F,
+  logfile = "logFile.txt")
 }
 \arguments{
 \item{landingsData}{Tidy data frame. Landings by YEAR,QTR,NEGEAR,MARKET_CODE,landings_land,landings_nn,len_totalNumLen,len_numLengthSampls}
@@ -22,6 +22,8 @@ aggregate_landings(landingsData = sampleData_164744,
 \item{nLengthSamples}{Numeric scalar. The minimum number of length sample sizes required to avoid combination of data. Default = 1}
 
 \item{pValue}{Numeric scalar. Threshold pvalue for determining significance of ks test for length samples}
+
+\item{aggregate_to}{Character string. Level of aggregation for all MARKET_CODES and gears}
 
 \item{proportionMissing}{Numeric scalar. Proportion of missing samples allowed per YEAR for each MARKET_CODE/GEAR combination). Default = 0.2}
 

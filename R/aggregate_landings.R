@@ -12,6 +12,7 @@
 #'@param landingsThresholdGear Numeric scalar (proportion). Minimum proportion of cumulative landings to avoid aggregation of gear. Default = .9
 #'@param nLengthSamples Numeric scalar. The minimum number of length sample sizes required to avoid combination of data. Default = 1
 #'@param pValue Numeric scalar. Threshold pvalue for determining significance of ks test for length samples
+#'@param aggregate_to Character string. Level of aggregation for all MARKET_CODES and gears
 #'@param proportionMissing Numeric scalar. Proportion of missing samples allowed per YEAR for each MARKET_CODE/GEAR combination). Default = 0.2
 #'@param outputDir Character string. Path to output directory (png files saved here)
 #'@param outputPlots Boolean. Should plots be created. T or F (Default = F)
@@ -26,8 +27,8 @@
 #'
 #'@export
 
-aggregate_landings <- function(landingsData=sampleData_164744,lengthData=sampleLengths_164744,species_itis=164744,
-                              landingsThresholdGear = .90, nLengthSamples = 1, pValue = 0.05, proportionMissing= .2,
+aggregate_landings <- function(landingsData,lengthData,species_itis,
+                              landingsThresholdGear = .90, nLengthSamples = 1, pValue = 0.05, aggregate_to = "QTR",proportionMissing= .2,
                               outputDir=here::here("output"), outputPlots=F, logfile="logFile.txt") {
 
 
@@ -107,6 +108,28 @@ aggregate_landings <- function(landingsData=sampleData_164744,lengthData=sampleL
 
       numYearsLengthsStarted <-  length(unique(QTRData$YEAR))
 
+      # deal with other gear differently since by definition may be sparse to aggregate to year may be prefereable
+      if (gearType == otherGear) {
+        if (mean(aggQTRData$numSamples) < proportionMissing*numYearsLengthsStarted) {
+          data <- aggregate_to_qtr(data,gearType,marketCode,QTRData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile)
+        } else {
+          data <- aggregate_to_year(data,gearType,marketCode,aggYEARData,sampleStartYear,missingEarlyYears,proportionMissing,nLengthSamples,pValue,outputDir,logfile)
+        }
+        next
+      }
+
+      # several choices from user.
+      # 1. aggregate all to QTRs and borrow where necessary
+      # 2. aggregate all to years and borrow where necessary
+      # 3. a mix of both (need to work out how to expand unclassifieds)
+      # 4. combine market categories prior to this point
+
+      if (aggregate_to == "QTR") {
+        data <- aggregate_to_qtr(data,gearType,marketCode,QTRData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile)
+      } else if (aggregate_to == "YEAR") {
+        data <- aggregate_to_year(data,gearType,marketCode,aggYEARData,sampleStartYear,missingEarlyYears,proportionMissing,nLengthSamples,pValue,outputDir,logfile)
+      } else if (aggregate_to == "MIX") {
+
       ###################################################################################################
       # if mean number of missing years < specified tolerance
       if (mean(aggQTRData$numSamples) < proportionMissing*numYearsLengthsStarted) {
@@ -128,6 +151,8 @@ aggregate_landings <- function(landingsData=sampleData_164744,lengthData=sampleL
           stop("# need to aggregate MARKET_CODE over QTRs to YEAR")
 
         }
+
+      }
 
       }
       ###################################################################################################
