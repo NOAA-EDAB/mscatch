@@ -20,7 +20,7 @@ missing_length_by_qtr <- function(QTRData,iyear,iqtr,nLengthSamples) {
 
   print(numSamples)
   if (dim(numSamples)[1] == 0)  { # empty tibble or zero length samples
-    # look anothe year back
+    # look another year back
     numSamples <- missing_length_by_qtr(QTRData,iyear-1,iqtr,nLengthSamples)
   } else if (numSamples$len_numLengthSamples < nLengthSamples) {
     # previous year also has no samples need to look back another year

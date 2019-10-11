@@ -38,8 +38,11 @@ aggregate_to_qtr <- function(data,gearType,marketCode,QTRData,missingEarlyYears,
 
       write_to_logfile(outputDir,logfile,data=paste0("Gear: ",gearType," - ",iyear,"-",iqtr," used length samples from ",numSamples$YEAR," - MARKET_CODE:",marketCode),label=NULL,append=T)
     }
-
   }
+
+  # new QTRData to reflect addition of early years
+  QTRData <- data$landings %>% dplyr::filter(NEGEAR == gearType & MARKET_CODE == marketCode)
+
   # determine which QTRs have missing length samples
   missingQTRs <- QTRData %>% dplyr::group_by(YEAR,QTR) %>% dplyr::summarize(numSamples = sum(len_numLengthSamples < nLengthSamples)) %>% dplyr::filter(numSamples >= nLengthSamples)
   message("The following table shows YEAR/QTR that have missing samples:")

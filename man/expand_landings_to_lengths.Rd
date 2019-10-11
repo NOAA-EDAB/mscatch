@@ -32,8 +32,10 @@ E(W) = \eqn{ L^\beta exp(\alpha + \sigma^2 / 2)}
 \section{Expansion calculations}{
 
 
-For each unique category (YEAR, QTR, NEGEAR, MARKET_CODE) weights (mean weights, metric tons) are attributed to the sampled individuals lengths using the weight-length relationship above.
-This distribution of weights by length is then scaled such that the sum of weights (over lengths) = the total landed weight from the landingsData.
+For each unique category (YEAR, QTR, NEGEAR, MARKET_CODE) weights (mean weights, metric tons)
+are attributed to the sampled individuals lengths using the weight-length relationship above.
+This distribution of weights by length is then scaled such that
+the sum of weights (over lengths) = the total landed weight from the landingsData.
 This scaling assumes that the landed (commercial) fish have the same length distribution as the sampled fish.
 }
 
