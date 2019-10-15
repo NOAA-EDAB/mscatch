@@ -14,6 +14,7 @@
 #'@param pValue Numeric scalar. Threshold pvalue for determining significance of ks test for length samples
 #'@param aggregate_to Character string. Level of aggregation for all MARKET_CODES and gears
 #'@param proportionMissing Numeric scalar. Proportion of missing samples allowed per YEAR for each MARKET_CODE/GEAR combination). Default = 0.2
+#'@param otherGear Character string. Code to indicate the class for "other Gear". This is the group of gear types that land the species of interest but in small numbers
 #'@param outputDir Character string. Path to output directory (png files saved here)
 #'@param outputPlots Boolean. Should plots be created. T or F (Default = F)
 #'@param logFile Character string. Specify the name for the log file generated describing all decisions made.
@@ -28,16 +29,13 @@
 #'@export
 
 aggregate_landings <- function(landingsData,lengthData,species_itis,
-                              landingsThresholdGear = .90, nLengthSamples = 1, pValue = 0.05, aggregate_to = "QTR",proportionMissing= .2,
+                              landingsThresholdGear = .90, nLengthSamples = 1, pValue = 0.05, aggregate_to = "QTR",
+                              proportionMissing = .2, otherGear,
                               outputDir=here::here("output"), outputPlots=F, logfile="logFile.txt") {
 
 
   write_to_logfile(outputDir,logfile,"",label="DECISIONS MADE DURING AGGREGATION OF DATA")
   write_to_logfile(outputDir,logfile,data=as.character(species_itis),label="Species_itis",append=T)
-
-
-
-  otherGear <- "998"
 
   data <- list()
   data$landings <- landingsData
