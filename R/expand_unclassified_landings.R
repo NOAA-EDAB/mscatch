@@ -2,34 +2,51 @@
 #'
 #'@param landingsData Tibble. Aggregated landings data. YEAR, QTR, NEGEAR, MARKET_CODE,landings_land (metric tonnes), landings_nn (# trips), len_totalNumLen (# fish lengths), len_numLengthSamples (# independent samples).
 #'@param lengthData Tibble. Aggregated length data. YEAR, QTR, NEGEAR, MARKET_CODE, LENGTH (length of fish), NUMLEN (# fish at LENGTH)
+#'@param nLengthSamples Numeric scalar. The minimum number of length sample sizes required to avoid combination of data. Default = 1
 #'
 #'@export
 
 
-expand_unclassified_landings <- function(landingsData,lengthData){
+expand_unclassified_landings <- function(landingsData,lengthData,nLengthSamples){
 
-  ## now deal with unclassified. Treat as if none have length samples.
+  ## Now deal with unclassifieds.
+  # If have length samples they have already been expanded for all gear codes not "other"
+
+  # First pass, MARKET CODEs were aggregated to the same time level eg. all market codes for each qtr
+  # .eg. either all Yearly or all QTR
+
   # unclassified over NEGEAR and season (QTR)
-  # First remove all UN from length data.
+  # select all cases where we have UNclassified landings but no length samples
+   unclass <- landingsData %>%
+     dplyr::filter(MARKET_CODE == "UN" & NEGEAR != "998" & len_totalNumLen < nLengthSamples )  %>%
+     dplyr::distinct(YEAR,QTR,NEGEAR)
 
-  lengthData <- lengthData %>% dplyr::filter(MARKET_CODE != "UN")
+   nUnclass <- dim(unclass)[1] # number of cases
 
-  unclass <- landingsData %>%
-    dplyr::filter(MARKET_CODE == "UN" & len_totalNumLen < nLengthSamples )  %>%
-    dplyr::distinct(YEAR,QTR,NEGEAR)
-  print(unclass)
-  nUnclass <- dim(unclass)[1]
   # for each row, select length distribution from master and expand
   for(irow in 1:nUnclass) {
-    rowData <- master %>% dplyr::filter(YEAR == unclass$YEAR[irow] & QTR == unclass$QTR[irow] & NEGEAR == unclass$NEGEAR[irow])
-    if (dim(rowData)[1] ==0) {
-      rowData <- master %>% dplyr::filter(YEAR == unclass$YEAR[irow] & QTR == 0 & NEGEAR == unclass$NEGEAR[irow])
-    }
-    if (dim(rowData)[1] ==0) {
-      print(unclass[irow,])
-    }
+    # pull all lengths for YEAR, QTR, NEGEAR where MARKET CODE != "UN"
+    lengthDist <- lengthData %>%
+      dplyr::filter(YEAR == unclass$YEAR[irow] & QTR == unclass$QTR[irow] & NEGEAR == unclass$NEGEAR[irow] & MARKET_CODE != "UN")
+    # pull all landings for YEAR, QTR, NEGEAR
+    landDist <- landingsData %>%
+      dplyr::filter(YEAR == unclass$YEAR[irow] & QTR == unclass$QTR[irow] & NEGEAR == unclass$NEGEAR[irow])
+
+    # find landingd for "UN" and not "UN"
+    land <- sum((landDist %>% dplyr::filter(MARKET_CODE != "UN"))$landings_land)
+    UNLand <- sum((landDist %>% dplyr::filter(MARKET_CODE == "UN"))$landings_land)
+    # find the proportion of "UN" to all landings
+    scaling <- UNLand/land
+
+    # scale all the lengths of non "UN" then add them to lengthsData as expanded "UN"
+    lengthDist <- lengthDist %>% dplyr::mutate(weight = weight*scaling)
+    lengthDist$MARKET_CODE <-  "UN"
+    lengthData <- rbind(lengthData,lengthDist)
   }
 
-    return(list(landings = landingsData,lengthData = lengthData))
+  # now deal with "other gear" category which will not be by QTR but annually
 
+
+
+  return(list(landings = landingsData,lengthData = lengthData))
 }

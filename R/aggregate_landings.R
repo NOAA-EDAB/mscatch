@@ -108,7 +108,7 @@ aggregate_landings <- function(landingsData,lengthData,species_itis,
 
       numYearsLengthsStarted <-  length(unique(QTRData$YEAR))
 
-      # deal with other gear differently since by definition may be sparse to aggregate to year may be prefereable
+      # deal with other gear differently since by definition may be sparse. aggregate to year may be prefereable
       if (gearType == otherGear) {
         if (mean(aggQTRData$numSamples) < proportionMissing*numYearsLengthsStarted) {
           data <- aggregate_to_qtr(data,gearType,marketCode,QTRData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile)
