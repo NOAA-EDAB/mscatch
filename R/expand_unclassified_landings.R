@@ -3,11 +3,12 @@
 #'@param landingsData Tibble. Aggregated landings data. YEAR, QTR, NEGEAR, MARKET_CODE,landings_land (metric tonnes), landings_nn (# trips), len_totalNumLen (# fish lengths), len_numLengthSamples (# independent samples).
 #'@param lengthData Tibble. Aggregated length data. YEAR, QTR, NEGEAR, MARKET_CODE, LENGTH (length of fish), NUMLEN (# fish at LENGTH)
 #'@param nLengthSamples Numeric scalar. The minimum number of length sample sizes required to avoid combination of data. Default = 1
+#'@param otherGear Character string. Code to indicate the class for "other Gear". This is the group of gear types that land the species of interest but in small numbers
 #'
 #'@export
 
 
-expand_unclassified_landings <- function(landingsData,lengthData,nLengthSamples){
+expand_unclassified_landings <- function(landingsData,lengthData,nLengthSamples,otherGear){
 
   ## Now deal with unclassifieds.
   # If have length samples they have already been expanded for all gear codes not "other"
@@ -17,11 +18,11 @@ expand_unclassified_landings <- function(landingsData,lengthData,nLengthSamples)
 
   # unclassified over NEGEAR and season (QTR)
   # select all cases where we have UNclassified landings but no length samples
-   unclass <- landingsData %>%
-     dplyr::filter(MARKET_CODE == "UN" & NEGEAR != "998" & len_totalNumLen < nLengthSamples )  %>%
-     dplyr::distinct(YEAR,QTR,NEGEAR)
+  unclass <- landingsData %>%
+    dplyr::filter(MARKET_CODE == "UN" & NEGEAR != otherGear & len_totalNumLen < nLengthSamples )  %>%
+    dplyr::distinct(YEAR,QTR,NEGEAR)
 
-   nUnclass <- dim(unclass)[1] # number of cases
+  nUnclass <- dim(unclass)[1] # number of cases
 
   # for each row, select length distribution from master and expand
   for(irow in 1:nUnclass) {
@@ -44,7 +45,16 @@ expand_unclassified_landings <- function(landingsData,lengthData,nLengthSamples)
     lengthData <- rbind(lengthData,lengthDist)
   }
 
-  # now deal with "other gear" category which will not be by QTR but annually
+  # now deal with "other gear" category which will ge aggregated annually rather than by QTR.
+  # By definition other gear category will have few landings and therefor aggregated to annual
+  # note unclassifieds with length samples already expanded
+  unclass <- landingsData %>%
+    dplyr::filter(MARKET_CODE == "UN" & NEGEAR == otherGear & len_totalNumLen < nLengthSamples )  %>%
+    dplyr::distinct(YEAR,QTR,NEGEAR)
+
+  nUnclass <- dim(unclass)[1] # number of cases
+
+
 
 
 
