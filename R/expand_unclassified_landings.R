@@ -10,6 +10,9 @@
 
 expand_unclassified_landings <- function(landingsData,lengthData,nLengthSamples,otherGear){
 
+  #### THIS NEEDS TO BE SIMPLIFIED ###############
+
+
   ## Now deal with unclassifieds.
   # If have length samples they have already been expanded for all gear codes not "other"
 
@@ -33,7 +36,7 @@ expand_unclassified_landings <- function(landingsData,lengthData,nLengthSamples,
     landDist <- landingsData %>%
       dplyr::filter(YEAR == unclass$YEAR[irow] & QTR == unclass$QTR[irow] & NEGEAR == unclass$NEGEAR[irow])
 
-    # find landingd for "UN" and not "UN"
+    # find landings for "UN" and not "UN"
     land <- sum((landDist %>% dplyr::filter(MARKET_CODE != "UN"))$landings_land)
     UNLand <- sum((landDist %>% dplyr::filter(MARKET_CODE == "UN"))$landings_land)
     # find the proportion of "UN" to all landings
@@ -45,15 +48,34 @@ expand_unclassified_landings <- function(landingsData,lengthData,nLengthSamples,
     lengthData <- rbind(lengthData,lengthDist)
   }
 
-  # now deal with "other gear" category which will ge aggregated annually rather than by QTR.
+  # now deal with "other gear" category which will have market categories aggregated annually rather than by QTR.
   # By definition other gear category will have few landings and therefor aggregated to annual
-  # note unclassifieds with length samples already expanded
+  # note unclassifieds with length samples have already ben expanded.
   unclass <- landingsData %>%
-    dplyr::filter(MARKET_CODE == "UN" & NEGEAR == otherGear & len_totalNumLen < nLengthSamples )  %>%
-    dplyr::distinct(YEAR,QTR,NEGEAR)
-
+    dplyr::filter(MARKET_CODE == "UN" & NEGEAR == otherGear & len_totalNumLen < nLengthSamples )
   nUnclass <- dim(unclass)[1] # number of cases
+  print(unclass)
 
+  # expand each row
+  for(irow in 1:nUnclass) {
+    # pull all lengths for YEAR, QTR, NEGEAR where MARKET CODE != "UN"
+    lengthDist <- lengthData %>%
+      dplyr::filter(YEAR == unclass$YEAR[irow] & QTR == unclass$QTR[irow] & NEGEAR == unclass$NEGEAR[irow] & MARKET_CODE != "UN")
+    # pull all landings for YEAR, QTR, NEGEAR
+    landDist <- landingsData %>%
+      dplyr::filter(YEAR == unclass$YEAR[irow] & QTR == unclass$QTR[irow] & NEGEAR == unclass$NEGEAR[irow])
+
+    # find landings for "UN" and not "UN"
+    land <- sum((landDist %>% dplyr::filter(MARKET_CODE != "UN"))$landings_land)
+    UNLand <- sum((landDist %>% dplyr::filter(MARKET_CODE == "UN"))$landings_land)
+    # find the proportion of "UN" to all landings
+    scaling <- UNLand/land
+
+    # scale all the lengths of non "UN" then add them to lengthsData as expanded "UN"
+    lengthDist <- lengthDist %>% dplyr::mutate(weight = weight*scaling)
+    lengthDist$MARKET_CODE <-  "UN"
+    lengthData <- rbind(lengthData,lengthDist)
+  }
 
 
 

@@ -4,12 +4,17 @@
 \alias{expand_unclassified_landings}
 \title{Expand unclassified landings}
 \usage{
-expand_unclassified_landings(landingsData, lengthData)
+expand_unclassified_landings(landingsData, lengthData, nLengthSamples,
+  otherGear)
 }
 \arguments{
 \item{landingsData}{Tibble. Aggregated landings data. YEAR, QTR, NEGEAR, MARKET_CODE,landings_land (metric tonnes), landings_nn (# trips), len_totalNumLen (# fish lengths), len_numLengthSamples (# independent samples).}
 
 \item{lengthData}{Tibble. Aggregated length data. YEAR, QTR, NEGEAR, MARKET_CODE, LENGTH (length of fish), NUMLEN (# fish at LENGTH)}
+
+\item{nLengthSamples}{Numeric scalar. The minimum number of length sample sizes required to avoid combination of data. Default = 1}
+
+\item{otherGear}{Character string. Code to indicate the class for "other Gear". This is the group of gear types that land the species of interest but in small numbers}
 }
 \description{
 Expand unclassified landings
