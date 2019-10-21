@@ -108,11 +108,11 @@ aggregate_landings <- function(landingsData,lengthData,species_itis,
 
       # deal with other gear differently since by definition may be sparse. aggregate to year may be prefereable
       if (gearType == otherGear) {
-        if (mean(aggQTRData$numSamples) < proportionMissing*numYearsLengthsStarted) {
-          data <- aggregate_to_qtr(data,gearType,marketCode,QTRData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile)
-        } else {
+        # if (mean(aggQTRData$numSamples) < proportionMissing*numYearsLengthsStarted) {
+        #   data <- aggregate_to_qtr(data,gearType,marketCode,QTRData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile)
+        # } else {
           data <- aggregate_to_year(data,gearType,marketCode,aggYEARData,sampleStartYear,missingEarlyYears,proportionMissing,nLengthSamples,pValue,outputDir,logfile)
-        }
+        # }
         next
       }
 
@@ -159,8 +159,44 @@ aggregate_landings <- function(landingsData,lengthData,species_itis,
   } # gearType
 
 
+  ## Aggregate UNclassified category for each gear type
+  # We aggregate to the same level that the MARKET_CODE was aggregated. Either QTR or annual
+  # for otherGear we always aggreagte to annual
+  marketCode <- "UN"
+  for (gearType in gearList) {
+    conditionalOn <- rbind(c("NEGEAR",gearType),c("MARKET_CODE",marketCode))
+    if (aggregate_to == "QTR") {
+      # dont need to do anything already at QTR level
+    } else if (aggregate_to == "YEAR") {
+      for (iq in 1:4) {
+        landingsData <- aggregate_data_by_class(data$landings,variable="QTR",classes=c(iq,0),conditionalOn=conditionalOn,dataset="landings")
+        data$landings <- landingsData
+        lengthData <- aggregate_data_by_class(data$lengthData,variable="QTR",classes=c(iq,0),conditionalOn=conditionalOn,dataset="lengths")
+        data$lengthData <- lengthData
+        write_to_logfile(outputDir,logfile,data=paste0("Gear: ",otherGear," - QTR ",iq," coded to 0 - MARKET_CODE:",marketCode),label=NULL,append=T)
+      }
+    } else {
+      stop(paste0("ERROR: Not coded for this yet - aggregate_to = ",aggregate_to," in unclassifieds"))
+    }
+
+    if (gearType == otherGear) {
+      # now deal with "other gear" category which should have market categories aggregated annually rather than by QTR.
+      # By definition other gear category will have few landings and therefor aggregated to annual
+      # we need to aggregate UN category to annual so we can expand
+      conditionalOn <- rbind(c("NEGEAR",otherGear),c("MARKET_CODE",marketCode))
+      for (iq in 1:4) {
+        landingsData <- aggregate_data_by_class(data$landings,variable="QTR",classes=c(iq,0),conditionalOn=conditionalOn,dataset="landings")
+        data$landings <- landingsData
+        lengthData <- aggregate_data_by_class(data$lengthData,variable="QTR",classes=c(iq,0),conditionalOn=conditionalOn,dataset="lengths")
+        data$lengthData <- lengthData
+        write_to_logfile(outputDir,logfile,data=paste0("Gear: ",otherGear," - QTR ",iq," coded to 0 - MARKET_CODE:",marketCode),label=NULL,append=T)
+      }
+    }
+
+  }
 
   # produce report on decisions made and include figures
+
 
   #  write_to_logfile(outputDir,logfile,"Other gear (code 998) will be aggregated similarly to other gears\n",label=NULL,append = T)
   message(paste0("Check the logfile = ",outputDir,"/",logfile," for details regarding aggregation choices") )

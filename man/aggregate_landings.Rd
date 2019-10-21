@@ -6,7 +6,7 @@
 \usage{
 aggregate_landings(landingsData, lengthData, species_itis,
   landingsThresholdGear = 0.9, nLengthSamples = 1, pValue = 0.05,
-  aggregate_to = "QTR", proportionMissing = 0.2,
+  aggregate_to = "QTR", proportionMissing = 0.2, otherGear,
   outputDir = here::here("output"), outputPlots = F,
   logfile = "logFile.txt")
 }
@@ -26,6 +26,8 @@ aggregate_landings(landingsData, lengthData, species_itis,
 \item{aggregate_to}{Character string. Level of aggregation for all MARKET_CODES and gears}
 
 \item{proportionMissing}{Numeric scalar. Proportion of missing samples allowed per YEAR for each MARKET_CODE/GEAR combination). Default = 0.2}
+
+\item{otherGear}{Character string. Code to indicate the class for "other Gear". This is the group of gear types that land the species of interest but in small numbers}
 
 \item{outputDir}{Character string. Path to output directory (png files saved here)}
 
