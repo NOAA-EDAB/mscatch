@@ -82,7 +82,7 @@ $$ W_{ji} = \alpha L_{ji} ^ {\beta_j} e^{z_i} $$
 for season j, j= 1, ..., 4 (spring, summer, fall, winter) or sex j, j = 1, ..., 3 (0, 1, 2 categories) or extended further to include season:sex combinations. These models are all nested and can therefore be tested using standard statistical methods.
 
 
-6. apply length-weight relationship to length distributions and split aggregated landings accordingly. See the [method for expanding lengths ](#expand) section below
+6. Apply length-weight relationship to length distributions and split aggregated landings accordingly. All unclassified landings are then expanded using a similar method. See the [method for expanding lengths ](#expand) section below. 
 
 
 
@@ -115,6 +115,8 @@ Note: minimum number of length samples ~ 1 per 200 metric tonnes landed. (unwrit
 	  
 * Are there *quarters* with landings but sample sizes less than *X*? A threshold for percentage missing samples "allowed" is implemented. For each NEGEAR/MARKET_CODE combo we determine, for each QTR, the number years that have length samples. The mean of this is used as a measure of "completeness" (The ~# years with samples). If this mean exceeds a user defined threshold then we borrow length sample data for missing QTRs from the previous years equivalent QTR. (If this is also missing we look back another year and so on). If the mean falls below the defined threshold (too many missing length samples at QTR level) the data is aggregated to the YEARly level and we follow a similar process. However prior to aggregation we test (ks-test) for differences in length distributions among market categories. If distributions are sig different we do not aggregate MARKET_CODEs and proceed. Otherwise MARKET_CODEs are aggregated - not complete yet. The YEARs with missing length samples borrow from the closest YEAR with length samples (either direction). In most cases length sampling began at a point in time after landings were recored. For the YEARs with landings prior the length sampling start date we borrow length samples either by QTR or by YEAR (as explained above) from the most recent YEAR with length samples.
 
+NOTE: **This has been simplified until we can figure out how to deal with unclassifieds. The user decides if aggregation (for all MARKET_CODEs) occurs at QTR or annual level. UNclassified samples are then aggregated in a similar fashion to allow easier expansion of UN lengths. The otherGear category is ALWAYS aggregated to annual data.**
+
 	  + if YES: Create semesters?  (Currently semesters are skipped and jump straight to annual)
 	  + if NO: Count your blessings and continue.  
 	  
@@ -129,7 +131,7 @@ Note: minimum number of length samples ~ 1 per 200 metric tonnes landed. (unwrit
 	  + Select length within year/market category from adjacent quarter or semester (after determining if appropriate).  
 	  + Select length within year/market category from adjacent year (after determining if appropriate).  
 	  
-* If unclassified market category and no other information available:  
+* If unclassified market category and no other information available:  If length samples are available they are used for the given YEAR,NEGEAR otherwise the distribution is assumed to be that of all observed MARKET_CODEs
 
 	  + Combine market category samples to create an unclassified  
 	  + Use appropriate observer length samples to apply to unclassified. 
@@ -184,6 +186,8 @@ Definitions to think about.
 
 ## Method to expand lengths  {#expand}
 
+### Know market codes
+
 For each unique category (YEAR, QTR, NEGEAR, MARKET_CODE) we have both total landings (metric tons) and a sample of fish lengths for this category. The sampled fish lengths are converted to weights using the [weight-length relationship](#gen) found in the gerneral overview. The resulting sample fish weights are mean weights (metric tons). The weight distribution of sampled fish is then scaled to the weight of total landings. This scaling assumes that the landed (commercial) fish have the same length distribution as the sampled fish.
 
 For each unique category we define 
@@ -193,6 +197,16 @@ Therefore the expanded weights of the sample (to meet the total landings)
 
 $$expanded \; sample\; weights \; = expansion \; factor \;*\; sampled \; fish \; weights$$
 
+### Unclassified market code
+
+The unclassified landings for a specific (YEAR, QTR, NEGEAR) are assumed to be a mixture of fish lengths similar to that in the observed MARKET_CODEs. Therefore the length distribution for the unclassified landings are assumed to have the same distribution as the length distributions of the landed fish in all of the known market codes combined. The sampled fish lengths (from the known market codes) are converted to weights using the [weight-length relationship](#gen) found in the gerneral overview. 
+
+For each unique category we define
+
+$$expansion \; factor = \frac{landings \; of \; unclassifieds}{\sum landings \; of \; known \; market \; codes  } $$
+Therefore the expanded weights of the unclassified sample
+
+$$expanded \; unclassified\; weights \; = expansion \; factor \;*\; fish \; weights \; of \; known \; market \; codes$$
 
 
 
