@@ -31,7 +31,7 @@ aggregate_to_year <- function(data,gearType,marketCode,aggYEARData,sampleStartYe
       dplyr::filter(NEGEAR == gearType) %>%
       dplyr::summarise(totalLandings = sum(landings_land, na.rm = TRUE),len_numLengthSamples=sum(len_numLengthSamples,na.rm=T)) %>%
       dplyr::arrange(desc(totalLandings))
-    print(summarizedData)
+    #print(summarizedData)
 
     # do ks test to help make a decision. compare all length distributions of this year
     landings <- data$landings %>% dplyr::filter(NEGEAR==gearType)
@@ -48,8 +48,9 @@ aggregate_to_year <- function(data,gearType,marketCode,aggYEARData,sampleStartYe
 
     message("1. Grab missing lengths from previous years or ")
     message("2. aggregate MARKET_CODE")
-    options <- readline(prompt=paste0("There are 2 options for NEGEAR = ",gearType,": MARKET_CODE = ",marketCode, ". Enter 1 or 2: "))
-
+    #options <- readline(prompt=paste0("There are 2 options for NEGEAR = ",gearType,": MARKET_CODE = ",marketCode, ". Enter 1 or 2: "))
+    message("There are 2 options for NEGEAR = ",gearType,": MARKET_CODE = ",marketCode, ". Enter 1 or 2: Hard Coded: 1")
+    options <- 1
     if (options == 2) {
       newCode <- readline(prompt=paste0("Gear = ",gearType,": Which Market category would you like to combine ",marketCode, " with: "))
       message(paste0("OK. We will combine ",sum(data$landings$MARKET_CODE == marketCode)," records for ",marketCode, " with ",newCode))

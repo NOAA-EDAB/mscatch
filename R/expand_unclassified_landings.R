@@ -54,7 +54,6 @@ expand_unclassified_landings <- function(landingsData,lengthData,nLengthSamples,
   unclass <- landingsData %>%
     dplyr::filter(MARKET_CODE == "UN" & NEGEAR == otherGear & len_totalNumLen < nLengthSamples )
   nUnclass <- dim(unclass)[1] # number of cases
-  print(unclass)
 
   # expand each row
   for(irow in 1:nUnclass) {

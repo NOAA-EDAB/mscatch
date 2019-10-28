@@ -18,7 +18,7 @@ missing_length_by_qtr <- function(QTRData,iyear,iqtr,nLengthSamples) {
     dplyr::filter(YEAR==(iyear-1) & QTR==iqtr) %>%
     dplyr::select(YEAR,QTR,len_totalNumLen,len_numLengthSamples)
 
-  print(numSamples)
+  #print(numSamples)
   if (dim(numSamples)[1] == 0)  { # empty tibble or zero length samples
     # look another year back
     numSamples <- missing_length_by_qtr(QTRData,iyear-1,iqtr,nLengthSamples)

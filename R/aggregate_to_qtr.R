@@ -45,9 +45,9 @@ aggregate_to_qtr <- function(data,gearType,marketCode,QTRData,missingEarlyYears,
 
   # determine which QTRs have missing length samples
   missingQTRs <- QTRData %>% dplyr::group_by(YEAR,QTR) %>% dplyr::summarize(numSamples = sum(len_numLengthSamples < nLengthSamples)) %>% dplyr::filter(numSamples >= nLengthSamples)
-  message("The following table shows YEAR/QTR that have missing samples:")
+  #message("The following table shows YEAR/QTR that have missing samples:")
   message("We will borrow length data from the same QTR in the previous YEAR.")
-  print(missingQTRs[,c(1:2)])
+  #print(missingQTRs[,c(1:2)])
   # cycle through the table of YEAR/QTR combos
   for (iyear in 1:dim(missingQTRs)[1]) {
     # select same quarter in the previous year if not zero
@@ -56,8 +56,8 @@ aggregate_to_qtr <- function(data,gearType,marketCode,QTRData,missingEarlyYears,
       # still zero after going back many years!! This could be a problem.
       stop("PROBLEM!!!. Finding zero length samples in all previous years")
     }
-    print(missingQTRs$YEAR[ iyear])
-    print(numSamples)
+    #print(missingQTRs$YEAR[ iyear])
+    #print(numSamples)
     # update year/qtr info with filled in data
     data <- update_length_samples(data,missingQTRs[iyear,],gearType,marketCode,numSamples)
     # write to logfile

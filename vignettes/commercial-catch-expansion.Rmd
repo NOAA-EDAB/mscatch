@@ -186,7 +186,7 @@ Definitions to think about.
 
 ## Method to expand lengths  {#expand}
 
-### Know market codes
+### Known market codes
 
 For each unique category (YEAR, QTR, NEGEAR, MARKET_CODE) we have both total landings (metric tons) and a sample of fish lengths for this category. The sampled fish lengths are converted to weights using the [weight-length relationship](#gen) found in the gerneral overview. The resulting sample fish weights are mean weights (metric tons). The weight distribution of sampled fish is then scaled to the weight of total landings. This scaling assumes that the landed (commercial) fish have the same length distribution as the sampled fish.
 
