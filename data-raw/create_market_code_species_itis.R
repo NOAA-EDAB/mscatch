@@ -13,7 +13,7 @@ create_market_code_species_itis <- function(channel){
 
   sql <- paste0("select COMMON_NAME, SCIENTIFIC_NAME, SPECIES_ITIS, NESPP4, MARKET_DESC, MARKET_CODE from cfdbs.species_itis_ne where SPECIES_ITIS in (",speciesList,") order by SPECIES_ITIS, NESPP4;")
 
-  marketCodeLookupTable <- RODBC::sqlQuery(channel,sql,errors=TRUE,as.is=TRUE)
+  marketCodeLookupTable <- dplyr::as_tibble(DBI::dbGetQuery(channel,sql))
 
   save(marketCodeLookupTable,file=paste0(here::here("data"),"/marketCodeLookupTable.RData"))
 #  return(query)

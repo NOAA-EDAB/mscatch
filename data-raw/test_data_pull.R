@@ -60,6 +60,9 @@ test_data_pull <- function(channel,species=164744,species_itis = T){ # species =
   sampleLengths$QTR <- as.integer(sampleLengths$QTR)
   sampleLengths$LENGTH <- as.numeric(sampleLengths$LENGTH)
   sampleLengths$NUMLEN <- as.integer(sampleLengths$NUMLEN)
+
+  sampleLengths <- dplyr::as_tibble(sampleLengths)
+  sampleData <- dplyr::as_tibble(sampleData)
   # save data
   vName <- paste0("sampleData_",species)
   assign(vName,sampleData)
