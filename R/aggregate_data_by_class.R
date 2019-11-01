@@ -16,10 +16,10 @@
 aggregate_data_by_class <- function(data,variable,classes,conditionalOn=NULL,dataset) {
 
   nrows <- dim(conditionalOn)[1]
-  # rename class conditional on anothe variable
+  # rename class conditional on another variable
   ind <- data[,variable]==classes[1]
   indCond <- 1
-  if(!is.null(conditionalOn)) { # multiple condionals
+  if(!is.null(conditionalOn)) { # multiple conditionals
     for (irow in 1:nrows){
       indCond <- as.logical(indCond) * (data[,conditionalOn[irow,1]] == conditionalOn[irow,2])
     }

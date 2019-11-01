@@ -11,7 +11,7 @@
 #'\item{numSamples}{tibble (nx4). Columns =  YEAR, QTR, len_totalNumLen, len_numLengthSamples}
 #'
 
-
+##NOTE: recursion needs to be stopped at some point.
 missing_length_by_qtr <- function(QTRData,iyear,iqtr,nLengthSamples) {
 
   numSamples <- QTRData %>%
@@ -21,6 +21,7 @@ missing_length_by_qtr <- function(QTRData,iyear,iqtr,nLengthSamples) {
   #print(numSamples)
   if (dim(numSamples)[1] == 0)  { # empty tibble or zero length samples
     # look another year back
+    print(iyear)
     numSamples <- missing_length_by_qtr(QTRData,iyear-1,iqtr,nLengthSamples)
   } else if (numSamples$len_numLengthSamples < nLengthSamples) {
     # previous year also has no samples need to look back another year

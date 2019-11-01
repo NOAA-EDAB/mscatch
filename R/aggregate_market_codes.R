@@ -20,10 +20,10 @@ aggregate_market_codes <- function(data,pValue,outputDir,outputPlots,logfile) {
 
   # group by code to look at total landings by market code
   market <- data$landings %>%
-    group_by(MARKET_CODE) %>%
-    summarise(totalLandings = sum(landings_land, na.rm = TRUE),len_numLengthSamples=sum(len_numLengthSamples,na.rm=T)) %>%
-    arrange(desc(totalLandings))
-  market <- dplyr::mutate(market,percent = totalLandings/sum(totalLandings) , cumsum=cumsum(totalLandings),cum_percent=cumsum/sum(totalLandings))
+    dplyr::group_by(MARKET_CODE) %>%
+    dplyr::summarise(totalLandings = sum(landings_land, na.rm = TRUE),len_numLengthSamples=sum(len_numLengthSamples,na.rm=T)) %>%
+    dplyr::arrange(desc(totalLandings))
+  market <- market %>% dplyr::mutate(percent = totalLandings/sum(totalLandings) , cumsum=cumsum(totalLandings),cum_percent=cumsum/sum(totalLandings))
 
   plot_market_codes(market,7,outputDir,outputPlots)
 
@@ -35,11 +35,12 @@ aggregate_market_codes <- function(data,pValue,outputDir,outputPlots,logfile) {
     message("Some market codes have NO length samples. Below is a table of market codes and their relative contribution to landings \n")
     print(market)
     zeroLandings <- market$MARKET_CODE[market$len_numLengthSamples == 0]
-    message(paste0("As you can see, code = ",as.character(zeroLandings)," need to be combined with other market categories. \n" ))
+    message(paste0("As you can see, code = ",as.character(zeroLandings)," needs to be combined with other market categories. \n" ))
     message("We'll walk through each one in turn:\n")
     mapCodes <- NULL
     for (acode in zeroLandings) {
-      newCode <- readline(prompt=paste0("Which Market category should we combine with ",acode,"?: \n"))
+      newCode <- "UN"
+      #newCode <- readline(prompt=paste0("Which Market category should we combine with ",acode,"?: \n"))
       message(paste0("OK. We will combine ",sum(data$landings$MARKET_CODE == acode)," records for ",acode, " with ",newCode))
       mapCodes <- rbind(mapCodes,c(acode,newCode))
       # rename MARKET_CODES in landings data
@@ -49,11 +50,12 @@ aggregate_market_codes <- function(data,pValue,outputDir,outputPlots,logfile) {
 
     write_to_logfile(outputDir,logfile,mapCodes,label="market code relabelling, from:to",append=T)
 
+
     newmarket <- data$landings %>%
-      group_by(MARKET_CODE) %>%
-      summarise(totalLandings = sum(landings_land, na.rm = TRUE),len_numLengthSamples=sum(len_numLengthSamples,na.rm=T)) %>%
-      arrange(desc(totalLandings)) %>%
-      mutate(percent = totalLandings/sum(totalLandings) , cumsum=cumsum(totalLandings),cum_percent=cumsum/sum(totalLandings))
+      dplyr::group_by(MARKET_CODE) %>%
+      dplyr::summarise(totalLandings = sum(landings_land, na.rm = TRUE),len_numLengthSamples=sum(len_numLengthSamples,na.rm=T)) %>%
+      dplyr::arrange(desc(totalLandings)) %>%
+      dplyr::mutate(percent = totalLandings/sum(totalLandings) , cumsum=cumsum(totalLandings),cum_percent=cumsum/sum(totalLandings))
 
   }
   plot_market_codes(newmarket,8,outputDir,outputPlots)
