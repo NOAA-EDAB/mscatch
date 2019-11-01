@@ -5,6 +5,7 @@
 
 # files
 test_main.r
+*.png
 # folders
 other/
 output/
