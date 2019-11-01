@@ -15,7 +15,7 @@
 #'
 #'
 
-aggregate_gear <- function(data,recodeOtherGear,landingsThresholdGear) {
+aggregate_gear <- function(data,recodeOtherGear,landingsThresholdGear,species_itis,outputDir,outputPlots) {
 
   landings <- data$landings
   lengthData <- data$lengthData
@@ -26,13 +26,28 @@ aggregate_gear <- function(data,recodeOtherGear,landingsThresholdGear) {
   # totl landings by group
   aggTopPercent <- landings %>% group_by(NEGEAR) %>% summarise(totalLandings = sum(landings_land, na.rm = TRUE)) %>% arrange(desc(totalLandings))
 
+  plot_landings_by_gear(species_itis,landings,1,outputPlots,outputDir,"1b")
+
   # convert to % of total and reorder
   aggTopPercent <- mutate(aggTopPercent,cumsum=cumsum(totalLandings),percent=cumsum/sum(totalLandings))
+  print(aggTopPercent)
+  png("test.png",height = 1000*nrow(aggTopPercent), width = 800*ncol(aggTopPercent))
+  gridExtra::grid.table(aggTopPercent)
+  dev.off()
+
   # select the gear that make up at least threshold %
   nGearsChosen <- dim(aggTopPercent %>% filter(percent<= landingsThresholdGear) %>% select(NEGEAR))[1]
-  gearsChosen <- aggTopPercent$NEGEAR[nGearsChosen + 1]
+  gearsChosen <- aggTopPercent$NEGEAR[1:(nGearsChosen + 1)]
   filteredLandings <- landings %>% filter(NEGEAR %in% gearsChosen)
   theRestLandings <- landings %>% filter(!(NEGEAR %in% gearsChosen))
+
+  print(nGearsChosen)
+  print(gearsChosen)
+
+  print(aggTopPercent[1:(nGearsChosen+2),])
+  png("test2.png",height = 800, width = 800)
+  gridExtra::grid.table(aggTopPercent[1:(nGearsChosen+2),])
+  dev.off()
   #########################################################################################################################
   # At this point may need to examine lengths distribution to determine further grouping (plots of length distributions)
   #########################################################################################################################
@@ -43,6 +58,9 @@ aggregate_gear <- function(data,recodeOtherGear,landingsThresholdGear) {
 
   # concatenate 2 data frames
   filteredLandings <- rbind(filteredLandings,as.data.frame(theRestLandings))
+
+
+  plot_landings_by_gear(species_itis,filteredLandings,landingsThresholdGear,outputPlots,outputDir,"1c")
 
   # update sample lengthsData to reflect gear aggregation
   lengthData$NEGEAR[!(lengthData$NEGEAR  %in% gearsChosen)] <- recodeOtherGear

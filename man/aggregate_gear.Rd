@@ -4,7 +4,8 @@
 \alias{aggregate_gear}
 \title{Aggregates landings and length data based on gear}
 \usage{
-aggregate_gear(data, recodeOtherGear, landingsThresholdGear)
+aggregate_gear(data, recodeOtherGear, landingsThresholdGear, species_itis,
+  outputDir, outputPlots)
 }
 \arguments{
 \item{data}{List. Landings data and length data}
