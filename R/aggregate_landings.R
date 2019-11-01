@@ -37,6 +37,16 @@ aggregate_landings <- function(landingsData,lengthData,species_itis,
   write_to_logfile(outputDir,logfile,"",label="DECISIONS MADE DURING AGGREGATION OF DATA")
   write_to_logfile(outputDir,logfile,data=as.character(species_itis),label="Species_itis",append=T)
 
+  # cleans landings data and length data of NAs
+  landingsData <- landingsData %>% dplyr::group_by(YEAR,QTR,NEGEAR,MARKET_CODE) %>%
+      dplyr::summarise(landings_land=sum(landings_land, na.rm=T),landings_nn=sum(landings_nn, na.rm=T),len_totalNumLen=sum(len_totalNumLen,na.rm=T),len_numLengthSamples=sum(len_numLengthSamples, na.rm=T)) %>%
+      dplyr::ungroup()
+  lengthData <- lengthData %>% dplyr::group_by(YEAR,QTR,NEGEAR,MARKET_CODE,LENGTH) %>%
+      dplyr::summarise(NUMLEN = sum(as.numeric(NUMLEN),na.rm=T)) %>%
+      dplyr::ungroup()
+
+  # create list for data.
+  # landing and lengths will from this point on be parts of a list.
   data <- list()
   data$landings <- landingsData
   data$lengthData <- lengthData
@@ -49,7 +59,7 @@ aggregate_landings <- function(landingsData,lengthData,species_itis,
   # Now deal with Gary's schematic.
   # 1. aggregate the gears based on landings
 
-  data <- aggregate_gear(data,otherGear,landingsThresholdGear)
+  data <- aggregate_gear(data,otherGear,landingsThresholdGear,species_itis,outputDir,outputPlots)
   gearList <- unique(data$landings$NEGEAR)
   # look at the summary stats/plots after aggregation
   summary_stats(data$landings,species_itis,outputDir,outputPlots)
@@ -68,7 +78,6 @@ aggregate_landings <- function(landingsData,lengthData,species_itis,
 
   data <- aggregate_market_codes(data,pValue,outputDir,outputPlots,logfile)
   marketCodeList <- unique(data$landings$MARKET_CODE)
-
   #######################################################
   ####### QTR, SEMESTER, ANNUAL #########################
   #######################################################
@@ -99,6 +108,7 @@ aggregate_landings <- function(landingsData,lengthData,species_itis,
       QTRData <- data$landings %>% dplyr::filter(YEAR >= sampleStartYear & NEGEAR == gearType & MARKET_CODE == marketCode)
       # find number of times no samples seen by QTR and YEAR
       aggQTRData <- QTRData %>% dplyr::group_by(QTR) %>% dplyr::summarise(numSamples=sum(len_numLengthSamples < nLengthSamples))
+
       aggYEARData <- QTRData %>% dplyr::group_by(YEAR) %>% dplyr::summarize(totLand=sum(landings_land),numSamples=all(len_numLengthSamples < nLengthSamples))
       # determines if number of years missing data is small enough to borrow data from other years
       write_to_logfile(outputDir,logfile,data=paste0("NEGEAR: ",gearType," - MARKET_CODE: ",marketCode," - Approx : ",mean(aggQTRData$numSamples)," years have NO length samples - based on mean(QTRs)"),label=NULL,append=T)
