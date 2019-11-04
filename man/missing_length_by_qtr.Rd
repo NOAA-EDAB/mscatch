@@ -4,7 +4,7 @@
 \alias{missing_length_by_qtr}
 \title{Recursive function to fill in missing sample lengths by quarter}
 \usage{
-missing_length_by_qtr(QTRData, iyear, iqtr, nLengthSamples)
+missing_length_by_qtr(QTRData, iyear, iqtr, nLengthSamples, minYear)
 }
 \arguments{
 \item{QTRData}{Tibble. (n x 8). Filtered landings data by NEGEAR, MARKET_CODE, YEARs > earlyYears}
@@ -14,6 +14,8 @@ missing_length_by_qtr(QTRData, iyear, iqtr, nLengthSamples)
 \item{iqtr}{Numeric scalar. QTR of YEAR in which length data are missing and need to be replaced}
 
 \item{nLengthSamples}{numeric scalar. The minimum number of length sample sizes required to avoid combination of data. Dfault = 1}
+
+\item{minYear}{numeric Scalar. Earliest year present in data.}
 }
 \value{
 \item{numSamples}{tibble (nx4). Columns =  YEAR, QTR, len_totalNumLen, len_numLengthSamples}

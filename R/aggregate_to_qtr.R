@@ -51,9 +51,15 @@ aggregate_to_qtr <- function(data,gearType,marketCode,QTRData,missingEarlyYears,
   # cycle through the table of YEAR/QTR combos
   for (iyear in 1:dim(missingQTRs)[1]) {
     # select same quarter in the previous year if not zero
-    numSamples <- missing_length_by_qtr(QTRData,missingQTRs$YEAR[iyear],missingQTRs$QTR[iyear],nLengthSamples)
-    if (numSamples$len_numLengthSamples < nLengthSamples) {
+    minYear <- min(data$lengthData$YEAR)
+    numSamples <- missing_length_by_qtr(QTRData,missingQTRs$YEAR[iyear],missingQTRs$QTR[iyear],nLengthSamples,minYear)
+    if (dim(numSamples)[1]==0) {
       # still zero after going back many years!! This could be a problem.
+      write_to_logfile(outputDir,logfile,data=paste0("Gear: ",gearType," - ",missingQTRs$YEAR[iyear],"-",missingQTRs$QTR[iyear],". No samples found. Looking at nearest neighbor. - MARKET_CODE:",marketCode),label=NULL,append=T)
+      # selet length samples closest in time to target year/qtr
+      numSamples <- missing_length_by_qtr_neighbor(QTRData,missingQTRs$YEAR[iyear],missingQTRs$QTR[iyear],nLengthSamples,minYear)
+
+
       stop("PROBLEM!!!. Finding zero length samples in all previous years")
     }
     #print(missingQTRs$YEAR[ iyear])
