@@ -11,7 +11,7 @@
 #' @param sampleStartYear Numeric scalar. Year first length sample was taken
 #' @param missingEarlyYears Numeric vector. Years prior to first length sample was taken
 #' @param proportionMissing numeric scalar. Proportion of missing samples allowed per YEAR for each MARKET_CODE/GEAR combination). Passed from \code{aggregate_landings}
-#' @param nLenthSampels Numeric scalar. Number of length samples deemed to be "enough" for calculations. This is passed from \code{aggregate_landings}
+#' @param nLenthSamples Numeric scalar. Number of length samples deemed to be "enough" for calculations. This is passed from \code{aggregate_landings}
 #' @param pValue Numeric scalar. Threshold pvalue for determining significance of ks test for length samples
 #' @param outputDir Character string. Path to output directory (png files saved here)
 #' @param logFile Character string. Specify the name for the log file generated describing all decisions made.

@@ -29,7 +29,7 @@ aggregate_gear <- function(data,recodeOtherGear,landingsThresholdGear,species_it
   plot_landings_by_gear(species_itis,landings,1,outputPlots,outputDir,"1b")
 
   # convert to % of total and reorder
-  aggTopPercent <- mutate(aggTopPercent,cumsum=cumsum(totalLandings),percent=cumsum/sum(totalLandings))
+  aggTopPercent <- mutate(aggTopPercent,cum_sum=cumsum(totalLandings),percent=cum_sum/sum(totalLandings))
   print(aggTopPercent)
   png("test.png",height = 1000*nrow(aggTopPercent), width = 800*ncol(aggTopPercent))
   gridExtra::grid.table(aggTopPercent)

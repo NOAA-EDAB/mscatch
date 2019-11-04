@@ -27,7 +27,7 @@ aggregate_to_year(data, gearType, marketCode, aggYEARData, sampleStartYear,
 
 \item{aggYearData}{Tibble. (n x 3). YEAR, total landings, presence/absence of min mumber of samples}
 
-\item{nLenthSampels}{Numeric scalar. Number of length samples deemed to be "enough" for calculations. This is passed from \code{aggregate_landings}}
+\item{nLenthSamples}{Numeric scalar. Number of length samples deemed to be "enough" for calculations. This is passed from \code{aggregate_landings}}
 
 \item{logFile}{Character string. Specify the name for the log file generated describing all decisions made.}
 }
