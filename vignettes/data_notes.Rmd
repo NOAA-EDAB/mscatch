@@ -214,12 +214,19 @@ Length expansions to YEAR, SEMESTER, MARKET_CODE. Same structure for all years (
 Larry Alade: Hake species
 
 nespp3 = 509
-
 species_itis = 164791
 
 ### Red Hake
 
-Michelle Traver
+Toni Scute (Kathy Sosebee past stock assessment scientist).
+
+nespp3 = 
+species_itis = 
+
+(Red hake scoping group:11/04/2019)
+Index based assessement (AIM). Currently in scoping phase to identify stock structure for a 2019 assessment. Current management unit describes a northern and southern stock. Boundary right through middle of Georges Bank. Prior to 1986 there were 4 stock areas. 2010 was last time stock stucture was examined. Since then new data available. (fisheries dependent (observer, VTR) data, survey (NEFSC Trawl, GOM shrimp, NEAMAP, NEFSC scallop, GOM longline (New data), canadian), life history). 
+
+Working on catchability estimates for rock hopper sweep (twin sweep)
 
 ### gooosefish
 
@@ -227,6 +234,7 @@ Ann Richards
 
 nespp3 = 011, 012
 species_itis = 164499
+
 
 ### Market Code Lookup Table
 
