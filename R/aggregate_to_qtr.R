@@ -18,7 +18,7 @@
 #' @return List. Same as input data
 
 
-aggregate_to_qtr <- function(data,gearType,marketCode,QTRData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile){
+aggregate_to_qtr <- function(data,gearType,mainGearType,marketCode,QTRData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile){
 
   # Deal with Early Years where we have landings data but no length samples
   # Repeat the length samples from the first year of sampling to all earlier years.
@@ -46,7 +46,7 @@ aggregate_to_qtr <- function(data,gearType,marketCode,QTRData,missingEarlyYears,
   # determine which QTRs have missing length samples
   missingQTRs <- QTRData %>% dplyr::group_by(YEAR,QTR) %>% dplyr::summarize(numSamples = sum(len_numLengthSamples < nLengthSamples)) %>% dplyr::filter(numSamples >= nLengthSamples)
   #message("The following table shows YEAR/QTR that have missing samples:")
-  message("We will borrow length data from the same QTR in the previous YEAR.")
+  message("We will borrow length data from the same QTR in previous YEAR(s).")
   #print(missingQTRs[,c(1:2)])
   # cycle through the table of YEAR/QTR combos
   for (iyear in 1:dim(missingQTRs)[1]) {
@@ -54,13 +54,25 @@ aggregate_to_qtr <- function(data,gearType,marketCode,QTRData,missingEarlyYears,
     minYear <- min(data$lengthData$YEAR)
     numSamples <- missing_length_by_qtr(QTRData,missingQTRs$YEAR[iyear],missingQTRs$QTR[iyear],nLengthSamples,minYear)
     if (dim(numSamples)[1]==0) {
+      message("No lengthData available for QTR. Using nearest neighbor.")
       # still zero after going back many years!! This could be a problem.
       write_to_logfile(outputDir,logfile,data=paste0("Gear: ",gearType," - ",missingQTRs$YEAR[iyear],"-",missingQTRs$QTR[iyear],". No samples found. Looking at nearest neighbor. - MARKET_CODE:",marketCode),label=NULL,append=T)
       # selet length samples closest in time to target year/qtr
       numSamples <- missing_length_by_qtr_neighbor(QTRData,missingQTRs$YEAR[iyear],missingQTRs$QTR[iyear],nLengthSamples,minYear)
-
-
-      stop("PROBLEM!!!. Finding zero length samples in all previous years")
+      if (dim(numSamples)[1]==0) {
+        # Still no samples, borrow from  main Fleet in closest year. Presumably dealer still categorizes a small as a small
+        # regardless of NEGEAR
+        print("AAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHH")
+        print(missingQTRs$YEAR[iyear])
+        print(missingQTRs$QTR[iyear])
+        print(mainGearType)
+        print(marketCode)
+        QTRDataGear <- data$landings %>% dplyr::filter(NEGEAR == mainGearType & MARKET_CODE == marketCode)
+        print(QTRDataGear)
+        numSamples <- missing_length_by_qtr_neighbor(QTRDataGear,missingQTRs$YEAR[iyear],missingQTRs$QTR[iyear],nLengthSamples,minYear)
+        print(numSamples)
+      }
+      #stop("PROBLEM!!!. Finding zero length samples in all previous years")
     }
     #print(missingQTRs$YEAR[ iyear])
     #print(numSamples)

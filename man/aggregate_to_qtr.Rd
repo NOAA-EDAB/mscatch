@@ -4,8 +4,8 @@
 \alias{aggregate_to_qtr}
 \title{Missing QTR length samples are filled using previous years QTR}
 \usage{
-aggregate_to_qtr(data, gearType, marketCode, QTRData, missingEarlyYears,
-  nLengthSamples, pValue, outputDir, logfile)
+aggregate_to_qtr(data, gearType, mainGearType, marketCode, QTRData,
+  missingEarlyYears, nLengthSamples, pValue, outputDir, logfile)
 }
 \arguments{
 \item{data}{List. Landings data and length data}
