@@ -24,7 +24,7 @@ plot_length_histogram <- function(lengthData,species_itis,outputDir,outputPlots)
 
   p <- ggplot(data = lengthDataGEARS) +
     geom_bar(stat="identity",mapping = aes(x=LENGTH,y=numlens),na.rm=T) +
-    facet_wrap(~NEGEAR+MARKET_CODE,scales="free_y",nrow=2, ncol = length(unique(lengthData$MARKET_CODE))) +
+    facet_wrap(~NEGEAR+MARKET_CODE,scales="free_y",nrow=length(unique(lengthData$NEGEAR)), ncol = length(unique(lengthData$MARKET_CODE))) +
     theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
     scale_x_discrete(name="Length (cm)", breaks=seq(0, max(lengthData$LENGTH),10))
   print(p)
