@@ -98,11 +98,11 @@ aggregate_landings <- function(landingsData,lengthData,species_itis,
 
   # loop through NEGEAR / MARKET_CODE combinations to determine where to borrow length samples from
   # rules
+  mainGearType <- gearList[1] #  need to process NEGEAR in order by decreasing landings
   for (gearType in gearList) { # loop over gear types
-    print(gearType)
     for (marketCode in marketCodeList) { # loop over market category
       if (marketCode == "UN") next
-      print(marketCode)
+      print(c(gearType,marketCode))
 
       # filter data by gear, market code and years where samples were taken
       QTRData <- data$landings %>% dplyr::filter(YEAR >= sampleStartYear & NEGEAR == gearType & MARKET_CODE == marketCode)
@@ -133,7 +133,7 @@ aggregate_landings <- function(landingsData,lengthData,species_itis,
       # 4. combine market categories prior to this point
 
       if (aggregate_to == "QTR") {
-        data <- aggregate_to_qtr(data,gearType,marketCode,QTRData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile)
+        data <- aggregate_to_qtr(data,gearType,mainGearType,marketCode,QTRData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile)
       } else if (aggregate_to == "YEAR") {
         data <- aggregate_to_year(data,gearType,marketCode,aggYEARData,sampleStartYear,missingEarlyYears,proportionMissing,nLengthSamples,pValue,outputDir,logfile)
       } else if (aggregate_to == "MIX") {
@@ -143,7 +143,7 @@ aggregate_landings <- function(landingsData,lengthData,species_itis,
       if (mean(aggQTRData$numSamples) < proportionMissing*numYearsLengthsStarted) {
 
         # fill in missing QTRS using previous QTR(s): Borrow length sample data from previous QTR
-        data <- aggregate_to_qtr(data,gearType,marketCode,QTRData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile)
+        data <- aggregate_to_qtr(data,gearType,mainGearType,marketCode,QTRData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile)
 
       } else if (0) {
         # maybe add rules for semester aggregation if we can work out a plan
