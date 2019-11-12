@@ -10,6 +10,8 @@ aggregate_to_qtr(data, gearType, mainGearType, marketCode, QTRData,
 \arguments{
 \item{data}{List. Landings data and length data}
 
+\item{mainGearType}{Character string. Name of NEGEAR with most landings}
+
 \item{marketCode}{Character string. MARKET_CODE designation from cfdbs}
 
 \item{QTRData}{Tibble. (n x 8). Filtered landings data by NEGEAR, MARKET_CODE, YEARs > earlyYears}

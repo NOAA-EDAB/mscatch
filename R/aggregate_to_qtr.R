@@ -6,7 +6,8 @@
 #' from the most recent YEAR where length samples were taken (from the same QTR)
 #'
 #' @param data List. Landings data and length data
-#' @param geatType Character string. NEGEAR gear code
+#' @param gearType Character string. NEGEAR gear code
+#' @param mainGearType Character string. Name of NEGEAR with most landings
 #' @param marketCode Character string. MARKET_CODE designation from cfdbs
 #' @param QTRData Tibble. (n x 8). Filtered landings data by NEGEAR, MARKET_CODE, YEARs > earlyYears
 #' @param missingEarlyYears Numeric vector. Years prior to first length sample was taken
@@ -16,6 +17,7 @@
 #' @param logFile Character string. Specify the name for the log file generated describing all decisions made.
 #'
 #' @return List. Same as input data
+
 
 
 aggregate_to_qtr <- function(data,gearType,mainGearType,marketCode,QTRData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile){
@@ -50,6 +52,7 @@ aggregate_to_qtr <- function(data,gearType,mainGearType,marketCode,QTRData,missi
   #print(missingQTRs[,c(1:2)])
   # cycle through the table of YEAR/QTR combos
   for (iyear in 1:dim(missingQTRs)[1]) {
+    mainGear <- F
     # select same quarter in the previous year if not zero
     minYear <- min(data$lengthData$YEAR)
     numSamples <- missing_length_by_qtr(QTRData,missingQTRs$YEAR[iyear],missingQTRs$QTR[iyear],nLengthSamples,minYear)
@@ -62,24 +65,25 @@ aggregate_to_qtr <- function(data,gearType,mainGearType,marketCode,QTRData,missi
       if (dim(numSamples)[1]==0) {
         # Still no samples, borrow from  main Fleet in closest year. Presumably dealer still categorizes a small as a small
         # regardless of NEGEAR
-        print("AAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHH")
-        print(missingQTRs$YEAR[iyear])
-        print(missingQTRs$QTR[iyear])
-        print(mainGearType)
-        print(marketCode)
         QTRDataGear <- data$landings %>% dplyr::filter(NEGEAR == mainGearType & MARKET_CODE == marketCode)
-        print(QTRDataGear)
         numSamples <- missing_length_by_qtr_neighbor(QTRDataGear,missingQTRs$YEAR[iyear],missingQTRs$QTR[iyear],nLengthSamples,minYear)
-        print(numSamples)
+        mainGear <- T
       }
       #stop("PROBLEM!!!. Finding zero length samples in all previous years")
     }
-    #print(missingQTRs$YEAR[ iyear])
-    #print(numSamples)
-    # update year/qtr info with filled in data
-    data <- update_length_samples(data,missingQTRs[iyear,],gearType,marketCode,numSamples)
-    # write to logfile
-    write_to_logfile(outputDir,logfile,data=paste0("Gear: ",gearType," - ",missingQTRs$YEAR[iyear],"-",missingQTRs$QTR[iyear]," used length samples from ",numSamples$YEAR,"-",numSamples$QTR,"   - MARKET_CODE:",marketCode),label=NULL,append=T)
+
+    if (mainGear == T) {
+      # update year/qtr info with filled in data
+      data <- update_length_samples(data,missingQTRs[iyear,],gearType,marketCode,numSamples,mainGearType)
+      # write to logfile
+      write_to_logfile(outputDir,logfile,data=paste0("Gear: ",gearType," - ",missingQTRs$YEAR[iyear],"-",missingQTRs$QTR[iyear]," used length samples from ",numSamples$YEAR,"-",numSamples$QTR,"   - MARKET_CODE:",marketCode,". From NEGEAR = ",mainGearType),label=NULL,append=T)
+
+    } else {
+      # update year/qtr info with filled in data
+      data <- update_length_samples(data,missingQTRs[iyear,],gearType,marketCode,numSamples)
+      # write to logfile
+      write_to_logfile(outputDir,logfile,data=paste0("Gear: ",gearType," - ",missingQTRs$YEAR[iyear],"-",missingQTRs$QTR[iyear]," used length samples from ",numSamples$YEAR,"-",numSamples$QTR,"   - MARKET_CODE:",marketCode),label=NULL,append=T)
+    }
   }
 
 

@@ -4,9 +4,9 @@
 \alias{aggregate_to_year}
 \title{Aggregate data to YEAR and borrow length samples from other years}
 \usage{
-aggregate_to_year(data, gearType, marketCode, aggYEARData, sampleStartYear,
-  missingEarlyYears, proportionMissing, nLengthSamples, pValue, outputDir,
-  logfile)
+aggregate_to_year(data, gearType, mainGearType, marketCode, aggYEARData,
+  sampleStartYear, missingEarlyYears, proportionMissing, nLengthSamples,
+  pValue, outputDir, logfile)
 }
 \arguments{
 \item{data}{List. Landings data and length data}

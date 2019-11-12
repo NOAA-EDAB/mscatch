@@ -5,7 +5,8 @@
 #'
 #'
 #' @param data List. Landings data and length data
-#' @param geatType Character string. NEGEAR gear code
+#' @param gearType Character string. NEGEAR gear code
+#' @param mainGearType Character string. Name of NEGEAR with most landings
 #' @param marketCode Character string. MARKET_CODE designation from cfdbs
 #' @param aggYearData Tibble. (n x 3). YEAR, total landings, presence/absence of min mumber of samples
 #' @param sampleStartYear Numeric scalar. Year first length sample was taken
@@ -20,9 +21,9 @@
 #'
 
 
-aggregate_to_year <- function(data,gearType,marketCode,aggYEARData,sampleStartYear,missingEarlyYears,proportionMissing,nLengthSamples,pValue,outputDir,logfile) {
+aggregate_to_year <- function(data,gearType,mainGearType,marketCode,aggYEARData,sampleStartYear,missingEarlyYears,proportionMissing,nLengthSamples,pValue,outputDir,logfile) {
   # recode all QTRS to 0
-
+    samplesAvailable <- T
     # Too many YEARs without length data for MARKET_CODE. Aggregate with another MARKET_CODE
     message("Annual data: There are ",sum(aggYEARData$numSamples)," years out of ",length(aggYEARData$numSamples)," (in which there are landings) where no length samples exist")
     message("Insufficient length samples at aggregate level: YEAR")
@@ -87,6 +88,12 @@ aggregate_to_year <- function(data,gearType,marketCode,aggYEARData,sampleStartYe
       for (iyear in 1:dim(missingYrs)[1]) {
         targetYEAR <- missingYrs$YEAR[iyear]
         numSamples <- missing_length_by_year(YEARData,targetYEAR,nLengthSamples)
+        if (dim(numSamples)[1] == 0){
+          # no length samples present for this market code
+          message("no length samples present for this market code. Borrow from other fleet")
+          samplesAvailable <- F
+          break
+        }
 
         #duplicate length samples to missing year
         missingRow <- expand.grid(YEAR=targetYEAR,QTR=0)
@@ -98,7 +105,7 @@ aggregate_to_year <- function(data,gearType,marketCode,aggYEARData,sampleStartYe
       # now deal with Early Years where we have landings data but no length samples were taken
       # repeat the length samples from the first year of sampling to all earlier years.
       # populate len_numLengthSamples in landings data
-
+      if (samplesAvailable == T) {
       for (iyear in missingEarlyYears) {
         for (iqtr in 0) {
           missingRow <- expand.grid(YEAR=iyear,QTR=iqtr)
@@ -116,6 +123,9 @@ aggregate_to_year <- function(data,gearType,marketCode,aggYEARData,sampleStartYe
           write_to_logfile(outputDir,logfile,data=paste0("Gear: ",gearType," - ",iyear,"-",iqtr," used length samples from ",numSamples$YEAR," - MARKET_CODE:",marketCode),label=NULL,append=T)
         }
 
+      }
+      } else {
+        message("Can not give length samples to early years")
       }
     }
 

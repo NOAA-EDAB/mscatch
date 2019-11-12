@@ -103,7 +103,8 @@ aggregate_landings <- function(landingsData,lengthData,species_itis,
     for (marketCode in marketCodeList) { # loop over market category
       if (marketCode == "UN") next
       print(c(gearType,marketCode))
-
+      # if (gearType == "100")
+      #   return(data)
       # filter data by gear, market code and years where samples were taken
       QTRData <- data$landings %>% dplyr::filter(YEAR >= sampleStartYear & NEGEAR == gearType & MARKET_CODE == marketCode)
       # find number of times no samples seen by QTR and YEAR
@@ -121,7 +122,7 @@ aggregate_landings <- function(landingsData,lengthData,species_itis,
         # if (mean(aggQTRData$numSamples) < proportionMissing*numYearsLengthsStarted) {
         #   data <- aggregate_to_qtr(data,gearType,marketCode,QTRData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile)
         # } else {
-          data <- aggregate_to_year(data,gearType,marketCode,aggYEARData,sampleStartYear,missingEarlyYears,proportionMissing,nLengthSamples,pValue,outputDir,logfile)
+          data <- aggregate_to_year(data,gearType,mainGearType,marketCode,aggYEARData,sampleStartYear,missingEarlyYears,proportionMissing,nLengthSamples,pValue,outputDir,logfile)
         # }
         next
       }
@@ -135,7 +136,7 @@ aggregate_landings <- function(landingsData,lengthData,species_itis,
       if (aggregate_to == "QTR") {
         data <- aggregate_to_qtr(data,gearType,mainGearType,marketCode,QTRData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile)
       } else if (aggregate_to == "YEAR") {
-        data <- aggregate_to_year(data,gearType,marketCode,aggYEARData,sampleStartYear,missingEarlyYears,proportionMissing,nLengthSamples,pValue,outputDir,logfile)
+        data <- aggregate_to_year(data,gearType,mainGearType,marketCode,aggYEARData,sampleStartYear,missingEarlyYears,proportionMissing,nLengthSamples,pValue,outputDir,logfile)
       } else if (aggregate_to == "MIX") {
 
       ###################################################################################################
@@ -153,7 +154,7 @@ aggregate_landings <- function(landingsData,lengthData,species_itis,
         print(aggYEARData)
         if ((sum(aggYEARData$numSamples==1)/length(aggYEARData$numSamples)) > proportionMissing ){
           print(paste0("Aggregate over QTRS to YEARly-",marketCode))
-          data <- aggregate_to_year(data,gearType,marketCode,aggYEARData,sampleStartYear,missingEarlyYears,proportionMissing,nLengthSamples,pValue,outputDir,logfile)
+          data <- aggregate_to_year(data,gearType,mainGearType,marketCode,aggYEARData,sampleStartYear,missingEarlyYears,proportionMissing,nLengthSamples,pValue,outputDir,logfile)
         } else {
           # need to aggregate MARKET_CODE over QTRs to YEAR
           stop("# need to aggregate MARKET_CODE over QTRs to YEAR")
