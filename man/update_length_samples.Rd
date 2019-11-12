@@ -4,7 +4,8 @@
 \alias{update_length_samples}
 \title{update missing length values}
 \usage{
-update_length_samples(data, missingRow, gearType, marketCode, numSamples)
+update_length_samples(data, missingRow, gearType, marketCode, numSamples,
+  mainGearType = NULL)
 }
 \arguments{
 \item{data}{List. landings and lengthData}
@@ -16,6 +17,8 @@ update_length_samples(data, missingRow, gearType, marketCode, numSamples)
 \item{marketCode}{Character string. Name of MARKET_CODE}
 
 \item{numSamples}{Tibble. Filtered landings data (YEAR, QTR, len_totalNumLen, len_numLengthSamples) by NEGEAR, MARKET_CODE}
+
+\item{mainGearType}{Character string. Name of NEGEAR with most landings}
 }
 \value{
 List of landings and associated length samples .Same as input data
