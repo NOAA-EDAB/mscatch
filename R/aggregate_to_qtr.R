@@ -57,7 +57,7 @@ aggregate_to_qtr <- function(data,gearType,mainGearType,marketCode,QTRData,missi
     minYear <- min(data$lengthData$YEAR)
     numSamples <- missing_length_by_qtr(QTRData,missingQTRs$YEAR[iyear],missingQTRs$QTR[iyear],nLengthSamples,minYear)
     if (dim(numSamples)[1]==0) {
-      message("No lengthData available for QTR. Using nearest neighbor.")
+      message(paste0(missingQTRs$YEAR[iyear]," - No lengthData available for QTR = ",missingQTRs$QTR[iyear],". Using nearest neighbor."))
       # still zero after going back many years!! This could be a problem.
       write_to_logfile(outputDir,logfile,data=paste0("Gear: ",gearType," - ",missingQTRs$YEAR[iyear],"-",missingQTRs$QTR[iyear],". No samples found. Looking at nearest neighbor. - MARKET_CODE:",marketCode),label=NULL,append=T)
       # selet length samples closest in time to target year/qtr

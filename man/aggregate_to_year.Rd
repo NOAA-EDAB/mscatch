@@ -11,6 +11,10 @@ aggregate_to_year(data, gearType, mainGearType, marketCode, aggYEARData,
 \arguments{
 \item{data}{List. Landings data and length data}
 
+\item{gearType}{Character string. NEGEAR gear code}
+
+\item{mainGearType}{Character string. Name of NEGEAR with most landings}
+
 \item{marketCode}{Character string. MARKET_CODE designation from cfdbs}
 
 \item{sampleStartYear}{Numeric scalar. Year first length sample was taken}
@@ -22,8 +26,6 @@ aggregate_to_year(data, gearType, mainGearType, marketCode, aggYEARData,
 \item{pValue}{Numeric scalar. Threshold pvalue for determining significance of ks test for length samples}
 
 \item{outputDir}{Character string. Path to output directory (png files saved here)}
-
-\item{geatType}{Character string. NEGEAR gear code}
 
 \item{aggYearData}{Tibble. (n x 3). YEAR, total landings, presence/absence of min mumber of samples}
 

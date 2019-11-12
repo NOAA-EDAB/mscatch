@@ -10,6 +10,8 @@ aggregate_to_qtr(data, gearType, mainGearType, marketCode, QTRData,
 \arguments{
 \item{data}{List. Landings data and length data}
 
+\item{gearType}{Character string. NEGEAR gear code}
+
 \item{mainGearType}{Character string. Name of NEGEAR with most landings}
 
 \item{marketCode}{Character string. MARKET_CODE designation from cfdbs}
@@ -21,8 +23,6 @@ aggregate_to_qtr(data, gearType, mainGearType, marketCode, QTRData,
 \item{pValue}{Numeric scalar. Threshold pvalue for determining significance of ks test for length samples}
 
 \item{outputDir}{Character string. Path to output directory (png files saved here)}
-
-\item{geatType}{Character string. NEGEAR gear code}
 
 \item{nLenthSampels}{Numeric scalar. Number of length samples deemed to be "enough" for calculations. This is passed from \code{aggregate_landings}}
 
