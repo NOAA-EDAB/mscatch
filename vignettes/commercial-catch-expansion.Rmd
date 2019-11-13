@@ -113,9 +113,9 @@ Note: minimum number of length samples ~ 1 per 200 metric tonnes landed. (unwrit
 	  + if NO : Count your blessings and continue.  
 	  
 	  
-* Are there *quarters* with landings but sample sizes less than *X*? A threshold for percentage missing samples "allowed" is implemented. For each NEGEAR/MARKET_CODE combo we determine, for each QTR, the number years that have length samples. The mean of this is used as a measure of "completeness" (The ~# years with samples). If this mean exceeds a user defined threshold then we borrow length sample data for missing QTRs from the previous years equivalent QTR. (If this is also missing we look back another year and so on). If the mean falls below the defined threshold (too many missing length samples at QTR level) the data is aggregated to the YEARly level and we follow a similar process. However prior to aggregation we test (ks-test) for differences in length distributions among market categories. If distributions are sig different we do not aggregate MARKET_CODEs and proceed. Otherwise MARKET_CODEs are aggregated - not complete yet. The YEARs with missing length samples borrow from the closest YEAR with length samples (either direction). In most cases length sampling began at a point in time after landings were recored. For the YEARs with landings prior the length sampling start date we borrow length samples either by QTR or by YEAR (as explained above) from the most recent YEAR with length samples.
+* Are there *quarters* with landings but sample sizes less than *X*? A threshold for percentage missing samples "allowed" is implemented. For each NEGEAR/MARKET_CODE combo we determine, for each QTR, the number years that have length samples. The mean of this is used as a measure of "completeness" (The ~# years with samples). If this mean exceeds a user defined threshold then we borrow length sample data for missing QTRs from the previous years equivalent QTR. (If this is also missing we look back another year and so on). If the mean falls below the defined threshold (too many missing length samples at QTR level) the data is aggregated to the YEARly level and we follow a similar process. However prior to aggregation we test (ks-test) for differences in length distributions among market categories. If distributions are sig different we do not aggregate MARKET_CODEs and proceed. Otherwise MARKET_CODEs are aggregated - not complete yet. The YEARs with missing length samples borrow from the closest YEAR with length samples (either direction). In most cases length sampling began at a point in time after landings were recorded. For the YEARs with landings prior the length sampling start date we borrow length samples either by QTR or by YEAR (as explained above) from the most recent YEAR with length samples.
 
-NOTE: **This has been simplified until we can figure out how to deal with unclassifieds. The user decides if aggregation (for all MARKET_CODEs) occurs at QTR or annual level. UNclassified samples are then aggregated in a similar fashion to allow easier expansion of UN lengths. The otherGear category is ALWAYS aggregated to annual data.**
+NOTE: **This has been simplified until we can figure out how to deal with unclassifieds. The user decides if aggregation (for all MARKET_CODEs) occurs at QTR or annual level. UNclassified samples are then aggregated in a similar fashion to allow easier expansion of UN lengths. The otherGear category is ALWAYS aggregated to annual data. If there are no length samples in previous year(s), same quarter, we resort to nearest neighbor. If no samples exist at all, we borrow from another gear type, nearest neighbor **
 
 	  + if YES: Create semesters?  (Currently semesters are skipped and jump straight to annual)
 	  + if NO: Count your blessings and continue.  
@@ -216,6 +216,8 @@ Need to deal with discards in a similar fashion.
 It seems that Susan Wigley has a SAS script that most/some stock assessment scientists use to help with this.
 Edit: Spoke to Susan Wigley she says that they will have all of the discard estimates over time for all of the species in a database similar to that of the landings, length, age databases. This will make life heck of a lot simpler for us.
 			
-	
+# NAFO data
+
+Non US landings need to be integrated also.
 
 

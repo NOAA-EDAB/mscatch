@@ -19,6 +19,7 @@ knitr::opts_chunk$set(
   comment = "#>"
   )
 library(mscatch)
+library(magrittr)
 ```
 
 # ADIOS!
@@ -236,10 +237,10 @@ nespp3 = 011, 012
 species_itis = 164499
 
 
-### Market Code Lookup Table
+## Market Code Lookup Table
 
 ``` {r itis}
-knitr::kable(marketCodeLookupTable)
+knitr::kable(marketCodeLookupTable %>% dplyr::distinct())
 
 ```
 
