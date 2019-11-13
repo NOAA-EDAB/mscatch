@@ -60,7 +60,14 @@ aggregate_landings <- function(landingsData,lengthData,species_itis,
   # 1. aggregate the gears based on landings
 
   data <- aggregate_gear(data,otherGear,landingsThresholdGear,species_itis,outputDir,outputPlots)
-  gearList <- unique(data$landings$NEGEAR)
+  # list of gears in ordered by landings
+  gearList <- data$landings %>% dplyr::group_by(NEGEAR) %>%
+    dplyr::summarise(totLand=sum(landings_land)) %>%
+    dplyr::arrange(desc(totLand)) %>%
+    dplyr::select(NEGEAR) %>%
+    unlist()
+  mainGearType <- gearList[1]
+
   # look at the summary stats/plots after aggregation
   summary_stats(data$landings,species_itis,outputDir,outputPlots)
   # take a look at length distribution of size categories
@@ -98,7 +105,7 @@ aggregate_landings <- function(landingsData,lengthData,species_itis,
 
   # loop through NEGEAR / MARKET_CODE combinations to determine where to borrow length samples from
   # rules
-  mainGearType <- gearList[1] #  need to process NEGEAR in order by decreasing landings
+#return(data)
   for (gearType in gearList) { # loop over gear types
     for (marketCode in marketCodeList) { # loop over market category
       if (marketCode == "UN") next
