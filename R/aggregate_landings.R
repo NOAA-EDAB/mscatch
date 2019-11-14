@@ -83,6 +83,14 @@ aggregate_landings <- function(landingsData,lengthData,species_itis,
   # if market category has landings but no length data at all. Then the landings need to be lumped into a
   # neighboring size class. Very subjective but dont lump into unclassified/ unknown
 
+  #############################################################################
+  #############################################################################
+  #############################################################################
+  ##### WE NEED TO HAVE A BETTER METHOD OG AGGREGATING MARKET CODES HERE #####
+  #############################################################################
+  #############################################################################
+  #############################################################################
+
   data <- aggregate_market_codes(data,pValue,outputDir,outputPlots,logfile)
   marketCodeList <- unique(data$landings$MARKET_CODE)
   #######################################################
@@ -141,7 +149,7 @@ aggregate_landings <- function(landingsData,lengthData,species_itis,
       # 4. combine market categories prior to this point
 
       if (aggregate_to == "QTR") {
-        data <- aggregate_to_qtr(data,gearType,mainGearType,marketCode,QTRData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile)
+        data <- aggregate_to_qtr(data,gearType,marketCode,QTRData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile)
       } else if (aggregate_to == "YEAR") {
         data <- aggregate_to_year(data,gearType,mainGearType,marketCode,aggYEARData,sampleStartYear,missingEarlyYears,proportionMissing,nLengthSamples,pValue,outputDir,logfile)
       } else if (aggregate_to == "MIX") {
@@ -151,7 +159,7 @@ aggregate_landings <- function(landingsData,lengthData,species_itis,
       if (mean(aggQTRData$numSamples) < proportionMissing*numYearsLengthsStarted) {
 
         # fill in missing QTRS using previous QTR(s): Borrow length sample data from previous QTR
-        data <- aggregate_to_qtr(data,gearType,mainGearType,marketCode,QTRData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile)
+        data <- aggregate_to_qtr(data,gearType,marketCode,QTRData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile)
 
       } else if (0) {
         # maybe add rules for semester aggregation if we can work out a plan

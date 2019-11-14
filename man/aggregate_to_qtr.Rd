@@ -4,15 +4,13 @@
 \alias{aggregate_to_qtr}
 \title{Missing QTR length samples are filled using previous years QTR}
 \usage{
-aggregate_to_qtr(data, gearType, mainGearType, marketCode, QTRData,
-  missingEarlyYears, nLengthSamples, pValue, outputDir, logfile)
+aggregate_to_qtr(data, gearType, marketCode, QTRData, missingEarlyYears,
+  nLengthSamples, pValue, outputDir, logfile)
 }
 \arguments{
 \item{data}{List. Landings data and length data}
 
 \item{gearType}{Character string. NEGEAR gear code}
-
-\item{mainGearType}{Character string. Name of NEGEAR with most landings}
 
 \item{marketCode}{Character string. MARKET_CODE designation from cfdbs}
 

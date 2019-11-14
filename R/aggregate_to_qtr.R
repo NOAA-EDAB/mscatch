@@ -7,7 +7,6 @@
 #'
 #' @param data List. Landings data and length data
 #' @param gearType Character string. NEGEAR gear code
-#' @param mainGearType Character string. Name of NEGEAR with most landings
 #' @param marketCode Character string. MARKET_CODE designation from cfdbs
 #' @param QTRData Tibble. (n x 8). Filtered landings data by NEGEAR, MARKET_CODE, YEARs > earlyYears
 #' @param missingEarlyYears Numeric vector. Years prior to first length sample was taken
@@ -20,7 +19,7 @@
 
 
 
-aggregate_to_qtr <- function(data,gearType,mainGearType,marketCode,QTRData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile){
+aggregate_to_qtr <- function(data,gearType,marketCode,QTRData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile){
 
   # Deal with Early Years where we have landings data but no length samples
   # Repeat the length samples from the first year of sampling to all earlier years.
@@ -63,10 +62,12 @@ aggregate_to_qtr <- function(data,gearType,mainGearType,marketCode,QTRData,missi
       # selet length samples closest in time to target year/qtr
       numSamples <- missing_length_by_qtr_neighbor(QTRData,missingQTRs$YEAR[iyear],missingQTRs$QTR[iyear],nLengthSamples,minYear)
       if (dim(numSamples)[1]==0) {
-        # Still no samples, borrow from  main Fleet in closest year. Presumably dealer still categorizes a small as a small
+        # Still no samples, borrow from main Fleet in closest year. Presumably dealer still categorizes a small as a small
         # regardless of NEGEAR
-        QTRDataGear <- data$landings %>% dplyr::filter(NEGEAR == mainGearType & MARKET_CODE == marketCode)
+        QTRDataGear <- data$landings %>% dplyr::filter(MARKET_CODE == marketCode)
+#        QTRDataGear <- data$landings %>% dplyr::filter(NEGEAR == mainGearType & MARKET_CODE == marketCode)
         numSamples <- missing_length_by_qtr_neighbor(QTRDataGear,missingQTRs$YEAR[iyear],missingQTRs$QTR[iyear],nLengthSamples,minYear)
+        mainGearType <- numSamples$NEGEAR
         mainGear <- T
       }
       #stop("PROBLEM!!!. Finding zero length samples in all previous years")
