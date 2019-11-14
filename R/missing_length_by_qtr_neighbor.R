@@ -28,8 +28,11 @@ missing_length_by_qtr_neighbor <- function(QTRData,iyear,iqtr,nLengthSamples,min
   useYear <- closestYearQtrs[which(diffYear == min(diffYear)),][1,]
 
   numSamples <- QTRData %>%
-    dplyr::filter(YEAR==useYear$YEAR, QTR==useYear$QTR) %>%
-    dplyr::select(YEAR,QTR,len_totalNumLen,len_numLengthSamples)
+    dplyr::filter(YEAR==useYear$YEAR, QTR==useYear$QTR, len_numLengthSamples >= nLengthSamples ) %>%
+    dplyr::select(YEAR,QTR,NEGEAR,len_totalNumLen,len_numLengthSamples)
 
+  # incase there are multiple fleets with same number of length samples
+  numSamples <- numSamples %>% dplyr::filter(len_numLengthSamples==max(len_numLengthSamples))
+  numSamples <- head(numSamples,1)
   return(numSamples)
 }

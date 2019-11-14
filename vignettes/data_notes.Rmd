@@ -26,9 +26,9 @@ library(magrittr)
 
 This is the database that the population dynamics (Pop Dy) branch use for their stock assessments.  
 
-* Access the online [GUI](file://155.206.139.2/home0/pdy/pub/STOCKEFF/ADIOS/website/webfiles/ADIOS_homepage.html)
+* Access the [GUI](file://155.206.139.2/home0/pdy/pub/STOCKEFF/ADIOS/website/webfiles/ADIOS_homepage.html). This in on local server (net)
 
-* Read the [DOCUMENTATION](file://155.206.139.2/home0/pdy/pub/STOCKEFF/ADIOS/ADIOS_CF/website/webfiles/ADIOS_technical_documentation.pdf)
+* Read the [DOCUMENTATION](file://155.206.139.2/home0/pdy/pub/STOCKEFF/ADIOS/ADIOS_CF/website/webfiles/ADIOS_technical_documentation.pdf). Also on net
 
 The landing portion are stored in the Stockeff.MV_cf_Landings materialized view. (This is equivalent to AA Trip and AA Species tables joined). Each record represents trip and species data for a specific landed species. A trip will appear as many times as there are landed species in that trip
 
