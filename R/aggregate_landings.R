@@ -52,6 +52,7 @@ aggregate_landings <- function(landingsData,lengthData,species_itis,
   data$lengthData <- lengthData
   sampleStartYear <- min(as.numeric(unique(data$lengthData$YEAR)))
   numYears <- length(unique(data$landings$YEAR))
+
   #######################################################
   ####### GEARs #########################################
   #######################################################
@@ -219,6 +220,34 @@ aggregate_landings <- function(landingsData,lengthData,species_itis,
       }
     }
 
+  }
+
+  # When we go to expand unclasified. We have a problem if there are landings for "UN" but we
+  # a. dont have any length samples. Cant expand
+  #.b. dont have any landings for other market categories. Cant obtain a scaling factor
+  # so we need to check for this prior to expanding
+
+  # unclassified over NEGEAR and season (QTR)
+  # select all cases where we have UNclassified landings but no length samples
+  unclass <- data$landings %>%
+    dplyr::filter(MARKET_CODE == "UN" & len_totalNumLen < nLengthSamples )  %>%
+    dplyr::distinct(YEAR,QTR,NEGEAR)
+  nUnclass <- dim(unclass)[1] # number of cases
+  # for each row, select length distribution from master and expand
+  for(irow in 1:nUnclass) {
+    # pull all lengths for YEAR, QTR, NEGEAR where MARKET CODE != "UN"
+    missingRow <- unclass[irow,]
+    lengthDist <- lengthData %>%
+      dplyr::filter(YEAR == missingRow$YEAR & QTR == missingRow$QTR & NEGEAR == missingRow$NEGEAR & MARKET_CODE != "UN")
+
+    # no length samples for any market codes. Therefore cant obtain a scaling.
+    # Have to find nearest neighbor where Unclassifieds have samples.
+    if (dim(lengthDist)[1] == 0){
+      UNData <- data$landings %>% dplyr::filter(NEGEAR == missingRow$NEGEAR,MARKET_CODE=="UN")
+      numSamples <- missing_length_by_qtr_neighbor(UNData,missingRow$YEAR,missingRow$QTR,nLengthSamples)
+      data <- update_length_samples(data,missingRow,missingRow$NEGEAR,marketCode="UN",numSamples,mainGearType = NULL)
+      #readline(prompt = "Press [Enter] to continue ...")
+    }
   }
 
   # produce report on decisions made and include figures

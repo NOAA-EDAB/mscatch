@@ -7,13 +7,12 @@
 #' @param iyear Numeric scalar. YEAR in which length data are missing and need to be replaced
 #' @param iqtr Numeric scalar. QTR of YEAR in which length data are missing and need to be replaced
 #' @param nLengthSamples numeric scalar. The minimum number of length sample sizes required to avoid combination of data. Dfault = 1
-#' @param minYear numeric Scalar. Earliest year present in data.
 #'
 #' @return
 #'\item{numSamples}{tibble (nx4). Columns =  YEAR, QTR, len_totalNumLen, len_numLengthSamples}
 #'
 
-missing_length_by_qtr_neighbor <- function(QTRData,iyear,iqtr,nLengthSamples,minYear) {
+missing_length_by_qtr_neighbor <- function(QTRData,iyear,iqtr,nLengthSamples) {
 
   # select a vector of Years/QTRs with +ve number of length samples
   closestYearQtrs <- QTRData %>%
