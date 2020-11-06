@@ -4,7 +4,8 @@
 \name{marketCodeLookupTable}
 \alias{marketCodeLookupTable}
 \title{A lookup table for species_itis and market code}
-\format{A dataframe with 7 columns
+\format{
+A dataframe with 7 columns
 \describe{
   \item{COMMON_NAME}{Common name for species}
   \item{SCIENTIFIC_NAME}{scientific name for species}
@@ -13,7 +14,8 @@
   \item{MARKET_DESC}{Description of the fish part}
   \item{MARKET_CODE}{2 digit market code}
   \item{MARKET_SCALE}{Ordinal scale for market code within species}
-}}
+}
+}
 \source{
 SPECIES_ITIS_NE table
 }

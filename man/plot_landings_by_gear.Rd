@@ -4,8 +4,7 @@
 \alias{plot_landings_by_gear}
 \title{plot landings by gear}
 \usage{
-plot_landings_by_gear(species, data, threshold, outputPlots, outputDir,
-  plotID)
+plot_landings_by_gear(species, data, threshold, outputPlots, outputDir, plotID)
 }
 \description{
 Select the variable to plot.

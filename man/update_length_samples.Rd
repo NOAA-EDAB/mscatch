@@ -4,8 +4,14 @@
 \alias{update_length_samples}
 \title{update missing length values}
 \usage{
-update_length_samples(data, missingRow, gearType, marketCode, numSamples,
-  mainGearType = NULL)
+update_length_samples(
+  data,
+  missingRow,
+  gearType,
+  marketCode,
+  numSamples,
+  mainGearType = NULL
+)
 }
 \arguments{
 \item{data}{List. landings and lengthData}

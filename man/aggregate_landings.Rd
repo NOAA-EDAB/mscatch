@@ -4,11 +4,20 @@
 \alias{aggregate_landings}
 \title{Landings data aggregated based on length sample availability}
 \usage{
-aggregate_landings(landingsData, lengthData, species_itis,
-  landingsThresholdGear = 0.9, nLengthSamples = 1, pValue = 0.05,
-  aggregate_to = "QTR", proportionMissing = 0.2, otherGear,
-  outputDir = here::here("output"), outputPlots = F,
-  logfile = "logFile.txt")
+aggregate_landings(
+  landingsData,
+  lengthData,
+  species_itis,
+  landingsThresholdGear = 0.9,
+  nLengthSamples = 1,
+  pValue = 0.05,
+  aggregate_to = "QTR",
+  proportionMissing = 0.2,
+  otherGear,
+  outputDir = here::here("output"),
+  outputPlots = F,
+  logfile = "logFile.txt"
+)
 }
 \arguments{
 \item{landingsData}{Tidy data frame. Landings by YEAR,QTR,NEGEAR,MARKET_CODE,landings_land,landings_nn,len_totalNumLen,len_numLengthSampls}

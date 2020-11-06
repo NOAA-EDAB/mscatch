@@ -75,6 +75,17 @@ summary_stats <- function(data,species_itis,outputDir,outputPlots) {
     labs(title = paste0("number of length samples")) +
     ylab("n")
 
+  # length samples by gear over time
+  png(paste0(outputDir,"/4b_length_samples_by_gear.png"))
+  lengthSamples <- data %>% group_by(YEAR,NEGEAR) %>% summarize(nSamples=sum(len_numLengthSamples,na.rm = TRUE))
+  g <- ggplot() +
+    geom_col(lengthSamples, mapping=aes(x=YEAR, y = nSamples, fill=NEGEAR)) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    labs(title = paste0("number of length samples")) +
+    ylab("n")
+
+
+
   print(g)
   dev.off()
 

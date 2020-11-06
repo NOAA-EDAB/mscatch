@@ -3,7 +3,6 @@
 \docType{package}
 \name{mscatch}
 \alias{mscatch}
-\alias{mscatch-package}
 \title{mscatch: landings data manipulation}
 \description{
 Tools to aid in extraction, manipulation of data from the cfdbs database

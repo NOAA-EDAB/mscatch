@@ -4,8 +4,7 @@
 \alias{aggregate_data_by_class}
 \title{Aggregates rows of data by a given variable}
 \usage{
-aggregate_data_by_class(data, variable, classes, conditionalOn = NULL,
-  dataset)
+aggregate_data_by_class(data, variable, classes, conditionalOn = NULL, dataset)
 }
 \arguments{
 \item{data}{tibble. Data set to aggreate}

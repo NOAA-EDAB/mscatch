@@ -4,7 +4,8 @@
 \name{sampleData_164744}
 \alias{sampleData_164744}
 \title{A sample dataSet for species_itis 164744}
-\format{A dataframe (tibble) with 8 columns
+\format{
+A dataframe (tibble) with 8 columns
 \describe{
   \item{YEAR}{year}
   \item{QTR}{quarter year designation}
@@ -14,7 +15,8 @@
   \item{landings_nn}{Number of landings (Trips, subtrips). From mv_cf_landings}
   \item{len_totalNumLen}{number of actual fish lengths taken. combined over numLengthSamples. From mv_cf_len}
   \item{len_numLengthSamples}{Number of length samples for YEAR,QTR,NEGEAR,MARKET_CODE. From mv_cf_len}
-}}
+}
+}
 \source{
 join between mv_cf_landings and mv_cf_len
 }
