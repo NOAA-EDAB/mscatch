@@ -18,7 +18,7 @@
 #' Column 4 - Difference in number of Trips
 #' }
 #'
-#' @export
+#'
 
 aa_count_trips <- function(channel,yearRange=1964:2017) {
 
@@ -33,10 +33,10 @@ aa_count_trips <- function(channel,yearRange=1964:2017) {
     }
 
    sqlAA <- paste0("select count(year) from cfdbs.",table,";")
-   resAA <- as.numeric(unlist(RODBC::sqlQuery(channel,sqlAA)))
+   resAA <- as.numeric(unlist(DBI::dbGetQuery(channel,sqlAA)))
 
    sqlADIOS <- paste0("select count(distinct link) from stockeff.mv_cf_landings where year = ",iyear)
-   resADIOS <- as.numeric(unlist(RODBC::sqlQuery(channel,sqlADIOS)))
+   resADIOS <- as.numeric(unlist(DBI::dbGetQuery(channel,sqlADIOS)))
 
 
    print(sqlAA)

@@ -2,9 +2,18 @@ Package: mscatch
 Type: Package
 Title: Multispecies Length Expansion
 Version: 0.1.0
-Author: person("Andy", "Beet", , "andrew.beet@noaa.gov", c("aut", "cre")),
-        person("Laurel", "Smith", , "laurel.smith@noaa.gov", c("aut")),
-         person("Sean", "Lucey", , "sean.lucey@noaa.gov", c("aut"))
+Authors@R: c(person(given="Andy", 
+                    family="Beet",
+                    email="andrew.beet@noaa.gov", 
+                    role=c("aut", "cre")),
+            person(given="Laurel", 
+                    family="Smith", 
+                    email="laurel.smith@noaa.gov",
+                    role=c("aut")),
+            person(given="Sean",
+                    family="Lucey",
+                    email="sean.lucey@noaa.gov",
+                    role=c("aut")))
 Description: Attributes length distribution of market codes to commercial landings. 
     Landings are aggregated (based on data avilability) over time, space, gear types, market codes
 License: What license is it under?
@@ -19,7 +28,6 @@ Suggests:
     rmarkdown
 VignetteBuilder: knitr
 Imports: 
-    RODBC,
     cfdbs,
     dplyr,
     magrittr,
