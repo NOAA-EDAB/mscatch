@@ -5,10 +5,10 @@
 library(magrittr)
 
 
-create_nespp3_svspp_lookup <- function(channel){
+create_nespp3_svspp_lookup <- function(channel,overwrite=F){
   # Same order as Hydra
-  # Spiny Dog, winter skate, herring , cod, haddock, yellowtail fl, winter fl, mackerel, silver hake, goosefish
-  speciesList <- c(160617,564145,161722,164712,164744,172909,172905,172414,164791,164499)
+  # Spiny Dog, winter skate, herring , cod, haddock, yellowtail fl, winter fl, mackerel, silver hake, goosefish,pollock
+  speciesList <- c(160617,564145,161722,164712,164744,172909,172905,172414,164791,164499,164727)
   speciesList <- sprintf(paste0("%06d"),speciesList)
   speciesList <-  paste0("'",speciesList,"'",collapse=",")
 
@@ -30,10 +30,10 @@ create_nespp3_svspp_lookup <- function(channel){
   speciesLookupTable <- dplyr::left_join(cfdbsLookupTable,svdbsLookupTable, by="SCIENTIFIC_NAME") %>%
     dplyr::select(SCIENTIFIC_NAME,SPECIES_ITIS,dplyr::everything()) %>% dplyr::as_tibble()
 
+  usethis::use_data(speciesLookupTable,overwrite=overwrite)
+  #save(speciesLookupTable,file=paste0(here::here("data"),"/speciesLookupTable.RData"))
 
-  save(speciesLookupTable,file=paste0(here::here("data"),"/speciesLookupTable.RData"))
 
-
-  #return(joinedTable)
+  return(speciesLookupTable)
 }
 

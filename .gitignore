@@ -7,8 +7,11 @@
 test_main.r
 *.png
 # folders
+docs/
 other/
 output/
 # ignore data because this is where sensitive data is stored
-data/
+/data/*.*
+# exception for lookuptable
+!/data/speciesLookupTable.rda
 tests/
