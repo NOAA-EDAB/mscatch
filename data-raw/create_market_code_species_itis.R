@@ -7,7 +7,7 @@ library(magrittr)
 create_market_code_species_itis <- function(channel){
   # Same order as Hydra
   # Spiny Dog, winter skate, herring , cod, haddock, yellowtail fl, winter fl, mackerel, silver hake, goosefish
-  speciesList <- c(164744,564145,161722,164712,164744,172909,172905,172414,164791,164499)
+  speciesList <- c(160617,564145,161722,164712,164744,172909,172905,172414,164791,164499)
   speciesList <- sprintf(paste0("%06d"),speciesList)
   speciesList <-  paste0("'",speciesList,"'",collapse=",")
 
