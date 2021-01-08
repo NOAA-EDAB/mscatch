@@ -50,7 +50,8 @@ fit_length_weight <- function(lengthWeightData,speciesName,outputDir,logfile){
   Fstat <- (reductionSS/dfModel)/(SSR/df)
   pVal <- 1-pf(Fstat,dfModel,df)
 
-  write_to_logfile(outputDir,logfile,"",label="LENGTH-WEIGHT RELATIONSHIPS from SVDBS",append=T)
+
+  write_to_logfile(outputDir,logfile,"",label=paste0(speciesName,": LENGTH-WEIGHT RELATIONSHIPS from SVDBS"),append=T)
   write_to_logfile(outputDir,logfile,data=pVal,label="pvalue: H0: single slope (beta) vs H1:seasonal (beta)",append=T)
 
   # plots common slope fit and separate seasonal fits on facet plot
@@ -64,9 +65,9 @@ fit_length_weight <- function(lengthWeightData,speciesName,outputDir,logfile){
   figText$SEASON <- as.factor(figText$SEASON)
 
 
-  png(paste0(outputDir,"/length_weight_relationship.png"),width = 1000,height = 1000,units="px")
+  png(paste0(outputDir,"/length_weight_relationship_",speciesName,".png"),width = 1000,height = 1000,units="px")
 
-  p <- ggplot2::ggplot(data = lwd,ggplot2::aes(x=LENGTH, y = INDWT, color = SEX)) +
+  p <- ggplot2::ggplot(data = lwd,ggplot2::aes(x=LENGTH, y = INDWT, color = as.factor(SEX))) +
     ggplot2::geom_point(shape = 1) +
     ggplot2::facet_wrap(facets="SEASON") +
     ggplot2::geom_line(ggplot2::aes(y = predWt),color = "red") +
