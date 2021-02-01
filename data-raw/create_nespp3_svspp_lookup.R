@@ -7,8 +7,8 @@ library(magrittr)
 
 create_nespp3_svspp_lookup <- function(channel,overwrite=F){
   # Same order as Hydra
-  # Spiny Dog, winter skate, herring , cod, haddock, yellowtail fl, winter fl, mackerel, silver hake, goosefish,pollock
-  speciesList <- c(160617,564145,161722,164712,164744,172909,172905,172414,164791,164499,164727)
+  # Spiny Dog, winter skate, herring , cod, haddock, yellowtail fl, winter fl, mackerel, silver hake, goosefish,pollock, acadian redfish
+  speciesList <- c(160617,564145,161722,164712,164744,172909,172905,172414,164791,164499,164727,166774)
   speciesList <- sprintf(paste0("%06d"),speciesList)
   speciesList <-  paste0("'",speciesList,"'",collapse=",")
 
