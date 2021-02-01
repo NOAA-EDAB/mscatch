@@ -28,7 +28,6 @@ Suggests:
     rmarkdown
 VignetteBuilder: knitr
 Imports: 
-    cfdbs,
     dplyr,
     magrittr,
     ggplot2,
@@ -36,5 +35,7 @@ Imports:
     here,
     purrr,
     stringr
+Remotes:
+    andybeet/cfdbs
 Depends: 
     R (>= 2.10)
