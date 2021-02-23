@@ -25,7 +25,8 @@ RoxygenNote: 7.1.0
 Suggests:
     testthat,
     knitr,
-    rmarkdown
+    rmarkdown,
+    DT
 VignetteBuilder: knitr
 Imports: 
     dplyr,
@@ -34,8 +35,7 @@ Imports:
     gridExtra,
     here,
     purrr,
-    stringr,
-    DT
+    stringr
 Remotes:
     andybeet/cfdbs
 Depends: 
