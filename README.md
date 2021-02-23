@@ -8,6 +8,7 @@ pages](https://github.com/NOAA-EDAB/mscatch/workflows/deploy%20to%20github%20pag
 ![Install on
 windows](https://github.com/NOAA-EDAB/mscatch/workflows/Install%20on%20windows/badge.svg)
 ![gitleaks](https://github.com/NOAA-EDAB/mscatch/workflows/gitleaks/badge.svg)
+
 The goal of `mscatch` is to expand total catch by species and area
 apportioned to length composition in a consistent manner.
 

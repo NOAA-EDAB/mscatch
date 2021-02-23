@@ -19,6 +19,7 @@ knitr::opts_chunk$set(
 ![gitleaks](https://github.com/NOAA-EDAB/mscatch/workflows/gitleaks/badge.svg)
 
 
+
 The goal of `mscatch` is to expand total catch by species and area apportioned to length composition in a consistent manner.
 
 ## Installation
