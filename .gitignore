@@ -15,4 +15,6 @@ output/
 /data/*.*
 # exception for lookuptable
 !/data/speciesLookupTable.rda
+!/data/marketCodeLookupTable.RData
+
 tests/
