@@ -66,11 +66,14 @@ test_data_pull <- function(channel,species=164744,species_itis = T){ # species =
   # save data
   vName <- paste0("sampleData_",species)
   assign(vName,sampleData)
-  save(list=vName,file=paste0(here::here("data"),"/sampleData_",species,".RData"))
+
+  save(list=vName,file=paste0(here::here("data"),"/sampleData_",species,".rdata"))
 
   vName <- paste0("sampleLengths_",species)
   assign(vName,sampleLengths)
-  save(list=vName,file=paste0(here::here("data"),"/sampleLengths_",species,".RData"))
+
+  #usethis::use_data(vName,overwite=T)
+  save(list=vName,file=paste0(here::here("data"),"/sampleLengths_",species,".rdata"))
 
   #return(lengths)
 

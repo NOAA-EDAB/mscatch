@@ -34,10 +34,10 @@ knitr::opts_chunk$set(
 4. Now start to  *Combine* cells to increase sample sizes or *interpolate* individual missing cells? 
 
 For example: the data should be in this format (mv_cf_landings: species_itis = 164744, Haddock):
-``` {r table1 , echo = F}
-#library(mscatch)
-data <- mscatch::sampleData_164744
-knitr::kable(head(data))
+``` {r table1 , echo = F, out.width="100%"}
+#data <- mscatch::sampleData_164744
+#knitr::kable(head(data))
+knitr::include_graphics(here::here("vignettes","figures","head164744dat.png"))
 ```
 
 where,
@@ -54,11 +54,10 @@ NA indicates no data
 
 with the length data in this format (mv_cf_len):
 
-``` {r table2 , echo = F}
-#library(mscatch)
-data <- mscatch::sampleLengths_164744
-#data$tripid <- NULL
-knitr::kable(head(data))
+``` {r table2 , echo = F, out.width="65%"}
+#data <- mscatch::sampleLengths_164744
+#knitr::kable(head(data))
+knitr::include_graphics(here::here("vignettes","figures","head164744len.png"))
 ```
 
 where,

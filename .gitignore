@@ -6,6 +6,7 @@
 # files
 test_main.r
 *.png
+!/vignettes/figures/*.png
 # folders
 docs/
 other/
