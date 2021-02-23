@@ -93,13 +93,13 @@ All market category descriptions are unique to each species.
 eg. 
 Mackerel (NESPP3='212')
 ```
-channel = dbutils::connect_to_database(serve,username)
-table <- RODBC::sqlQuery(channel,"select nespp4,mktnm from cfdbs.CFSPP where nespp3 = '212' order by nespp4")
+channel = dbutils::connect_to_database(server,username)
+table <- DBI::dbGetQuery(channel,"select nespp4,mktnm from cfdbs.CFSPP where nespp3 = '212' order by nespp4")
 ```
 vs Cod (NESPP3 = '081')
 ```
-channel = cfdbs::connect_to_database("sole",username)
-table <- RODBC::sqlQuery(channel,"select nespp4,mktnm from cfdbs.CFSPP where nespp3 = '081' order by nespp4")
+channel = cfdbs::connect_to_database(server,username)
+table <- DBI::dbGetQuery(channel,"select nespp4,mktnm from cfdbs.CFSPP where nespp3 = '081' order by nespp4")
 ```
 
 
@@ -145,7 +145,7 @@ nespp3 = 168, species_itis = 161722
 
 ### Cod
 
-Mike Palmer
+Charles Perretti
 
 nespp3 = 081 (082 ALSO? 400+ rows) 
 species_itis = 164712
@@ -157,10 +157,10 @@ Brian Linton
 
 ### Haddock 
 
+Liz Brooks
+
 According to G. Shepherd has most complete data (landings, length, discards).
 This will be trial dataset.
-
-Meet with Liz Brooks week of 15th april 2019
 
 nespp3 = 147 (148 too? Market Codes X1,X2,MK,MD, 0 length samples small landings. Appear in later years 2002+)
 species_itis = 164744
@@ -240,7 +240,11 @@ species_itis = 164499
 ## Market Code Lookup Table
 
 ``` {r itis}
-knitr::kable(marketCodeLookupTable %>% dplyr::distinct())
+
+DT::datatable(marketCodeLookupTable %>% dplyr::distinct(),
+              rownames=F,
+              options=list(pageLength=15,
+                           order=list(list(0,"asc"))))
 
 ```
 

@@ -37,7 +37,7 @@ For example: the data should be in this format (mv_cf_landings: species_itis = 1
 ``` {r table1 , echo = F, out.width="100%"}
 #data <- mscatch::sampleData_164744
 #knitr::kable(head(data))
-knitr::include_graphics(here::here("vignettes","figures","head164744dat.png"))
+knitr::include_graphics("figures/head164744dat.png")
 ```
 
 where,
@@ -57,7 +57,7 @@ with the length data in this format (mv_cf_len):
 ``` {r table2 , echo = F, out.width="65%"}
 #data <- mscatch::sampleLengths_164744
 #knitr::kable(head(data))
-knitr::include_graphics(here::here("vignettes","figures","head164744len.png"))
+knitr::include_graphics("figures/head164744len.png")
 ```
 
 where,
