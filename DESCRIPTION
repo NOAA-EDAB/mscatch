@@ -34,7 +34,8 @@ Imports:
     gridExtra,
     here,
     purrr,
-    stringr
+    stringr,
+    DT
 Remotes:
     andybeet/cfdbs
 Depends: 
