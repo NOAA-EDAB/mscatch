@@ -1,0 +1,8 @@
+pandoc: 2.7.3
+pkgdown: 1.6.1
+pkgdown_sha: ~
+articles:
+  commercial-catch-expansion: commercial-catch-expansion.html
+  data_notes: data_notes.html
+last_built: 2021-02-23T17:17Z
+
