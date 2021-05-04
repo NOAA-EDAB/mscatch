@@ -12,7 +12,8 @@
 #'@param landingsThresholdGear Numeric scalar (proportion). Minimum proportion of cumulative landings to avoid aggregation of gear. Default = .9
 #'@param nLengthSamples Numeric scalar. The minimum number of length sample sizes required to avoid combination of data. Default = 1
 #'@param pValue Numeric scalar. Threshold pvalue for determining significance of ks test for length samples
-#'@param aggregate_to Character string. Level of aggregation for all MARKET_CODES and gears
+#'@param aggregate_to Character string. Level of aggregation for all MARKET_CODES and gears (NULL, "QTR", "YEAR", "MIX").
+#'Default = NULL - do not aggregate.
 #'@param proportionMissing Numeric scalar. Proportion of missing samples allowed per YEAR for each MARKET_CODE/GEAR combination). Default = 0.2
 #'@param otherGear Character string. Code to indicate the class for "other Gear". This is the group of gear types that land the species of interest but in small numbers
 #'@param outputDir Character string. Path to output directory (png files saved here)
@@ -29,13 +30,16 @@
 #'@export
 
 aggregate_landings <- function(landingsData,lengthData,species_itis,
-                              landingsThresholdGear = .90, nLengthSamples = 1, pValue = 0.05, aggregate_to = "QTR",
+                              landingsThresholdGear = .90, nLengthSamples = 1, pValue = 0.05,
+                              aggregate_to = NULL,
                               proportionMissing = .2, otherGear,
                               outputDir=here::here("output"), outputPlots=F, logfile="logFile.txt") {
 
 
   write_to_logfile(outputDir,logfile,"",label="DECISIONS MADE DURING AGGREGATION OF DATA")
-  write_to_logfile(outputDir,logfile,data=as.character(species_itis),label="Species_itis",append=T)
+  write_to_logfile(outputDir,logfile,data=as.character(species_itis),label="Species_itis:",append=T)
+  # write function call to log file
+  write_to_logfile(outputDir,logfile,data=deparse(dbutils::capture_function_call()),label="Arguments passed to aggregate_landings:",append=T)
 
   # cleans landings data and length data of NAs
   landingsData <- landingsData %>% dplyr::group_by(YEAR,QTR,NEGEAR,MARKET_CODE) %>%
