@@ -15,7 +15,8 @@
 #'@param aggregate_to Character string. Level of aggregation for all MARKET_CODES and gears (NULL, "QTR", "YEAR", "MIX").
 #'Default = NULL - do not aggregate.
 #'@param proportionMissing Numeric scalar. Proportion of missing samples allowed per YEAR for each MARKET_CODE/GEAR combination). Default = 0.2
-#'@param otherGear Character string. Code to indicate the class for "other Gear". This is the group of gear types that land the species of interest but in small numbers
+#'@param otherGear Character string. Code to indicate the class for "other Gear".
+#'This is the group of gear types that land the species of interest but in small numbers Default = "998"
 #'@param outputDir Character string. Path to output directory (png files saved here)
 #'@param outputPlots Boolean. Should plots be created. T or F (Default = F)
 #'@param logFile Character string. Specify the name for the log file generated describing all decisions made.
@@ -29,11 +30,18 @@
 #'
 #'@export
 
-aggregate_landings <- function(landingsData,lengthData,species_itis,
-                              landingsThresholdGear = .90, nLengthSamples = 1, pValue = 0.05,
-                              aggregate_to = NULL,
-                              proportionMissing = .2, otherGear,
-                              outputDir=here::here("output"), outputPlots=F, logfile="logFile.txt") {
+aggregate_landings <- function(landingsData,
+                               lengthData,
+                               species_itis,
+                               landingsThresholdGear = .90,
+                               nLengthSamples = 1,
+                               pValue = 0.05,
+                               aggregate_to = NULL,
+                               proportionMissing = .2,
+                               otherGear = "998",
+                               outputDir=here::here("output"),
+                               outputPlots=F,
+                               logfile="logFile.txt") {
 
 
   write_to_logfile(outputDir,logfile,"",label="DECISIONS MADE DURING AGGREGATION OF DATA")
@@ -91,7 +99,7 @@ aggregate_landings <- function(landingsData,lengthData,species_itis,
   #############################################################################
   #############################################################################
   #############################################################################
-  ##### WE NEED TO HAVE A BETTER METHOD OG AGGREGATING MARKET CODES HERE #####
+  ##### WE NEED TO HAVE A BETTER METHOD OF AGGREGATING MARKET CODES HERE #####
   #############################################################################
   #############################################################################
   #############################################################################
@@ -137,7 +145,7 @@ aggregate_landings <- function(landingsData,lengthData,species_itis,
 
       numYearsLengthsStarted <-  length(unique(QTRData$YEAR))
 
-      # deal with other gear differently since by definition may be sparse. aggregate to year may be prefereable
+      # deal with other gear differently since by definition may be sparse. aggregate to year may be preferable
       if (gearType == otherGear) {
         # if (mean(aggQTRData$numSamples) < proportionMissing*numYearsLengthsStarted) {
         #   data <- aggregate_to_qtr(data,gearType,marketCode,QTRData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile)
