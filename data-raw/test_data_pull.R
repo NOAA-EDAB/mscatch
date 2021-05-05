@@ -22,6 +22,7 @@ test_data_pull <- function(channel,species=164744,species_itis = T){ # species =
 
   ################ pull sample landings data and massage it
   #############################################################################################################
+  message("Pulling landings data ...")
   testDataPullLandings <- cfdbs::get_landings(channel,year="all",species=species,species_itis=species_itis)
   ## for test data assume we this is EPU data. To achive this we just sum over AREAS for now
   lands <- testDataPullLandings$data %>%
@@ -41,6 +42,7 @@ test_data_pull <- function(channel,species=164744,species_itis = T){ # species =
 
   #############################################################################################################
   # pull sample length data and massage it
+  message("Puling length data ...")
   testDataPullLength <- cfdbs::get_landings_length(channel,year="all",species=species,species_itis=species_itis)
   # create unique tripid since NUMSAMP is replicated for each species reported within a trip
   lengths <- testDataPullLength$data %>%
@@ -54,7 +56,7 @@ test_data_pull <- function(channel,species=164744,species_itis = T){ # species =
   sampleData <- as.data.frame(dplyr::full_join(sampleLandings,lengthsData, by=c("YEAR","QTR","NEGEAR","MARKET_CODE")))
   sampleData$YEAR <- as.integer(sampleData$YEAR)
   sampleData$QTR <- as.integer(sampleData$QTR)
-  # just extract the lengths and the number at length for the year, qrt etc
+  # just extract the lengths and the number at length for the year, qr etc
   sampleLengths <- lengths %>% dplyr::select(YEAR,QTR,NEGEAR,MARKET_CODE,LENGTH,NUMLEN,tripid)
   sampleLengths$YEAR <- as.integer(sampleLengths$YEAR)
   sampleLengths$QTR <- as.integer(sampleLengths$QTR)
