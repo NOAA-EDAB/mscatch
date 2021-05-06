@@ -28,7 +28,8 @@
 expand_landings_to_lengths <- function(landingsData,lengthData,lengthWeightParams){
 
   # join tables together for length and landings
-  joined <- dplyr::left_join(lengthData,landingsData,by=c("YEAR","QTR","NEGEAR","MARKET_CODE"))
+  #joined <- dplyr::left_join(lengthData,landingsData,by=c("YEAR","QTR","NEGEAR","MARKET_CODE"))
+  joined <- dplyr::left_join(landingsData,lengthData,by=c("YEAR","QTR","NEGEAR","MARKET_CODE"))
   # atribute weight to each fish in group and scale up by "expansion factor
   master <- joined %>%
     dplyr::group_by(YEAR,QTR,NEGEAR,MARKET_CODE) %>%
