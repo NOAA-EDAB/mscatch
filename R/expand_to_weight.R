@@ -35,5 +35,10 @@ expand_to_weight <- function(fishLength,numAtLength,landings,lengthWeightParams)
   # scaled weight to landings total.
   fishWeight <- fishWeight * expansionFactor
 
+  # if length samples are missing, just assign the landings as the weight.
+  if(anyNA(fishWeight)) {
+    fishWeight <- landings
+  }
+
   return(fishWeight)
 }
