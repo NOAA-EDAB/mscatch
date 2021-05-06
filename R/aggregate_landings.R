@@ -86,6 +86,7 @@ aggregate_landings <- function(landingsData,
   # take a look at length distribution of size categories
   plot_length_histogram(data$lengthData,species_itis,outputDir,outputPlots)
 
+
   #######################################################
   ####### MARKET CODES ##################################
   #######################################################
@@ -106,6 +107,15 @@ aggregate_landings <- function(landingsData,
 
   data <- aggregate_market_codes(data,pValue,outputDir,outputPlots,logfile)
   marketCodeList <- unique(data$landings$MARKET_CODE)
+
+
+
+  if (is.null(aggregate_to)) {
+    return(data)
+  }
+  ## Interpolation/imputation starts here
+
+
   #######################################################
   ####### QTR, SEMESTER, ANNUAL #########################
   #######################################################
@@ -115,6 +125,8 @@ aggregate_landings <- function(landingsData,
   plot_market_code_by_qtr(data,9,outputDir,outputPlots)
   write_to_logfile(outputDir,logfile,paste0("Length samples started in ",as.character(sampleStartYear),". All landings prior to this year will use this years data"),label=NULL,append = T)
   #write_to_logfile(outputDir,logfile,"Other gear (code 998) will be aggregated similarly to other gears",label="market code by qrt",append = T)
+
+
 
   # find set of years where samples were not taken but landings were. Early years
   landYrs <- unique(data$landings$YEAR)
