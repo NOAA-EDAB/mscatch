@@ -14,8 +14,14 @@ expand_landings_to_lengths(landingsData, lengthData, lengthWeightParams)
 \item{lengthWeightParams}{List. alpha = intercept, betas = slope(s), var = residual variance used to formulate the mean (?see Notes section below)}
 }
 \value{
-A Tibble with same columns as \code{landingsData}
-\item{expandedLandings}{landingsData expanded to represent weight of landings by length}
+A Tibble of expanded landings to represent weight of landings by length
+\item{YEAR}{Year of landings}
+\item{NEGEAR}{3 digit gear code as defined in cfdbs.gear}
+\item{QTR}{Quarter year of landings (The presence of this field depends on whether it was present in the \code{landingsData}}
+\item{MARKET_CODE}{Market code assigned to landed fish (The presence of this field depends on whether it was present in the \code{landingsData}}
+\item{LENGTH}{Length of sampled fish}
+\item{NUMLEN}{number of sampled for fish stated LENGTH}
+\item{weight}{expanded weight of all fish of given LENGTH in YEAR, NEGEAR etc..}
 }
 \description{
 Proportions commercial landings based on length sample distribution
