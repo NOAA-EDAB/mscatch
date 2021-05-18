@@ -11,9 +11,10 @@ aggregate_landings(
   landingsThresholdGear = 0.9,
   nLengthSamples = 1,
   pValue = 0.05,
-  aggregate_to = "QTR",
+  aggregate_to = NULL,
+  borrowLengths = T,
   proportionMissing = 0.2,
-  otherGear,
+  otherGear = "998",
   outputDir = here::here("output"),
   outputPlots = F,
   logfile = "logFile.txt"
@@ -32,11 +33,15 @@ aggregate_landings(
 
 \item{pValue}{Numeric scalar. Threshold pvalue for determining significance of ks test for length samples}
 
-\item{aggregate_to}{Character string. Level of aggregation for all MARKET_CODES and gears}
+\item{aggregate_to}{Character string. Level of aggregation for all MARKET_CODES and gears (NULL, "QTR", "YEAR", "MIX").
+Default = NULL - do not aggregate.}
+
+\item{borrowLengths}{Boolean. Return data as is or use allgorithm to borrow lengths from neighboring cells (Time and/or space)}
 
 \item{proportionMissing}{Numeric scalar. Proportion of missing samples allowed per YEAR for each MARKET_CODE/GEAR combination). Default = 0.2}
 
-\item{otherGear}{Character string. Code to indicate the class for "other Gear". This is the group of gear types that land the species of interest but in small numbers}
+\item{otherGear}{Character string. Code to indicate the class for "other Gear".
+This is the group of gear types that land the species of interest but in small numbers Default = "998"}
 
 \item{outputDir}{Character string. Path to output directory (png files saved here)}
 

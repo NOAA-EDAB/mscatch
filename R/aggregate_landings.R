@@ -14,6 +14,7 @@
 #'@param pValue Numeric scalar. Threshold pvalue for determining significance of ks test for length samples
 #'@param aggregate_to Character string. Level of aggregation for all MARKET_CODES and gears (NULL, "QTR", "YEAR", "MIX").
 #'Default = NULL - do not aggregate.
+#'@param borrowLengths Boolean. Return data as is or use allgorithm to borrow lengths from neighboring cells (Time and/or space)
 #'@param proportionMissing Numeric scalar. Proportion of missing samples allowed per YEAR for each MARKET_CODE/GEAR combination). Default = 0.2
 #'@param otherGear Character string. Code to indicate the class for "other Gear".
 #'This is the group of gear types that land the species of interest but in small numbers Default = "998"
@@ -37,6 +38,7 @@ aggregate_landings <- function(landingsData,
                                nLengthSamples = 1,
                                pValue = 0.05,
                                aggregate_to = NULL,
+                               borrowLengths = T,
                                proportionMissing = .2,
                                otherGear = "998",
                                outputDir=here::here("output"),
@@ -110,8 +112,25 @@ aggregate_landings <- function(landingsData,
 
 
 
-  if (is.null(aggregate_to)) {
+  if (!(borrowLengths)) { # return data without any length borrowing
+    # aggregate data over time
+    if (aggregate_to == "YEAR") {
+      data$landings <- data$landings %>%
+        dplyr::group_by(YEAR, NEGEAR) %>%
+        dplyr::summarise(landings_land = sum(landings_land),
+                         len_totalNumLen = sum(len_totalNumLen),
+                         len_numLengthSamples = sum(len_numLengthSamples),
+                         landings_nn = sum(landings_nn)) %>%
+        dplyr::ungroup()
+      data$lengthData <- data$lengthData %>%
+        dplyr::group_by(YEAR, NEGEAR,LENGTH) %>%
+        dplyr::summarise(NUMLEN = sum(NUMLEN)) %>%
+        dplyr::ungroup()
+
+    } else { # do nothing
+    }
     return(data)
+
   }
   ## Interpolation/imputation starts here
 
