@@ -20,24 +20,29 @@ plot_length_histogram <- function(lengthData,species_itis,outputDir,outputPlots)
 
   lengthDataGEARS <- lengthData %>% dplyr::group_by(NEGEAR,MARKET_CODE,LENGTH) %>% dplyr::summarise(numlens=sum(as.numeric(NUMLEN)))
 
-  png(paste0(outputDir,"/5_market_category_lengths_by_gear.png"))
+  # check to see if any length data
+  if (any(!is.na(lengthDataGEARS$LENGTHS))) {
 
-  p <- ggplot(data = lengthDataGEARS) +
-    geom_bar(stat="identity",mapping = aes(x=LENGTH,y=numlens),na.rm=T) +
-    facet_wrap(~NEGEAR+MARKET_CODE,scales="free_y",nrow=length(unique(lengthData$NEGEAR)), ncol = length(unique(lengthData$MARKET_CODE))) +
-    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-    scale_x_discrete(name="Length (cm)", breaks=seq(0, max(lengthData$LENGTH),10))
-  print(p)
-  dev.off()
+    png(paste0(outputDir,"/5_market_category_lengths_by_gear.png"))
 
-  png(paste0(outputDir,"/6_market_category_lengths.png"))
-  p <- ggplot(data = lengthDataGEARS) +
-    geom_bar(stat="identity",mapping = aes(x=LENGTH,y=numlens),na.rm=T) +
-    facet_wrap(~MARKET_CODE,scales="free_y",nrow = length(unique(lengthData$MARKET_CODE)),ncol=1) +
-    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-    scale_x_discrete(name="Length (cm)", breaks=seq(0, max(lengthData$LENGTH),10))
-  print(p)
+    p <- ggplot(data = lengthDataGEARS) +
+      geom_bar(stat="identity",mapping = aes(x=LENGTH,y=numlens),na.rm=T) +
+      facet_wrap(~NEGEAR+MARKET_CODE,scales="free_y",nrow=length(unique(lengthData$NEGEAR)), ncol = length(unique(lengthData$MARKET_CODE))) +
+      theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+      scale_x_discrete(name="Length (cm)", breaks=seq(0, max(lengthData$LENGTH),10))
+    print(p)
+    dev.off()
 
-  dev.off()
+    png(paste0(outputDir,"/6_market_category_lengths.png"))
+    p <- ggplot(data = lengthDataGEARS) +
+      geom_bar(stat="identity",mapping = aes(x=LENGTH,y=numlens),na.rm=T) +
+      facet_wrap(~MARKET_CODE,scales="free_y",nrow = length(unique(lengthData$MARKET_CODE)),ncol=1) +
+      theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+      scale_x_discrete(name="Length (cm)", breaks=seq(0, max(lengthData$LENGTH),10))
+    print(p)
 
+    dev.off()
+  } else {
+    # no length samples
+  }
 }
