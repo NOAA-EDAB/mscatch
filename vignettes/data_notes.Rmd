@@ -200,7 +200,8 @@ Result - aggregated to 2 areas (NE, MA) by semester. Really only 1 gear type
 nespp3 = 212
 species_itis = 172414
 
-Data may come from other sources also. NAFO.
+landings data comes cfdbs > 1992 and from Canada via a github repo. (pre 1992 landings can be 1-10 thousand mt per year)
+Length data comes from cfdbs only
 
 Prior to 1992 Joint venture. CF tables landings dont match up with prior assessments since Joint venture data is stored in databases (servers = FishA, FishB). (Tables something like FFJV) which are old and were not converted to oracle databases. So to tease them apart from US landings is near impossible. For mackerel assessment data from < 1992 found in prior assessments are assumed as true since recreation is not possible.
 
