@@ -214,6 +214,8 @@ $$expanded \; unclassified\; weights \; = expansion \; factor \;*\; fish \; weig
 Need to deal with discards in a similar fashion.
 It seems that Susan Wigley has a SAS script that most/some stock assessment scientists use to help with this.
 Edit: Spoke to Susan Wigley she says that they will have all of the discard estimates over time for all of the species in a database similar to that of the landings, length, age databases. This will make life heck of a lot simpler for us.
+
+Discards tracked in observer database from 1989. However spotty coverage (mostly from otter trawls) until 2005
 			
 # NAFO data
 
