@@ -52,12 +52,14 @@ aggregate_landings <- function(landingsData,
   write_to_logfile(outputDir,logfile,data=deparse(dbutils::capture_function_call()),label="Arguments passed to aggregate_landings:",append=T)
 
   # cleans landings data and length data of NAs
-  landingsData <- landingsData %>% dplyr::group_by(YEAR,QTR,NEGEAR,MARKET_CODE) %>%
-      dplyr::summarise(landings_land=sum(landings_land, na.rm=T),landings_nn=sum(landings_nn, na.rm=T),len_totalNumLen=sum(len_totalNumLen,na.rm=T),len_numLengthSamples=sum(len_numLengthSamples, na.rm=T)) %>%
-      dplyr::ungroup()
-  lengthData <- lengthData %>% dplyr::group_by(YEAR,QTR,NEGEAR,MARKET_CODE,LENGTH) %>%
-      dplyr::summarise(NUMLEN = sum(as.numeric(NUMLEN),na.rm=T)) %>%
-      dplyr::ungroup()
+  landingsData <- landingsData %>%
+    dplyr::group_by(YEAR,QTR,NEGEAR,MARKET_CODE) %>%
+    dplyr::summarise(landings_land=sum(landings_land, na.rm=T),landings_nn=sum(landings_nn, na.rm=T),len_totalNumLen=sum(len_totalNumLen,na.rm=T),
+                     len_numLengthSamples=sum(len_numLengthSamples, na.rm=T),
+                     .groups="drop")
+  lengthData <- lengthData %>%
+    dplyr::group_by(YEAR,QTR,NEGEAR,MARKET_CODE,LENGTH) %>%
+    dplyr::summarise(NUMLEN = sum(as.numeric(NUMLEN),na.rm=T),.groups="drop")
 
   # create list for data.
   # landing and lengths will from this point on be parts of a list.
@@ -70,14 +72,16 @@ aggregate_landings <- function(landingsData,
   #######################################################
   ####### GEARs #########################################
   #######################################################
-
+  message("Aggregating by gear type ...")
   # Now deal with Gary's schematic.
   # 1. aggregate the gears based on landings
 
-  data <- aggregate_gear(data,otherGear,landingsThresholdGear,species_itis,outputDir,outputPlots)
+  data <- aggregate_gear(data,otherGear,landingsThresholdGear,species_itis,logfile,outputDir,outputPlots)
+
   # list of gears in ordered by landings
-  gearList <- data$landings %>% dplyr::group_by(NEGEAR) %>%
-    dplyr::summarise(totLand=sum(landings_land)) %>%
+  gearList <- data$landings %>%
+    dplyr::group_by(NEGEAR) %>%
+    dplyr::summarise(totLand=sum(landings_land),.groups="drop") %>%
     dplyr::arrange(desc(totLand)) %>%
     dplyr::select(NEGEAR) %>%
     unlist()
@@ -107,12 +111,13 @@ aggregate_landings <- function(landingsData,
   #############################################################################
   #############################################################################
 
+  message("Aggregating by market code ...")
+
   data <- aggregate_market_codes(data,pValue,outputDir,outputPlots,logfile)
   marketCodeList <- unique(data$landings$MARKET_CODE)
 
-
-
-  if (!(borrowLengths)) { # return data without any length borrowing
+  ## Return data without any length borrowing
+  if (!(borrowLengths)) {
     # aggregate data over time
     if (aggregate_to == "YEAR") {
       data$landings <- data$landings %>%
@@ -120,20 +125,34 @@ aggregate_landings <- function(landingsData,
         dplyr::summarise(landings_land = sum(landings_land),
                          len_totalNumLen = sum(len_totalNumLen),
                          len_numLengthSamples = sum(len_numLengthSamples),
-                         landings_nn = sum(landings_nn)) %>%
-        dplyr::ungroup()
+                         landings_nn = sum(landings_nn),
+                         .groups="drop")
+
       data$lengthData <- data$lengthData %>%
         dplyr::group_by(YEAR, NEGEAR,LENGTH) %>%
-        dplyr::summarise(NUMLEN = sum(NUMLEN)) %>%
-        dplyr::ungroup()
+        dplyr::summarise(NUMLEN = sum(NUMLEN),.groups="drop")
+
+    } else if (aggregate_to == "QTR") {
+      data$landings <- data$landings %>%
+        dplyr::group_by(YEAR, QTR, NEGEAR) %>%
+        dplyr::summarise(landings_land = sum(landings_land),
+                         len_totalNumLen = sum(len_totalNumLen),
+                         len_numLengthSamples = sum(len_numLengthSamples),
+                         landings_nn = sum(landings_nn),
+                         .groups="drop")
+
+      data$lengthData <- data$lengthData %>%
+        dplyr::group_by(YEAR,QTR, NEGEAR,LENGTH) %>%
+        dplyr::summarise(NUMLEN = sum(NUMLEN),.groups="drop")
 
     } else { # do nothing
     }
+
     return(data)
 
   }
-  ## Interpolation/imputation starts here
 
+  ## Interpolation/imputation starts here
 
   #######################################################
   ####### QTR, SEMESTER, ANNUAL #########################
@@ -160,16 +179,22 @@ aggregate_landings <- function(landingsData,
 #return(data)
   for (gearType in gearList) { # loop over gear types
     for (marketCode in marketCodeList) { # loop over market category
-      if (marketCode == "UN") next
+      if (marketCode == "UN") next # deal with Unclassifieds differently
       print(c(gearType,marketCode))
       # if (gearType == "100")
       #   return(data)
       # filter data by gear, market code and years where samples were taken
-      QTRData <- data$landings %>% dplyr::filter(YEAR >= sampleStartYear & NEGEAR == gearType & MARKET_CODE == marketCode)
-      # find number of times no samples seen by QTR and YEAR
-      aggQTRData <- QTRData %>% dplyr::group_by(QTR) %>% dplyr::summarise(numSamples=sum(len_numLengthSamples < nLengthSamples))
+      QTRData <- data$landings %>%
+        dplyr::filter(YEAR >= sampleStartYear & NEGEAR == gearType & MARKET_CODE == marketCode)
+      # find number of times no samples seen by QTR
+      aggQTRData <- QTRData %>%
+        dplyr::group_by(QTR) %>%
+        dplyr::summarise(numSamples=sum(len_numLengthSamples < nLengthSamples))
+      # find number of times no samples seen by YEAR
+      aggYEARData <- QTRData %>%
+        dplyr::group_by(YEAR) %>%
+        dplyr::summarize(totLand=sum(landings_land),numSamples=all(len_numLengthSamples < nLengthSamples))
 
-      aggYEARData <- QTRData %>% dplyr::group_by(YEAR) %>% dplyr::summarize(totLand=sum(landings_land),numSamples=all(len_numLengthSamples < nLengthSamples))
       # determines if number of years missing data is small enough to borrow data from other years
       write_to_logfile(outputDir,logfile,data=paste0("NEGEAR: ",gearType," - MARKET_CODE: ",marketCode," - Approx : ",mean(aggQTRData$numSamples)," years have NO length samples - based on mean(QTRs)"),label=NULL,append=T)
       write_to_logfile(outputDir,logfile,data=paste0("NEGEAR: ",gearType," - MARKET_CODE: ",marketCode," - There are ",sum(aggYEARData$numSamples)," years out of ",length(aggYEARData$numSamples)," (in which there are landings) where no length samples exist - based on # YEARS"),label=NULL,append=T)
@@ -197,30 +222,28 @@ aggregate_landings <- function(landingsData,
       } else if (aggregate_to == "YEAR") {
         data <- aggregate_to_year(data,gearType,mainGearType,marketCode,aggYEARData,sampleStartYear,missingEarlyYears,proportionMissing,nLengthSamples,pValue,outputDir,logfile)
       } else if (aggregate_to == "MIX") {
+        ###################################################################################################
+        # if mean number of missing years < specified tolerance
+        if (mean(aggQTRData$numSamples) < proportionMissing*numYearsLengthsStarted) {
+          # fill in missing QTRS using previous QTR(s): Borrow length sample data from previous QTR
+          data <- aggregate_to_qtr(data,gearType,marketCode,QTRData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile)
 
-      ###################################################################################################
-      # if mean number of missing years < specified tolerance
-      if (mean(aggQTRData$numSamples) < proportionMissing*numYearsLengthsStarted) {
+        } else if (0) {
+          # maybe add rules for semester aggregation if we can work out a plan
 
-        # fill in missing QTRS using previous QTR(s): Borrow length sample data from previous QTR
-        data <- aggregate_to_qtr(data,gearType,marketCode,QTRData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile)
+        } else  { # too many QTRs missing. aggregate the entire MARKET_CODE over QTR to annual data
 
-      } else if (0) {
-        # maybe add rules for semester aggregation if we can work out a plan
+          print(aggYEARData)
+          if ((sum(aggYEARData$numSamples==1)/length(aggYEARData$numSamples)) > proportionMissing ){
+            print(paste0("Aggregate over QTRS to YEARly-",marketCode))
+            data <- aggregate_to_year(data,gearType,mainGearType,marketCode,aggYEARData,sampleStartYear,missingEarlyYears,proportionMissing,nLengthSamples,pValue,outputDir,logfile)
+          } else {
+            # need to aggregate MARKET_CODE over QTRs to YEAR
+            stop("# need to aggregate MARKET_CODE over QTRs to YEAR")
 
-      } else  { # too many QTRs missing. aggregate the entire MARKET_CODE over QTR to annual data
-
-        print(aggYEARData)
-        if ((sum(aggYEARData$numSamples==1)/length(aggYEARData$numSamples)) > proportionMissing ){
-          print(paste0("Aggregate over QTRS to YEARly-",marketCode))
-          data <- aggregate_to_year(data,gearType,mainGearType,marketCode,aggYEARData,sampleStartYear,missingEarlyYears,proportionMissing,nLengthSamples,pValue,outputDir,logfile)
-        } else {
-          # need to aggregate MARKET_CODE over QTRs to YEAR
-          stop("# need to aggregate MARKET_CODE over QTRs to YEAR")
+          }
 
         }
-
-      }
 
       }
       ###################################################################################################
