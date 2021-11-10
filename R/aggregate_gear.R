@@ -1,7 +1,7 @@
 #' Aggregates landings and length data based on gear
 #'
 #' Selects unique gear types that comprise a certain percentage of total landings. All landings by other gear types are deemed minor
-#'  and thus aggregated into an "other gear" category. The percentage is an function argument
+#'  and thus relabeled as "other gear" category. The percentage is a function argument
 #'
 #'@param data List. Landings data and length data
 #'@param recodeOtherGear Numeric scalar. Arbitrary code to use for "other gears" that contribute little to landings
@@ -13,9 +13,9 @@
 #'\item{landings}{same as input}
 #'\item{lengthData}{Same as input}
 #'
-#'
+#'@noRd
 
-aggregate_gear <- function(data,recodeOtherGear,landingsThresholdGear,species_itis,outputDir,outputPlots) {
+aggregate_gear <- function(data,recodeOtherGear,landingsThresholdGear,species_itis,logfile,outputDir,outputPlots) {
 
   landings <- data$landings
   lengthData <- data$lengthData
@@ -24,13 +24,19 @@ aggregate_gear <- function(data,recodeOtherGear,landingsThresholdGear,species_it
 
   # find gears that make up "threshold" % of catch overall. Valid assumption?
   # totl landings by group
-  aggTopPercent <- landings %>% group_by(NEGEAR) %>% summarise(totalLandings = sum(landings_land, na.rm = TRUE)) %>% arrange(desc(totalLandings))
+  aggTopPercent <- landings %>%
+    group_by(NEGEAR) %>%
+    summarise(totalLandings = sum(landings_land, na.rm = TRUE)) %>%
+    arrange(desc(totalLandings))
 
   plot_landings_by_gear(species_itis,landings,1,outputPlots,outputDir,"1b")
 
   # convert to % of total and reorder
   aggTopPercent <- mutate(aggTopPercent,cum_sum=cumsum(totalLandings),percent=cum_sum/sum(totalLandings))
   print(aggTopPercent)
+
+  write_to_logfile(outputDir,logfile,as.data.frame(aggTopPercent),label="Landings by gear type:",append = T)
+
   png("test.png",height = 1000*nrow(aggTopPercent), width = 800*ncol(aggTopPercent))
   gridExtra::grid.table(aggTopPercent)
   dev.off()
