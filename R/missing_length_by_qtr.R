@@ -11,6 +11,7 @@
 #' @return
 #'\item{numSamples}{tibble (nx4). Columns =  YEAR, QTR, len_totalNumLen, len_numLengthSamples}
 #'
+#'@noRd
 
 ##NOTE: recursion needs to be stopped at some point.
 missing_length_by_qtr <- function(QTRData,iyear,iqtr,nLengthSamples,minYear) {

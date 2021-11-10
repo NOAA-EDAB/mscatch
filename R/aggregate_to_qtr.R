@@ -16,6 +16,8 @@
 #' @param logFile Character string. Specify the name for the log file generated describing all decisions made.
 #'
 #' @return List. Same as input data
+#'
+#' @noRd
 
 
 

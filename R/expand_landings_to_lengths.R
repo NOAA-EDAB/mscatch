@@ -33,6 +33,7 @@
 
 expand_landings_to_lengths <- function(landingsData,lengthData,lengthWeightParams){
 
+
   # determine fields to join by. MARKET_CODE & QTR may be missing
   mainList <- c("YEAR","QTR","NEGEAR","MARKET_CODE")
   varsPresent <- mainList[mainList %in% names(landingsData) ]
@@ -51,7 +52,7 @@ expand_landings_to_lengths <- function(landingsData,lengthData,lengthWeightParam
   # join tables together for length and landings
   #joined <- dplyr::left_join(lengthData,landingsData,by=c("YEAR","QTR","NEGEAR","MARKET_CODE"))
   # joined <- dplyr::left_join(landingsData,lengthData,by=varsPresent)
-  # # atribute weight to each fish in group and scale up by "expansion factor
+  # # attribute weight to each fish in group and scale up by "expansion factor
   # master <- joined %>%
   #   dplyr::group_by(YEAR,QTR,NEGEAR,MARKET_CODE) %>%
   #   dplyr::mutate(weight = expand_to_weight(LENGTH,NUMLEN,landings_land,lengthWeightParams)) %>%

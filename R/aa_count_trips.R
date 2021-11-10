@@ -18,7 +18,7 @@
 #' Column 4 - Difference in number of Trips
 #' }
 #'
-#'
+#' @noRd
 
 aa_count_trips <- function(channel,yearRange=1964:2017) {
 

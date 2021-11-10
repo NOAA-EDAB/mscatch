@@ -15,7 +15,7 @@
 #' This an internal function called within a dplyr::mutate statement operating on a group
 #'
 #'
-#'
+#' @noRd
 
 expand_to_weight <- function(fishLength,numAtLength,landings,lengthWeightParams) {
 

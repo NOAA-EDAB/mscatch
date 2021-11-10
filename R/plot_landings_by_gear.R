@@ -8,7 +8,7 @@
 #'
 #'
 #'
-#' @export
+#' @noRd
 
 plot_landings_by_gear <- function(species,data,threshold,outputPlots,outputDir,plotID) {
 

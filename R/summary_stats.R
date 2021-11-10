@@ -13,7 +13,7 @@
 #' @importFrom dplyr "summarize" "summarise" "group_by"
 #' @importFrom magrittr "%>%"
 #'
-#'@export
+#'@noRd
 
 summary_stats <- function(data,species_itis,outputDir,outputPlots) {
 

@@ -65,6 +65,7 @@ fit_length_weight <- function(lengthWeightData,speciesName,outputDir,logfile){
   figText$SEASON <- as.factor(figText$SEASON)
 
 
+
   png(paste0(outputDir,"/length_weight_relationship_",speciesName,".png"),width = 1000,height = 1000,units="px")
 
   p <- ggplot2::ggplot(data = lwd,ggplot2::aes(x=LENGTH, y = INDWT, color = as.factor(SEX))) +

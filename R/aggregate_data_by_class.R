@@ -11,6 +11,7 @@
 #'@return tibble
 #'\item{data}{The same form and content as the input tibble, just aggregated}
 #'
+#'@noRd
 
 
 aggregate_data_by_class <- function(data,variable,classes,conditionalOn=NULL,dataset) {

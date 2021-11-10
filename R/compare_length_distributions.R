@@ -10,7 +10,7 @@
 #'@return Character vector
 #'\item{codes}{Two market category codes not significantly different}
 #'
-#'@export
+#'@noRd
 
 compare_length_distributions <- function(landings,lengthData,variableToAggregate,groupBy,pValue,outputDir,logfile) {
 

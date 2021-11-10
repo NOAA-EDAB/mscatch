@@ -13,7 +13,7 @@
 #'@importFrom dplyr "summarize" "summarise" "group_by"
 #'@importFrom magrittr "%>%"
 #'
-#' @export
+#' @noRd
 
 plot_market_codes <- function(marketData,plotID,outputDir,outputPlots){
 

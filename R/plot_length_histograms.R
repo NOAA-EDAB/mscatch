@@ -12,7 +12,7 @@
 #'@importFrom dplyr "summarize" "summarise" "group_by"
 #'@importFrom magrittr "%>%"
 #'
-#' @export
+#' @noRd
 
 plot_length_histogram <- function(lengthData,species_itis,outputDir,outputPlots){
 
@@ -21,7 +21,7 @@ plot_length_histogram <- function(lengthData,species_itis,outputDir,outputPlots)
   lengthDataGEARS <- lengthData %>% dplyr::group_by(NEGEAR,MARKET_CODE,LENGTH) %>% dplyr::summarise(numlens=sum(as.numeric(NUMLEN)))
 
   # check to see if any length data
-  if (any(!is.na(lengthDataGEARS$LENGTHS))) {
+  if (any(!is.na(lengthDataGEARS$LENGTH))) {
 
     png(paste0(outputDir,"/5_market_category_lengths_by_gear.png"))
 

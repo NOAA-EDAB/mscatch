@@ -19,6 +19,7 @@
 #'
 #' @return List. Same as input data
 #'
+#'@noRd
 
 
 aggregate_to_year <- function(data,gearType,mainGearType,marketCode,aggYEARData,sampleStartYear,missingEarlyYears,proportionMissing,nLengthSamples,pValue,outputDir,logfile) {
