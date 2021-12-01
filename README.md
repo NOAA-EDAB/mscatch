@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# mscatch
+# mscatch <img src="man/figures/logo.png" align="right" width="120" />
 
 <!-- badges: start -->
 [![gh-pages](https://github.com/NOAA-EDAB/mscatch/workflows/gh-pages/badge.svg)](https://github.com/NOAA-EDAB/mscatch/actions)
