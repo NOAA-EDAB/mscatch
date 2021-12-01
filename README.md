@@ -5,9 +5,7 @@
 
 <!-- badges: start -->
 [![gh-pages](https://github.com/NOAA-EDAB/mscatch/workflows/gh-pages/badge.svg)](https://github.com/NOAA-EDAB/mscatch/actions)
-
 [![R-CMD-check](https://github.com/NOAA-EDAB/mscatch/workflows/R-CMD-check/badge.svg)](https://github.com/NOAA-EDAB/mscatch/actions)
-
 [![gitleaks](https://github.com/NOAA-EDAB/mscatch/workflows/gitleaks/badge.svg)](https://github.com/NOAA-EDAB/mscatch/actions)
 <!-- badges: end -->
 
