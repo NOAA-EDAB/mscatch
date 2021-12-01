@@ -1,12 +1,12 @@
 ---
-title: "Data needs"
+title: "mscatch"
 #output: html_document
 output: rmarkdown::html_vignette
 csl: apa-annotated-bibliography.csl
 bibliography: references.bib
 link-citations: yes
 vignette: >
-  %\VignetteIndexEntry{Data needs}
+  %\VignetteIndexEntry{mscatch}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -17,8 +17,6 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 ```
-
-# General overview
 
 To use `mscatch` you will need to compile two data sets for a specific region of interest, whether a stock area, an ecological production unit, or a larger area:
 
@@ -46,8 +44,9 @@ This is then merged with the catch data.
 
 The data set should have this form
 
-``` {r lengths}
-readRDS(here::here("data-raw/data/sampleLengths.RDS"))
+``` {r lengths, echo = F, eval = T}
+sl <- readRDS(here::here("data-raw/data/sampleLengths.RDS"))
+sl
 ```
 
 where for each sampled in the YEAR, QTR, caught using NEGEAR and classed as MARKET_CODE
@@ -67,8 +66,9 @@ Discards are not included in this data. At a future date both `comlandr` and the
 
 The resulting Catch data is then merged with the biological samples to summarise total catch (metric tons) by YEAR, QTR, GEAR, MARKET_CODE, the number of trips associated with the landings, the number of biological samples taken, and the total number of fish sampled. The data set should have this form:
 
-``` {r catch}
-readRDS(here::here("data-raw/data/sampleCatch.RDS"))
+``` {r catch, echo = F, eval = T}
+sc <- readRDS(here::here("data-raw/data/sampleCatch.RDS"))
+sc
 ```
 
 ## Use `mscatch`
