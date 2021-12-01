@@ -20,7 +20,7 @@
 #'This is the group of gear types that land the species of interest but in small numbers Default = "998"
 #'@param outputDir Character string. Path to output directory (png files saved here)
 #'@param outputPlots Boolean. Should plots be created. T or F (Default = F)
-#'@param logFile Character string. Specify the name for the log file generated describing all decisions made.
+#'@param logfile Character string. Specify the name for the log file generated describing all decisions made.
 #'
 #'@importFrom dplyr "summarize" "summarise" "group_by" "filter" "select" "arrange" "mutate"
 #'@importFrom magrittr "%>%"
@@ -117,6 +117,7 @@ aggregate_landings <- function(landingsData,
   marketCodeList <- unique(data$landings$MARKET_CODE)
 
   ## Return data without any length borrowing
+  #  This terminates the algorithm without any length borrowing.
   if (!(borrowLengths)) {
     # aggregate data over time
     if (aggregate_to == "YEAR") {

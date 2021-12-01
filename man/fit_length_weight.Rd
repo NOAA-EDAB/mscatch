@@ -10,11 +10,15 @@ fit_length_weight(lengthWeightData, speciesName, outputDir, logfile)
 \item{lengthWeightData}{Data frame. length-weight pairs. Each row represents an individual fish}
 
 \item{speciesName}{Character string. Common name for species}
+
+\item{outputDir}{Character string. Path to output directory (png files saved here)}
+
+\item{logfile}{Character string. Specify the name for the log file generated describing all decisions made.}
 }
 \value{
 List of model fit objects
-\item{commonSlope}{\code{\url{lm}} object. Fit for single slope (beta)}
-\item{seasonalSlope}{\code{\url{lm}} object. Fit for seasonal slopes}
+\item{commonSlope}{\code{\link{lm}} object. Fit for single slope (beta)}
+\item{seasonalSlope}{\code{\link{lm}} object. Fit for seasonal slopes}
 }
 \description{
 Fits a length weight relationship for use in length expansion

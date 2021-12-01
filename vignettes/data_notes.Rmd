@@ -1,15 +1,14 @@
 ---
-title: "Data Notes"
-output:
-  html_document:
-    collapsed: yes
-    number_sections: no
-    smooth_scrol: yes
-    toc: yes
-    toc_float: yes
-  pdf_document:
-    toc: yes
-
+title: "Data notes"
+#output: html_document
+output: rmarkdown::html_vignette
+csl: apa-annotated-bibliography.csl
+bibliography: references.bib
+link-citations: yes
+vignette: >
+  %\VignetteIndexEntry{Data notes}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}

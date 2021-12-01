@@ -6,3 +6,5 @@
 ^other$
 ^tests$
 ^\.github$
+^docs$
+^pkgdown$

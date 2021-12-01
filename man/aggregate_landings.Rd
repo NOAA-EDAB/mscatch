@@ -47,7 +47,7 @@ This is the group of gear types that land the species of interest but in small n
 
 \item{outputPlots}{Boolean. Should plots be created. T or F (Default = F)}
 
-\item{logFile}{Character string. Specify the name for the log file generated describing all decisions made.}
+\item{logfile}{Character string. Specify the name for the log file generated describing all decisions made.}
 }
 \value{
 List of landings and associated length samples

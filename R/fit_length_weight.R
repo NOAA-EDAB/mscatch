@@ -4,11 +4,13 @@
 #'
 #'@param lengthWeightData Data frame. length-weight pairs. Each row represents an individual fish
 #'@param speciesName Character string. Common name for species
-## #' @inheritParams get_species
+#'@param outputDir Character string. Path to output directory (png files saved here)
+#'@param logfile Character string. Specify the name for the log file generated describing all decisions made.
+
 #'
 #'@return List of model fit objects
-#'\item{commonSlope}{\code{\url{lm}} object. Fit for single slope (beta)}
-#'\item{seasonalSlope}{\code{\url{lm}} object. Fit for seasonal slopes}
+#'\item{commonSlope}{\code{\link{lm}} object. Fit for single slope (beta)}
+#'\item{seasonalSlope}{\code{\link{lm}} object. Fit for seasonal slopes}
 #'
 #'@section Notes on model fitting :
 #'

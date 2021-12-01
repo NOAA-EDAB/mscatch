@@ -1,6 +1,6 @@
 Package: mscatch
 Type: Package
-Title: Multispecies Length Expansion
+Title: Multispecies length expansion of commercial catch
 Version: 0.1.0
 Authors@R: c(person(given="Andy", 
                     family="Beet",
@@ -14,8 +14,7 @@ Authors@R: c(person(given="Andy",
                     family="Lucey",
                     email="sean.lucey@noaa.gov",
                     role=c("aut")))
-Description: Attributes length distribution of market codes to commercial landings. 
-    Landings are aggregated (based on data avilability) over time, space, gear types, market codes
+Description: Attributes length distribution of market codes to commercial landings. L landings are aggregated (based on data avilability) over time, space, gear types, market codes
 License: file LICENSE
 URL: https://github.com/NOAA-EDAB/mscatch
 BugReports: https://github.com/NOAA-EDAB/mscatch/issues
@@ -26,7 +25,9 @@ Suggests:
     testthat,
     knitr,
     rmarkdown,
-    DT
+    DT,
+    DBI,
+    cfdbs
 VignetteBuilder: knitr
 Imports: 
     dplyr,
@@ -35,7 +36,8 @@ Imports:
     gridExtra,
     here,
     purrr,
-    stringr
+    stringr,
+    dbutils
 Remotes:
     andybeet/cfdbs
     andybeet/dbutils
