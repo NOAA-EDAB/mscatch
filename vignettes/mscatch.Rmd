@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+ library(magrittr)
 ```
 
 To use `mscatch` you will need to compile two data sets for a specific region of interest, whether a stock area, an ecological production unit, or a larger area:
@@ -45,7 +46,8 @@ This is then merged with the catch data.
 The data set should have this form
 
 ``` {r lengths, echo = F, eval = T}
-sl <- readRDS(here::here("data-raw/data/sampleLengths.RDS"))
+sl <- readRDS(here::here("data-raw/data/sampleLengths.RDS")) %>%
+  dplyr::select(-tripid)
 sl
 ```
 
