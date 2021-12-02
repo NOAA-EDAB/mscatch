@@ -88,7 +88,7 @@ aggregate_to_year <- function(data,gearType,mainGearType,marketCode,aggYEARData,
         YEARData <- data$landings %>%
           dplyr::filter(YEAR >= sampleStartYear & NEGEAR == mainGearType & MARKET_CODE == marketCode)
         mainGear <- T
-        ## need to code for instances where this fails!!
+        ## need to code for instances where this fails!! ie. where main fleet has no length samples
       }
 
       # for each year with missing length find closest year with length samples

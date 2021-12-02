@@ -37,9 +37,9 @@ aggregate_gear <- function(data,recodeOtherGear,landingsThresholdGear,species_it
 
   write_to_logfile(outputDir,logfile,as.data.frame(aggTopPercent),label="Landings by gear type:",append = T)
 
-  png("test.png",height = 1000*nrow(aggTopPercent), width = 800*ncol(aggTopPercent))
-  gridExtra::grid.table(aggTopPercent)
-  dev.off()
+  # png("test.png",height = 1000*nrow(aggTopPercent), width = 800*ncol(aggTopPercent))
+  # gridExtra::grid.table(aggTopPercent)
+  # dev.off()
 
   # select the gear that make up at least threshold %
   nGearsChosen <- dim(aggTopPercent %>% filter(percent<= landingsThresholdGear) %>% select(NEGEAR))[1]

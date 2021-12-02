@@ -11,7 +11,7 @@ aggregate_landings(
   landingsThresholdGear = 0.9,
   nLengthSamples = 1,
   pValue = 0.05,
-  aggregate_to = NULL,
+  aggregate_to = "YEAR",
   borrowLengths = T,
   proportionMissing = 0.2,
   otherGear = "998",
@@ -33,8 +33,8 @@ aggregate_landings(
 
 \item{pValue}{Numeric scalar. Threshold pvalue for determining significance of ks test for length samples}
 
-\item{aggregate_to}{Character string. Level of aggregation for all MARKET_CODES and gears (NULL, "QTR", "YEAR", "MIX").
-Default = NULL - do not aggregate.}
+\item{aggregate_to}{Character string. Level of aggregation for all MARKET_CODES and gears ("QTR", "YEAR", "SEMESTER", MIX").
+Default = YEAR.}
 
 \item{borrowLengths}{Boolean. Return data as is or use allgorithm to borrow lengths from neighboring cells (Time and/or space)}
 
