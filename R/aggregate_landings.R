@@ -12,8 +12,8 @@
 #'@param landingsThresholdGear Numeric scalar (proportion). Minimum proportion of cumulative landings to avoid aggregation of gear. Default = .9
 #'@param nLengthSamples Numeric scalar. The minimum number of length sample sizes required to avoid combination of data. Default = 1
 #'@param pValue Numeric scalar. Threshold pvalue for determining significance of ks test for length samples
-#'@param aggregate_to Character string. Level of aggregation for all MARKET_CODES and gears (NULL, "QTR", "YEAR", "MIX").
-#'Default = NULL - do not aggregate.
+#'@param aggregate_to Character string. Level of aggregation for all MARKET_CODES and gears ("QTR", "YEAR", "SEMESTER", MIX").
+#'Default = YEAR.
 #'@param borrowLengths Boolean. Return data as is or use allgorithm to borrow lengths from neighboring cells (Time and/or space)
 #'@param proportionMissing Numeric scalar. Proportion of missing samples allowed per YEAR for each MARKET_CODE/GEAR combination). Default = 0.2
 #'@param otherGear Character string. Code to indicate the class for "other Gear".
@@ -37,7 +37,7 @@ aggregate_landings <- function(landingsData,
                                landingsThresholdGear = .90,
                                nLengthSamples = 1,
                                pValue = 0.05,
-                               aggregate_to = NULL,
+                               aggregate_to = "YEAR",
                                borrowLengths = T,
                                proportionMissing = .2,
                                otherGear = "998",
@@ -45,6 +45,11 @@ aggregate_landings <- function(landingsData,
                                outputPlots=F,
                                logfile="logFile.txt") {
 
+  if (!(aggregate_to %in% c("YEAR","QTR","MIX"))) {
+    stop(paste0("Aggregation to ",aggretage_to," is not currently implemented. Please create an issue
+                at https://github.com/NOAA-EDAB/mscatch/issues"))
+
+  }
 
   write_to_logfile(outputDir,logfile,"",label="DECISIONS MADE DURING AGGREGATION OF DATA")
   write_to_logfile(outputDir,logfile,data=as.character(species_itis),label="Species_itis:",append=T)
