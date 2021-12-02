@@ -1,0 +1,192 @@
+---
+title: "Rules of Aggregation"
+#output: html_document
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Rules of Aggregation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(magrittr)
+```
+
+After [pulling the data](articles/mscatch.html) (length sample data and the landings data) for a particular species a user can now use [`mscatch::aggregate_landings()`](reference/aggregate_landings.html) to aggregate the landings and the length data. All decision points are written to a [logfile](logExample.html) for the user to inspect. 
+
+## Gear
+
+Gear is defined using the field NEGEAR which characterizes gear by a three character code. A list of gear types with their codes and descriptions can be found using `comlandr::get_gears()`
+
+
+* This step ignores time (YEAR, QTR), MARKET_CODE, and length distributions and looks at aggregated landings by gear type to determine dominant gear types in fishery. The resulting number of distinct gear types to be selected is controlled by a user defined parameter indicating the total percentage of landings to be accounted for by distinct gear types. (Others lumped in **otherGear** category)
+
+For example, using a value of 95% would select the gear types, when ordered by each gears landings, for which the cumulative sum > 95% of total landings. All other gear types (those comprising < 5% of total landings) would be combined into an **otherGear** category. Below gear types (050,010,110) would be retained. All other gear types would be lumped together.
+
+```{r gearExample, echo=F, eval=T}
+readr::read_csv("data/gearAgg.csv",col_names = T, show_col_types = F,skip=3) %>%
+  kableExtra::kbl() %>%
+  kableExtra::row_spec(1:3,color = "green") %>% 
+  kableExtra::row_spec(4:17,color = "#d3d3d3") 
+```
+
+## Market Category
+
+Market categories are defined by the field MARKET_CODE which characterizes market codes by a two character code. A list of market codes for a species can be found using `comlandr::get_species_itis()`
+
+* Any MARKET_CODEs that do not have any length samples (aggregated over YEAR, QTR) are treated first. The user has the option to aggregate these market codes with any other market code. The default option is to relabel these as unknowns, "UN". Often these MARKET_CODEs have a small amount of landings attributed to them and the impact of this aggregation is negligible
+
+* The length distributions for the remaining MARKET_CODEs (aggregated over YEAR, QTR) are then tested against each other (using the Kolmogorov-Smirnov) to determine if they are significantly different. Any MARKET_CODEs that are found to be statistically insignificant are aggregated.
+
+* **Future development: Include option to do this for each YEAR**
+
+The user has the option of stopping at this point. The data returned will either be at the QTR or YEAR level depending on user inputs.
+
+## Time
+
+The user supplies the level in which landings should be aggregated, (YEAR, QTR, or a MIX of the two). **Future development: Include SEMESTER option**. All combinations of Time, NEGEAR, MARKET_CODE that do not have associated length samples borrow samples from the nearest neighbor based on time. **Future development: Include nearest neighbor based on spatial units and/or GEAR**
+
+The borrowing of length samples from one time interval to use in another time interval can be a subjective process that differs among species based on life history traits. To complicate matters length distributions sampled within MARKET_CODEs may have shifted over time. These issues will be dealt with at a future date. A generalized method is currently applied (**Future development: Include additional options based on life history traits and fishing industry changes**)
+
+* Aggregate all to QTRs and borrow length samples where necessary
+* Aggregate all to YEAR and borrow length samples where necessary
+* A MIX of both YEAR and QTR
+
+### YEAR
+
+The following are performed sequentially:
+
+* The landings and length sample data are aggregated over QTR to the the annual (YEAR) level
+
+* For each gear type (NEGEAR) the Kolmogorov-Smirnov test is applied to test for differences in the length distributions among MARKET_CODEs. Any MARKET_CODEs with length distributions found to be statistically insignificant can be aggregated by the user. The default is no aggregation of MARKET_CODEs.
+
+* For NEGEAR types where the number of length samples is less than the user defined value (`nLengthSamples`), length samples are borrowed from the NEGEAR type that is attributed with the majority of the landings.
+
+* For each gear type and market code: A YEAR with missing length samples borrows length samples from the YEAR closest to it in time (in the future or the past)
+
+* The sampling program for most species started several years after landings were first recorded. So there is a stretch of consecutive years in the early part o the time series without any length samples. These years borrowed length samples from the first year in which samples were taken.
+
+### QTR
+
+
+
+### MIX
+
+
+
+
+	  
+* Are there *quarters* with landings but sample sizes less than *X*? A threshold for percentage missing samples "allowed" is implemented. For each NEGEAR/MARKET_CODE combo we determine, for each QTR, the number years that have length samples. The mean of this is used as a measure of "completeness" (The ~# years with samples). If this mean exceeds a user defined threshold then we borrow length sample data for missing QTRs from the previous years equivalent QTR. (If this is also missing we look back another year and so on). If the mean falls below the defined threshold (too many missing length samples at QTR level) the data is aggregated to the YEARly level and we follow a similar process. However prior to aggregation we test (ks-test) for differences in length distributions among market categories. If distributions are sig different we do not aggregate MARKET_CODEs and proceed. Otherwise MARKET_CODEs are aggregated - not complete yet. The YEARs with missing length samples borrow from the closest YEAR with length samples (either direction). In most cases length sampling began at a point in time after landings were recorded. For the YEARs with landings prior the length sampling start date we borrow length samples either by QTR or by YEAR (as explained above) from the most recent YEAR with length samples.
+
+NOTE: **This has been simplified until we can figure out how to deal with unclassifieds. The user decides if aggregation (for all MARKET_CODEs) occurs at QTR or annual level. UNclassified samples are then aggregated in a similar fashion to allow easier expansion of UN lengths. The otherGear category is ALWAYS aggregated to annual data. If there are no length samples in previous year(s), same quarter, we resort to nearest neighbor. If no samples exist at all, we borrow from another gear type, nearest neighbor **
+
+	  + if YES: Create semesters?  (Currently semesters are skipped and jump straight to annual)
+	  + if NO: Count your blessings and continue.  
+	  
+* Are there *strata* with landings but sample sizes less than *X*? We have one *strata* (EPU) so this is skipped (Code can be generalized to include this. Rules will need to be made as to where to borrow from and when)
+
+	  + If YES: define groups of similar strata  
+	  + If NO: Count your blessings and continue.  
+	  
+* Interpolate remaining holes.  
+
+	  + Select length within year/market category from adjacent strata or strata group (after determining if appropriate).  
+	  + Select length within year/market category from adjacent quarter or semester (after determining if appropriate).  
+	  + Select length within year/market category from adjacent year (after determining if appropriate).  
+	  
+* If unclassified market category and no other information available:  If length samples are available they are used for the given YEAR,NEGEAR otherwise the distribution is assumed to be that of all observed MARKET_CODEs
+
+	  + Combine market category samples to create an unclassified  
+	  + Use appropriate observer length samples to apply to unclassified. 
+	  
+* If holes remain  
+
+	  + Calculate ratio of sampled to un-sampled landings and expand total length frequency such that expanded sample weight equals total landings weight for year t.
+
+
+
+
+
+## Interpolate only:
+If examination of sample matrix shows only sporadic missing cells with landings but sample sizes less than *X*:  
+
+* Samples by year/gear/quarter/stat area/market category
+
+	  + Nearest stat area within market category/quarter/gear/year  
+	  	  + Keeping year/market category constant:  
+	  	  	  + Adjacent quarter/ same stat area  
+	  	  	  	  + Adjacent quarter/ any stat area within ecoregion  
+	  	  	  	  	  + Adjacent semester/matching stat area  
+	  	  	  	  	  	  + Adjacent semester/ any stat area within ecoregion  
+                            +  If lengths by gear are similar: Alternative gear/same quarter/stat area	
+	  	  	  	  	  	  	  	  + Alternative gear/same quarter/any stat area
+	  	  	  	  	  	  	  	  	  + Alternative gear/semester/same stat area
+	  	  	  	  	  	  	  	  	  	  + Alternative gear/semester/any stat area
+	  	  	  	  	  	  	  	  	  	  	  + No options- extrapolate to total
+
+*Or combination of both approaches*
+
+
+
+## Vocabulary
+Definitions to think about.
+
+* Area - could be stock area or EPU
+
+	  + Stat area - smallest unit that the landings are reported to 
+	  + Stock area - stock assessment footprint (combined stat areas)
+	  + EPU - ecological production unit
+	  
+* Time - quarter, semester, annual	
+
+	  + Quarter - 3 month
+	  + Semester - 6 month
+	  + Annual - 12 month
+	  
+* Length - market categories, cm, 
+
+	  + Market categories - could vary over port, time, 
+
+## Method to expand lengths  {#expand}
+
+### Known market codes
+
+For each unique category (YEAR, QTR, NEGEAR, MARKET_CODE) we have both total landings (metric tons) and a sample of fish lengths for this category. The sampled fish lengths are converted to weights using the [weight-length relationship](#gen) found in the gerneral overview. The resulting sample fish weights are mean weights (metric tons). The weight distribution of sampled fish is then scaled to the weight of total landings. This scaling assumes that the landed (commercial) fish have the same length distribution as the sampled fish.
+
+For each unique category we define 
+
+$$expansion \; factor = \frac{total \; landings}{\sum sampled \; fish \; weigths} $$
+Therefore the expanded weights of the sample (to meet the total landings)
+
+$$expanded \; sample\; weights \; = expansion \; factor \;*\; sampled \; fish \; weights$$
+
+### Unclassified market code
+
+The unclassified landings for a specific (YEAR, QTR, NEGEAR) are assumed to be a mixture of fish lengths similar to that in the observed MARKET_CODEs. Therefore the length distribution for the unclassified landings are assumed to have the same distribution as the length distributions of the landed fish in all of the known market codes combined. The sampled fish lengths (from the known market codes) are converted to weights using the [weight-length relationship](#gen) found in the gerneral overview. 
+
+For each unique category we define
+
+$$expansion \; factor = \frac{landings \; of \; unclassifieds}{\sum landings \; of \; known \; market \; codes  } $$
+Therefore the expanded weights of the unclassified sample
+
+$$expanded \; unclassified\; weights \; = expansion \; factor \;*\; fish \; weights \; of \; known \; market \; codes$$
+
+
+
+# Discards
+
+Need to deal with discards in a similar fashion.
+It seems that Susan Wigley has a SAS script that most/some stock assessment scientists use to help with this.
+Edit: Spoke to Susan Wigley she says that they will have all of the discard estimates over time for all of the species in a database similar to that of the landings, length, age databases. This will make life heck of a lot simpler for us.
+
+Discards tracked in observer database from 1989. However spotty coverage (mostly from otter trawls) until 2005
+			
+# NAFO data
+
+Non US landings need to be integrated also.
+
+
