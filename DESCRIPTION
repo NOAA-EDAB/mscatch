@@ -14,7 +14,7 @@ Authors@R: c(person(given="Andy",
                     family="Lucey",
                     email="sean.lucey@noaa.gov",
                     role=c("aut")))
-Description: Attributes length distribution of market codes to commercial landings. L landings are aggregated (based on data avilability) over time, space, gear types, market codes
+Description: Attributes length distribution of market codes to commercial landings.
 License: file LICENSE
 URL: https://github.com/NOAA-EDAB/mscatch
 BugReports: https://github.com/NOAA-EDAB/mscatch/issues
@@ -27,7 +27,8 @@ Suggests:
     rmarkdown,
     DT,
     DBI,
-    cfdbs
+    cfdbs,
+    kableExtra
 VignetteBuilder: knitr
 Imports: 
     dplyr,
