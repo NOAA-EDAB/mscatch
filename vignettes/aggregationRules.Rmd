@@ -68,16 +68,21 @@ The following are performed sequentially:
 
 * For each gear type and market code: A YEAR with missing length samples borrows length samples from the YEAR closest to it in time (in the future or the past)
 
-* The sampling program for most species started several years after landings were first recorded. So there is a stretch of consecutive years in the early part o the time series without any length samples. These years borrowed length samples from the first year in which samples were taken.
+* The sampling program for most species started several years after landings were first recorded. So there is a stretch of consecutive years in the early part of the time series without any length samples. These years are assigned length samples from the first year in which samples were taken.
 
 ### QTR
 
+* For YEARs where there are landings before any length samples were taken all YEAR/QTRs are assigned the length samples from the most first YEAR in which length samples were taken (from the same QTR)
+
+* For YEARs when QTRs have missing length samples the previous years length samples for the same QTR are assigned. If there are not length samples in the previous year then the process is repeated until a length sample is available. If this still results in no length samples then the nearest neighbor is used. Length samples from the nearest QTR (any QTR) are used. If this still results in no length samples then the nearest neighbor is used from the NEGEAR type that is attributed with the majority of the landings.
+
+* 
 
 
 ### MIX
 
 
-
+## other GEAR
 
 	  
 * Are there *quarters* with landings but sample sizes less than *X*? A threshold for percentage missing samples "allowed" is implemented. For each NEGEAR/MARKET_CODE combo we determine, for each QTR, the number years that have length samples. The mean of this is used as a measure of "completeness" (The ~# years with samples). If this mean exceeds a user defined threshold then we borrow length sample data for missing QTRs from the previous years equivalent QTR. (If this is also missing we look back another year and so on). If the mean falls below the defined threshold (too many missing length samples at QTR level) the data is aggregated to the YEARly level and we follow a similar process. However prior to aggregation we test (ks-test) for differences in length distributions among market categories. If distributions are sig different we do not aggregate MARKET_CODEs and proceed. Otherwise MARKET_CODEs are aggregated - not complete yet. The YEARs with missing length samples borrow from the closest YEAR with length samples (either direction). In most cases length sampling began at a point in time after landings were recorded. For the YEARs with landings prior the length sampling start date we borrow length samples either by QTR or by YEAR (as explained above) from the most recent YEAR with length samples.
