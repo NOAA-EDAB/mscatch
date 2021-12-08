@@ -1,9 +1,9 @@
 ---
-title: "Rules of Aggregation"
+title: "2. Rules of Aggregation"
 #output: html_document
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Rules of Aggregation}
+  %\VignetteIndexEntry{2. Rules of Aggregation}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 library(magrittr)
 ```
 
-After [pulling the data](articles/mscatch.html) (length sample data and the landings data) for a particular species a user can now use [`mscatch::aggregate_landings()`](reference/aggregate_landings.html) to aggregate the landings and the length data. All decision points are written to a [logfile](logExample.html) for the user to inspect. 
+After [pulling the data](articles/1dataNeeds.html) (length sample data and the landings data) for a particular species a user can now use [`mscatch::aggregate_landings()`](reference/aggregate_landings.html) to aggregate the landings and the length data. All decision points are written to a [logfile](logExample.html) for the user to inspect. 
 
 ## Gear
 
@@ -76,100 +76,23 @@ The following are performed sequentially:
 
 * For YEARs when QTRs have missing length samples the previous years length samples for the same QTR are assigned. If there are not length samples in the previous year then the process is repeated until a length sample is available. If this still results in no length samples then the nearest neighbor is used. Length samples from the nearest QTR (any QTR) are used. If this still results in no length samples then the nearest neighbor is used from the NEGEAR type that is attributed with the majority of the landings.
 
-* 
-
-
 ### MIX
+
+* A tolerance for the allowed proportion of missing length samples by QTR (for each NEGEAR and MARKET_CODE) is used to determine if length samples should be assigned to ALL QTRs (as described by the methods above) or whether landings should be aggregated to annual data. 
 
 
 ## other GEAR
 
-	  
-* Are there *quarters* with landings but sample sizes less than *X*? A threshold for percentage missing samples "allowed" is implemented. For each NEGEAR/MARKET_CODE combo we determine, for each QTR, the number years that have length samples. The mean of this is used as a measure of "completeness" (The ~# years with samples). If this mean exceeds a user defined threshold then we borrow length sample data for missing QTRs from the previous years equivalent QTR. (If this is also missing we look back another year and so on). If the mean falls below the defined threshold (too many missing length samples at QTR level) the data is aggregated to the YEARly level and we follow a similar process. However prior to aggregation we test (ks-test) for differences in length distributions among market categories. If distributions are sig different we do not aggregate MARKET_CODEs and proceed. Otherwise MARKET_CODEs are aggregated - not complete yet. The YEARs with missing length samples borrow from the closest YEAR with length samples (either direction). In most cases length sampling began at a point in time after landings were recorded. For the YEARs with landings prior the length sampling start date we borrow length samples either by QTR or by YEAR (as explained above) from the most recent YEAR with length samples.
+In all methods above the `otherGear` category is by definition sparse. This gear type is always aggregated to annual data.
 
-NOTE: **This has been simplified until we can figure out how to deal with unclassifieds. The user decides if aggregation (for all MARKET_CODEs) occurs at QTR or annual level. UNclassified samples are then aggregated in a similar fashion to allow easier expansion of UN lengths. The otherGear category is ALWAYS aggregated to annual data. If there are no length samples in previous year(s), same quarter, we resort to nearest neighbor. If no samples exist at all, we borrow from another gear type, nearest neighbor **
+## Unclassified Market Code
 
-	  + if YES: Create semesters?  (Currently semesters are skipped and jump straight to annual)
-	  + if NO: Count your blessings and continue.  
-	  
-* Are there *strata* with landings but sample sizes less than *X*? We have one *strata* (EPU) so this is skipped (Code can be generalized to include this. Rules will need to be made as to where to borrow from and when)
+In all methods above the landings and length sample data for the unclassified market category, `UN`, is aggregated to the same level as other MARKET_CODEs.
 
-	  + If YES: define groups of similar strata  
-	  + If NO: Count your blessings and continue.  
-	  
-* Interpolate remaining holes.  
-
-	  + Select length within year/market category from adjacent strata or strata group (after determining if appropriate).  
-	  + Select length within year/market category from adjacent quarter or semester (after determining if appropriate).  
-	  + Select length within year/market category from adjacent year (after determining if appropriate).  
-	  
-* If unclassified market category and no other information available:  If length samples are available they are used for the given YEAR,NEGEAR otherwise the distribution is assumed to be that of all observed MARKET_CODEs
-
-	  + Combine market category samples to create an unclassified  
-	  + Use appropriate observer length samples to apply to unclassified. 
-	  
-* If holes remain  
-
-	  + Calculate ratio of sampled to un-sampled landings and expand total length frequency such that expanded sample weight equals total landings weight for year t.
+Any missing length samples 
 
 
 
-
-
-## Interpolate only:
-If examination of sample matrix shows only sporadic missing cells with landings but sample sizes less than *X*:  
-
-* Samples by year/gear/quarter/stat area/market category
-
-	  + Nearest stat area within market category/quarter/gear/year  
-	  	  + Keeping year/market category constant:  
-	  	  	  + Adjacent quarter/ same stat area  
-	  	  	  	  + Adjacent quarter/ any stat area within ecoregion  
-	  	  	  	  	  + Adjacent semester/matching stat area  
-	  	  	  	  	  	  + Adjacent semester/ any stat area within ecoregion  
-                            +  If lengths by gear are similar: Alternative gear/same quarter/stat area	
-	  	  	  	  	  	  	  	  + Alternative gear/same quarter/any stat area
-	  	  	  	  	  	  	  	  	  + Alternative gear/semester/same stat area
-	  	  	  	  	  	  	  	  	  	  + Alternative gear/semester/any stat area
-	  	  	  	  	  	  	  	  	  	  	  + No options- extrapolate to total
-
-*Or combination of both approaches*
-
-
-
-## Vocabulary
-Definitions to think about.
-
-* Area - could be stock area or EPU
-
-	  + Stat area - smallest unit that the landings are reported to 
-	  + Stock area - stock assessment footprint (combined stat areas)
-	  + EPU - ecological production unit
-	  
-* Time - quarter, semester, annual	
-
-	  + Quarter - 3 month
-	  + Semester - 6 month
-	  + Annual - 12 month
-	  
-* Length - market categories, cm, 
-
-	  + Market categories - could vary over port, time, 
-
-## Method to expand lengths  {#expand}
-
-### Known market codes
-
-For each unique category (YEAR, QTR, NEGEAR, MARKET_CODE) we have both total landings (metric tons) and a sample of fish lengths for this category. The sampled fish lengths are converted to weights using the [weight-length relationship](#gen) found in the gerneral overview. The resulting sample fish weights are mean weights (metric tons). The weight distribution of sampled fish is then scaled to the weight of total landings. This scaling assumes that the landed (commercial) fish have the same length distribution as the sampled fish.
-
-For each unique category we define 
-
-$$expansion \; factor = \frac{total \; landings}{\sum sampled \; fish \; weigths} $$
-Therefore the expanded weights of the sample (to meet the total landings)
-
-$$expanded \; sample\; weights \; = expansion \; factor \;*\; sampled \; fish \; weights$$
-
-### Unclassified market code
 
 The unclassified landings for a specific (YEAR, QTR, NEGEAR) are assumed to be a mixture of fish lengths similar to that in the observed MARKET_CODEs. Therefore the length distribution for the unclassified landings are assumed to have the same distribution as the length distributions of the landed fish in all of the known market codes combined. The sampled fish lengths (from the known market codes) are converted to weights using the [weight-length relationship](#gen) found in the gerneral overview. 
 
