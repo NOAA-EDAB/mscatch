@@ -7,7 +7,8 @@
 #'@param outputDir Character string. Directory where output is saved
 #'@param logfile Cahracter string. Name of logfile
 #'
-#'@return Character vector
+#'@return Character matrix
+#'
 #'\item{codes}{Two market category codes not significantly different}
 #'
 #'@noRd
@@ -26,9 +27,14 @@ compare_length_distributions <- function(landings,lengthData,variableToAggregate
       if ((acode =="UN") | (bcode == "UN")) next # leave unclassified alone
 
      #`!!` unquotes argument
-      sizeA <- lengthData %>% dplyr::select(!!groupBy) %>% dplyr::filter(UQ(as.name(variableToAggregate)) == acode)
+      sizeA <- lengthData %>%
+        dplyr::select(!!groupBy) %>%
+        dplyr::filter(UQ(as.name(variableToAggregate)) == acode)
       sizeA <- as.numeric(rep(sizeA$LENGTH,sizeA$NUMLEN))
-      sizeB <- lengthData %>% dplyr::select(!!groupBy) %>% dplyr::filter(UQ(as.name(variableToAggregate)) == bcode)
+
+      sizeB <- lengthData %>%
+        dplyr::select(!!groupBy) %>%
+        dplyr::filter(UQ(as.name(variableToAggregate)) == bcode)
       sizeB <- as.numeric(rep(sizeB$LENGTH,sizeB$NUMLEN))
 
       if ((length(sizeA) < 1) | (length(sizeB)< 1)) {
