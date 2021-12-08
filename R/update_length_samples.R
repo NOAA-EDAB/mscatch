@@ -6,7 +6,7 @@
 #' @param data List. landings and lengthData
 #' @param missingRow Dataframe. Specifies the YEAR and QTR where length samples are missing
 #' @param gearType Character string. Name of NEGEAR
-#' @param mainGearType Character string. Name of NEGEAR with most landings
+#' @param mainGearType Character string. Name of NEGEAR for which samples are borrowed from
 #' @param marketCode Character string. Name of MARKET_CODE
 #' @param numSamples Tibble. Filtered landings data (YEAR, QTR, len_totalNumLen, len_numLengthSamples) by NEGEAR, MARKET_CODE
 #'

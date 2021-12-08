@@ -64,7 +64,7 @@ The following are performed sequentially:
 
 * For each gear type (NEGEAR) the Kolmogorov-Smirnov test is applied to test for differences in the length distributions among MARKET_CODEs. Any MARKET_CODEs with length distributions found to be statistically insignificant can be aggregated by the user. The default is no aggregation of MARKET_CODEs.
 
-* For NEGEAR types where the number of length samples is less than the user defined value (`nLengthSamples`), length samples are borrowed from the NEGEAR type that is attributed with the majority of the landings.
+* For any NEGEAR/MARKET_CODE combinations where the number of length samples is less than the user defined value (`nLengthSamples`), length samples are borrowed from another NEGEAR type with the same MARKET_CODE. Samples are borrowed from the NEGEAR with the most landings (since is is assumed they will have the most length samples). If there are insufficient length samples, the next NEGEAR in order of total landings is checked. And so on.
 
 * For each gear type and market code: A YEAR with missing length samples borrows length samples from the YEAR closest to it in time (in the future or the past)
 

@@ -213,7 +213,7 @@ aggregate_landings <- function(landingsData,
         # if (mean(aggQTRData$numSamples) < proportionMissing*numYearsLengthsStarted) {
         #   data <- aggregate_to_qtr(data,gearType,marketCode,QTRData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile)
         # } else {
-          data <- aggregate_to_year(data,gearType,mainGearType,marketCode,aggYEARData,sampleStartYear,missingEarlyYears,proportionMissing,nLengthSamples,pValue,outputDir,logfile)
+          data <- aggregate_to_year(data,gearType,gearList,marketCode,aggYEARData,sampleStartYear,missingEarlyYears,proportionMissing,nLengthSamples,pValue,outputDir,logfile)
         # }
         next
       }
@@ -229,7 +229,7 @@ aggregate_landings <- function(landingsData,
       if (aggregate_to == "QTR") {
         data <- aggregate_to_qtr(data,gearType,marketCode,QTRData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile)
       } else if (aggregate_to == "YEAR") {
-        data <- aggregate_to_year(data,gearType,mainGearType,marketCode,aggYEARData,sampleStartYear,missingEarlyYears,proportionMissing,nLengthSamples,pValue,outputDir,logfile)
+        data <- aggregate_to_year(data,gearType,gearList,marketCode,aggYEARData,sampleStartYear,missingEarlyYears,proportionMissing,nLengthSamples,pValue,outputDir,logfile)
       } else if (aggregate_to == "MIX") {
         ###################################################################################################
         # if mean number of missing years < specified tolerance
@@ -245,7 +245,7 @@ aggregate_landings <- function(landingsData,
           print(aggYEARData)
           if ((sum(aggYEARData$numSamples==1)/length(aggYEARData$numSamples)) > proportionMissing ){
             print(paste0("Aggregate over QTRS to YEARly-",marketCode))
-            data <- aggregate_to_year(data,gearType,mainGearType,marketCode,aggYEARData,sampleStartYear,missingEarlyYears,proportionMissing,nLengthSamples,pValue,outputDir,logfile)
+            data <- aggregate_to_year(data,gearType,gearList,marketCode,aggYEARData,sampleStartYear,missingEarlyYears,proportionMissing,nLengthSamples,pValue,outputDir,logfile)
           } else {
             # need to aggregate MARKET_CODE over QTRs to YEAR
             stop("# need to aggregate MARKET_CODE over QTRs to YEAR")

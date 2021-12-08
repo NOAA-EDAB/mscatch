@@ -6,7 +6,7 @@
 #'
 #' @param data List. Landings data and length data
 #' @param gearType Character string. NEGEAR gear code
-#' @param mainGearType Character string. Name of NEGEAR with most landings
+#' @param gearList Character vector. Vector of NEGEARs in decreasing order by landings. (eg. gearList[1] is NEGEAR that landed most fish)
 #' @param marketCode Character string. MARKET_CODE designation from cfdbs
 #' @param aggYearData Tibble. (n x 3). YEAR, total landings, presence/absence of min mumber of samples
 #' @param sampleStartYear Numeric scalar. Year first length sample was taken
@@ -22,9 +22,10 @@
 #'@noRd
 
 
-aggregate_to_year <- function(data,gearType,mainGearType,marketCode,aggYEARData,sampleStartYear,missingEarlyYears,proportionMissing,nLengthSamples,pValue,outputDir,logfile) {
-  # recode all QTRS to 0
-  mainGear <- F
+aggregate_to_year <- function(data,gearType,gearList,marketCode,aggYEARData,sampleStartYear,missingEarlyYears,proportionMissing,nLengthSamples,pValue,outputDir,logfile) {
+
+    # recode all QTRS to 0
+    foundGear <- F
     # Too many YEARs without length data for MARKET_CODE. Aggregate with another MARKET_CODE
     message("Annual data: There are ",sum(aggYEARData$numSamples)," years out of ",length(aggYEARData$numSamples)," (in which there are landings) where no length samples exist")
     #message("Insufficient length samples at aggregate level: YEAR")
@@ -83,12 +84,33 @@ aggregate_to_year <- function(data,gearType,mainGearType,marketCode,aggYEARData,
 
       YEARData <- data$landings %>%
         dplyr::filter(YEAR >= sampleStartYear & QTR == 0 & NEGEAR == gearType & MARKET_CODE == marketCode)
+
       if (sum(YEARData$len_numLengthSamples) < nLengthSamples){
         # not enough length Samples. Borrow from other fleet
-        message("no length samples present for this market code. Borrow from other fleet")
-        YEARData <- data$landings %>%
-          dplyr::filter(YEAR >= sampleStartYear & NEGEAR == mainGearType & MARKET_CODE == marketCode)
-        mainGear <- T
+        message("No length samples present for this market code. Borrow from other fleet")
+        # loop through all gear types ordered by most landings from most
+        for (borrowGear in gearList) {
+          if (borrowGear == gearType) {
+            next # current gear is main gear
+          }
+          message(paste0("Trying to borrow from ", borrowGear))
+          # pull landings for gear we want samples from
+          YEARData <- data$landings %>%
+            dplyr::filter(YEAR >= sampleStartYear & NEGEAR == borrowGear & MARKET_CODE == marketCode)
+          # check to see if there are samples
+          if (sum(YEARData$len_numLengthSamples) >= nLengthSamples) {
+            # Found a gear that has length samples
+            write_to_logfile(outputDir,logfile,data=paste0("Using length samples from Gear: ",gearType),label=NULL,append=T)
+            foundGear <- T
+            foundGearType <- borrowGear
+            break
+          }
+        }
+
+        if (!foundGear) {
+          stop("ERROR: Could not find another gear with length samples")
+        }
+
         ## need to code for instances where this fails!! ie. where main fleet has no length samples
       }
 
@@ -99,9 +121,7 @@ aggregate_to_year <- function(data,gearType,mainGearType,marketCode,aggYEARData,
         numSamples <- missing_length_by_year(YEARData,targetYEAR,nLengthSamples)
         if (dim(numSamples)[1] == 0){
           # no length samples present for this market code
-          if (mainGearType == gearType) {
-            print("main gear type is the gear with No samples")
-          }
+          # This should never happen. Should have errored before now
           message("NO LENGTH SAMPLES - ERROR")
         } else if (dim(numSamples)[1] > 1){
           numSamples <- head(numSamples %>% dplyr::arrange(len_numLengthSamples),1)
@@ -109,9 +129,9 @@ aggregate_to_year <- function(data,gearType,mainGearType,marketCode,aggYEARData,
 
         #duplicate length samples to missing year
         missingRow <- expand.grid(YEAR=targetYEAR,QTR=0)
-        if (mainGear == T) {
-          data <- update_length_samples(data,missingRow,gearType,marketCode,numSamples,mainGearType)
-        } else {
+        if (foundGear) { # used samples from another gear type
+          data <- update_length_samples(data,missingRow,gearType,marketCode,numSamples,foundGearType)
+        } else { # used samples from own gear type
           data <- update_length_samples(data,missingRow,gearType,marketCode,numSamples)
         }
 
