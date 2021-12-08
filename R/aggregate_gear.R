@@ -35,7 +35,7 @@ aggregate_gear <- function(data,recodeOtherGear,landingsThresholdGear,species_it
   aggTopPercent <- mutate(aggTopPercent,cum_sum=cumsum(totalLandings),percent=cum_sum/sum(totalLandings))
   print(aggTopPercent)
 
-  write_to_logfile(outputDir,logfile,as.data.frame(aggTopPercent),label="Landings by gear type:",append = T)
+  write_to_logfile(outputDir,logfile,as.data.frame(aggTopPercent),label="Landings by gear type (NEGEAR):",append = T)
 
   # png("test.png",height = 1000*nrow(aggTopPercent), width = 800*ncol(aggTopPercent))
   # gridExtra::grid.table(aggTopPercent)
@@ -50,10 +50,10 @@ aggregate_gear <- function(data,recodeOtherGear,landingsThresholdGear,species_it
   print(nGearsChosen)
   print(gearsChosen)
 
-  print(aggTopPercent[1:(nGearsChosen+2),])
-  png("test2.png",height = 800, width = 800)
-  gridExtra::grid.table(aggTopPercent[1:(nGearsChosen+2),])
-  dev.off()
+  # print(aggTopPercent[1:(nGearsChosen+2),])
+  # png("test2.png",height = 800, width = 800)
+  # gridExtra::grid.table(aggTopPercent[1:(nGearsChosen+2),])
+  # dev.off()
   #########################################################################################################################
   # At this point may need to examine lengths distribution to determine further grouping (plots of length distributions)
   #########################################################################################################################
@@ -64,7 +64,6 @@ aggregate_gear <- function(data,recodeOtherGear,landingsThresholdGear,species_it
 
   # concatenate 2 data frames
   filteredLandings <- rbind(filteredLandings,as.data.frame(theRestLandings))
-
 
   plot_landings_by_gear(species_itis,filteredLandings,landingsThresholdGear,outputPlots,outputDir,"1c")
 

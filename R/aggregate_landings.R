@@ -89,7 +89,7 @@ aggregate_landings <- function(landingsData,
     dplyr::summarise(totLand=sum(landings_land),.groups="drop") %>%
     dplyr::arrange(desc(totLand)) %>%
     dplyr::select(NEGEAR) %>%
-    unlist()
+    dplyr::pull()
   mainGearType <- gearList[1]
 
   # look at the summary stats/plots after aggregation
@@ -158,6 +158,7 @@ aggregate_landings <- function(landingsData,
 
   }
 
+
   ## Interpolation/imputation starts here
 
   #######################################################
@@ -222,6 +223,8 @@ aggregate_landings <- function(landingsData,
       # 2. aggregate all to years and borrow where necessary
       # 3. a mix of both (need to work out how to expand unclassifieds)
       # 4. combine market categories prior to this point
+
+
 
       if (aggregate_to == "QTR") {
         data <- aggregate_to_qtr(data,gearType,marketCode,QTRData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile)

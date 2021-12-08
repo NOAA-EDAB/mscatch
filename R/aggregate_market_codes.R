@@ -35,6 +35,9 @@ aggregate_market_codes <- function(data,pValue,outputDir,outputPlots,logfile) {
   if (any (market$len_numLengthSamples == 0)) {
     message("Some market codes have NO length samples. Below is a table of market codes and their relative contribution to landings \n")
     print(market)
+
+    write_to_logfile(outputDir,logfile,as.data.frame(market),label="Landings and length samples by MARKET_CODE:",append = T)
+
     zeroLandings <- market$MARKET_CODE[market$len_numLengthSamples == 0]
     message(paste0("As you can see, code = ",as.character(zeroLandings)," needs to be combined with other market categories. \n" ))
     message("We'll walk through each one in turn:\n")
