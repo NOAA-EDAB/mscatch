@@ -26,7 +26,7 @@ write_to_logfile <- function(outputDir,logfile,data,label,append = F) {
     cat(data, file=fileConn)
     cat("\n", file=fileConn, append=T)
   } else if (length(dim(data))==2){ # matrix or dataframe
-    namesData <- sprintf("%15s ",names(aggData))
+    namesData <- sprintf("%15s ",names(data))
     cat(namesData, file=fileConn, append=T) # print field names
     cat("\n", file=fileConn, append=T)
 
