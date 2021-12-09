@@ -62,11 +62,11 @@ The following are performed sequentially:
 
 * The landings and length sample data are aggregated over QTR to the the annual (YEAR) level
 
-* For each gear type (NEGEAR) the Kolmogorov-Smirnov test is applied to test for differences in the length distributions among MARKET_CODEs. Any MARKET_CODEs with length distributions found to be statistically insignificant can be aggregated by the user. The default is no aggregation of MARKET_CODEs.
+* For each gear type (NEGEAR) the Kolmogorov-Smirnov test is applied in each YEAR (**Future work**) to test for differences in the length distributions among MARKET_CODEs. Any MARKET_CODEs with length distributions found to be statistically insignificant can be aggregated by the user. The default is no aggregation of MARKET_CODEs. 
 
-* For any NEGEAR/MARKET_CODE combinations where the number of length samples is less than the user defined value (`nLengthSamples`), length samples are borrowed from another NEGEAR type with the same MARKET_CODE. Samples are borrowed from the NEGEAR with the most landings (since is is assumed they will have the most length samples). If there are insufficient length samples, the next NEGEAR in order of total landings is checked. And so on.
+* For each gear type (NEGEAR) and market code: A YEAR with missing length samples borrows length samples from the YEAR closest to it in time (in the future or the past)
 
-* For each gear type and market code: A YEAR with missing length samples borrows length samples from the YEAR closest to it in time (in the future or the past)
+* For any NEGEAR/MARKET_CODE combinations where the number of length samples is less than the user defined value (`nLengthSamples`), for all YEARS then length samples are borrowed from another NEGEAR type with the same MARKET_CODE. Samples are borrowed from the NEGEAR with the most landings (since is is assumed they will have the most length samples). If there are insufficient length samples, the next NEGEAR in order of total landings is checked. And so on.
 
 * The sampling program for most species started several years after landings were first recorded. So there is a stretch of consecutive years in the early part of the time series without any length samples. These years are assigned length samples from the first year in which samples were taken.
 
@@ -80,7 +80,6 @@ The following are performed sequentially:
 
 * A tolerance for the allowed proportion of missing length samples by QTR (for each NEGEAR and MARKET_CODE) is used to determine if length samples should be assigned to ALL QTRs (as described by the methods above) or whether landings should be aggregated to annual data. 
 
-
 ## other GEAR
 
 In all methods above the `otherGear` category is by definition sparse. This gear type is always aggregated to annual data.
@@ -89,32 +88,8 @@ In all methods above the `otherGear` category is by definition sparse. This gear
 
 In all methods above the landings and length sample data for the unclassified market category, `UN`, is aggregated to the same level as other MARKET_CODEs.
 
-Any missing length samples 
 
+The unclassified landings for a specific (YEAR, QTR, NEGEAR) are assumed to be a mixture of fish lengths similar to that in the observed MARKET_CODEs. Therefore the length distribution for the unclassified landings are assumed to have the same distribution as the length distributions of the landed fish in all of the known market codes combined.
 
-
-
-The unclassified landings for a specific (YEAR, QTR, NEGEAR) are assumed to be a mixture of fish lengths similar to that in the observed MARKET_CODEs. Therefore the length distribution for the unclassified landings are assumed to have the same distribution as the length distributions of the landed fish in all of the known market codes combined. The sampled fish lengths (from the known market codes) are converted to weights using the [weight-length relationship](#gen) found in the gerneral overview. 
-
-For each unique category we define
-
-$$expansion \; factor = \frac{landings \; of \; unclassifieds}{\sum landings \; of \; known \; market \; codes  } $$
-Therefore the expanded weights of the unclassified sample
-
-$$expanded \; unclassified\; weights \; = expansion \; factor \;*\; fish \; weights \; of \; known \; market \; codes$$
-
-
-
-# Discards
-
-Need to deal with discards in a similar fashion.
-It seems that Susan Wigley has a SAS script that most/some stock assessment scientists use to help with this.
-Edit: Spoke to Susan Wigley she says that they will have all of the discard estimates over time for all of the species in a database similar to that of the landings, length, age databases. This will make life heck of a lot simpler for us.
-
-Discards tracked in observer database from 1989. However spotty coverage (mostly from otter trawls) until 2005
-			
-# NAFO data
-
-Non US landings need to be integrated also.
 
 

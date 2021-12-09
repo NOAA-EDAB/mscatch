@@ -40,7 +40,7 @@ This is then merged with the catch data.
 
 ### Individual fish lengths
 
-* The individual lengths of a sampled fish
+* The individual lengths of a sampled fish (1 cm increments)
 * The number of times a fish of this length was sampled
 
 The data set should have this form
