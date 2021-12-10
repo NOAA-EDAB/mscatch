@@ -3,7 +3,6 @@
 #' Creates a facet plot for each market category across all years for each gear type
 #'
 #'@param lengthData data frame.
-#'@param species_itis Numeric scalar.  Species_itis code for species
 #'@param outputDir Character string. Path to output directory (png files saved here)
 #'@param outputPlots Boolean. Should plots be created. T or F
 
@@ -14,11 +13,13 @@
 #'
 #' @noRd
 
-plot_length_histogram <- function(lengthData,species_itis,outputDir,outputPlots){
+plot_length_histogram <- function(lengthData,outputDir,outputPlots){
 
   if (outputPlots == F) return()
 
-  lengthDataGEARS <- lengthData %>% dplyr::group_by(NEGEAR,MARKET_CODE,LENGTH) %>% dplyr::summarise(numlens=sum(as.numeric(NUMLEN)))
+  lengthDataGEARS <- lengthData %>%
+    dplyr::group_by(NEGEAR,MARKET_CODE,LENGTH) %>%
+    dplyr::summarise(numlens=sum(as.numeric(NUMLEN)))
 
   # check to see if any length data
   if (any(!is.na(lengthDataGEARS$LENGTH))) {

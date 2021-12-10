@@ -104,7 +104,7 @@ aggregate_to_year <- function(data,gearType,gearList,marketCode,aggYEARData,samp
           # check to see if there are samples
           if (sum(YEARData$len_numLengthSamples) >= nLengthSamples) {
             # Found a gear that has length samples
-            write_to_logfile(outputDir,logfile,data=paste0("Using length samples from Gear: ",gearType),label=NULL,append=T)
+            write_to_logfile(outputDir,logfile,data=paste0("Using length samples from Gear: ",borrowGear),label=NULL,append=T)
             foundGear <- T
             foundGearType <- borrowGear
             break

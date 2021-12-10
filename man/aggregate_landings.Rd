@@ -7,7 +7,7 @@
 aggregate_landings(
   landingsData,
   lengthData,
-  species_itis,
+  speciesName,
   landingsThresholdGear = 0.9,
   nLengthSamples = 1,
   pValue = 0.05,
@@ -25,7 +25,7 @@ aggregate_landings(
 
 \item{lengthData}{Tidy data frame. Length data by YEAR,QTR,NEGEAR,MARKET_CODE, LENGTH, NUMLEN}
 
-\item{species_itis}{Numeric scalar. species_itis code relating to the landings and length data}
+\item{speciesName}{Character string. speciesName for data used. (This is used in plotting only)}
 
 \item{landingsThresholdGear}{Numeric scalar (proportion). Minimum proportion of cumulative landings to avoid aggregation of gear. Default = .9}
 

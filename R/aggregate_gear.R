@@ -15,7 +15,7 @@
 #'
 #'@noRd
 
-aggregate_gear <- function(data,recodeOtherGear,landingsThresholdGear,species_itis,logfile,outputDir,outputPlots) {
+aggregate_gear <- function(data,recodeOtherGear,landingsThresholdGear,speciesName,logfile,outputDir,outputPlots) {
 
   landings <- data$landings
   lengthData <- data$lengthData
@@ -29,7 +29,7 @@ aggregate_gear <- function(data,recodeOtherGear,landingsThresholdGear,species_it
     summarise(totalLandings = sum(landings_land, na.rm = TRUE)) %>%
     arrange(desc(totalLandings))
 
-  plot_landings_by_gear(species_itis,landings,1,outputPlots,outputDir,"1b")
+  plot_landings_by_gear(speciesName,landings,1,outputPlots,outputDir,"1b")
 
   # convert to % of total and reorder
   aggTopPercent <- mutate(aggTopPercent,cum_sum=cumsum(totalLandings),percent=cum_sum/sum(totalLandings))
@@ -65,7 +65,7 @@ aggregate_gear <- function(data,recodeOtherGear,landingsThresholdGear,species_it
   # concatenate 2 data frames
   filteredLandings <- rbind(filteredLandings,as.data.frame(theRestLandings))
 
-  plot_landings_by_gear(species_itis,filteredLandings,landingsThresholdGear,outputPlots,outputDir,"1c")
+  plot_landings_by_gear(speciesName,filteredLandings,landingsThresholdGear,outputPlots,outputDir,"1c")
 
   # update sample lengthsData to reflect gear aggregation
   lengthData$NEGEAR[!(lengthData$NEGEAR  %in% gearsChosen)] <- recodeOtherGear

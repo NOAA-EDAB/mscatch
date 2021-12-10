@@ -8,7 +8,7 @@
 #'
 #'@param landingsData Tidy data frame. Landings by YEAR,QTR,NEGEAR,MARKET_CODE,landings_land,landings_nn,len_totalNumLen,len_numLengthSampls
 #'@param lengthData Tidy data frame. Length data by YEAR,QTR,NEGEAR,MARKET_CODE, LENGTH, NUMLEN
-#'@param species_itis Numeric scalar. species_itis code relating to the landings and length data
+#'@param speciesName Character string. speciesName for data used. (This is used in plotting only)
 #'@param landingsThresholdGear Numeric scalar (proportion). Minimum proportion of cumulative landings to avoid aggregation of gear. Default = .9
 #'@param nLengthSamples Numeric scalar. The minimum number of length sample sizes required to avoid combination of data. Default = 1
 #'@param pValue Numeric scalar. Threshold pvalue for determining significance of ks test for length samples
@@ -33,7 +33,7 @@
 
 aggregate_landings <- function(landingsData,
                                lengthData,
-                               species_itis,
+                               speciesName,
                                landingsThresholdGear = .90,
                                nLengthSamples = 1,
                                pValue = 0.05,
@@ -52,7 +52,7 @@ aggregate_landings <- function(landingsData,
   }
 
   write_to_logfile(outputDir,logfile,"",label="DECISIONS MADE DURING AGGREGATION OF DATA")
-  write_to_logfile(outputDir,logfile,data=as.character(species_itis),label="Species_itis:",append=T)
+  write_to_logfile(outputDir,logfile,data=as.character(speciesName),label="Species Name:",append=T)
   # write function call to log file
   write_to_logfile(outputDir,logfile,data=deparse(dbutils::capture_function_call()),label="Arguments passed to aggregate_landings:",append=T)
 
@@ -81,7 +81,7 @@ aggregate_landings <- function(landingsData,
   # Now deal with Gary's schematic.
   # 1. aggregate the gears based on landings
 
-  data <- aggregate_gear(data,otherGear,landingsThresholdGear,species_itis,logfile,outputDir,outputPlots)
+  data <- aggregate_gear(data,otherGear,landingsThresholdGear,speciesName,logfile,outputDir,outputPlots)
 
   # list of gears in ordered by landings
   gearList <- data$landings %>%
@@ -93,9 +93,9 @@ aggregate_landings <- function(landingsData,
   mainGearType <- gearList[1]
 
   # look at the summary stats/plots after aggregation
-  summary_stats(data$landings,species_itis,outputDir,outputPlots)
+  summary_stats(data$landings,speciesName,outputDir,outputPlots)
   # take a look at length distribution of size categories
-  plot_length_histogram(data$lengthData,species_itis,outputDir,outputPlots)
+  plot_length_histogram(data$lengthData,outputDir,outputPlots)
 
 
   #######################################################
