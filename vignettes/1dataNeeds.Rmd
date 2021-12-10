@@ -26,7 +26,7 @@ To use `mscatch` you will need to compile two data sets for a specific region of
 
 ## Length data
 
-Length data can be pulled from the oracle table (`stockeff.mv_cf_len`) under the stock efficiency initiative or from the annual (cflen, wolen) AA tables. It is then aggregated by YEAR, QTR, GEAR, MARKET_CODE to summarise two data sets
+Length data can be pulled from the oracle table (`stockeff.mv_cf_len`) under the stock efficiency initiative or from the annual (cflen, wolen) AA tables. It is then aggregated by YEAR, QTR, GEAR, MARKET_CODE to summarize two data sets
 
 * The size of the biological samples taken on trips
 * Individual fish lengths and their frequencies from these samples
@@ -66,7 +66,7 @@ Trips with missing gear information is handled in `mscatch`. It is assumed that 
 
 Discards are not included in this data. At a future date both `comlandr` and the stock efficiency initiative will contain discard estimates using the methods of [@Wigley2020].
 
-The resulting Catch data is then merged with the biological samples to summarise total catch (metric tons) by YEAR, QTR, GEAR, MARKET_CODE, the number of trips associated with the landings, the number of biological samples taken, and the total number of fish sampled. The data set should have this form:
+The resulting Catch data is then merged with the biological samples to summarize total catch (metric tons) by YEAR, QTR, GEAR, MARKET_CODE, the number of trips associated with the landings, the number of biological samples taken, and the total number of fish sampled. The data set should have this form:
 
 ``` {r catch, echo = F, eval = T}
 sc <- readRDS(here::here("data-raw/data/sampleCatch.RDS"))
@@ -75,7 +75,7 @@ sc
 
 ## Use `mscatch`
 
-Once the above data sets have been assembled they can now be used to expand the commercial landings data to length distributions using `mscatch`
+Once the above data sets have been assembled they can now be used to [aggregate the landings and length samples](articles/2aggregationRules.html) and then [expand](3catchExpansion.html) the commercial landings data to length distributions using `mscatch`
 
 
 ## References
