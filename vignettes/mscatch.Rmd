@@ -92,9 +92,8 @@ The resulting data will look like this
 
 ```{r expdata,echo=F,eval=T}
 
-sl <- readRDS(here::here("data-raw/data/sampleExpanded.RDS")) %>%
-  dplyr::select(-tripid)
+sl <- readRDS(here::here("data-raw/data/sampleExpanded.RDS")) 
 sl
 ```
-where the `weight` column represents the weight of all fish of a given `LENGTH`
+where the `weight` column represents the weight (metric tons) of all fish of a given `LENGTH`
 
