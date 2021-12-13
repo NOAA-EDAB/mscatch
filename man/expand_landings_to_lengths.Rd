@@ -21,7 +21,7 @@ A Tibble of expanded landings to represent weight of landings by length
 \item{MARKET_CODE}{Market code assigned to landed fish (The presence of this field depends on whether it was present in the \code{landingsData}}
 \item{LENGTH}{Length of sampled fish}
 \item{NUMLEN}{number of sampled for fish stated LENGTH}
-\item{weight}{expanded weight of all fish of given LENGTH in YEAR, NEGEAR etc..}
+\item{weight}{expanded weight (mt) of all fish of given LENGTH in YEAR, NEGEAR etc..}
 }
 \description{
 Proportions commercial landings based on length sample distribution
@@ -30,7 +30,7 @@ Proportions commercial landings based on length sample distribution
 
 
 The length weight relationship (see \code{\link{fit_length_weight}}) was fit assuming log normal errors (normal on the log scale)
-Therefor when exponentiation we need to correct for the mean:
+Therefore when exponentiation we need to correct for the mean:
 
 E(W) = \eqn{ L^\beta exp(\alpha + \sigma^2 / 2)}
 }

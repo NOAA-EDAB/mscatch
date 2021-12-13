@@ -11,7 +11,7 @@
 #'\item{MARKET_CODE}{Market code assigned to landed fish (The presence of this field depends on whether it was present in the \code{landingsData}}
 #'\item{LENGTH}{Length of sampled fish}
 #'\item{NUMLEN}{number of sampled for fish stated LENGTH}
-#'\item{weight}{expanded weight of all fish of given LENGTH in YEAR, NEGEAR etc..}
+#'\item{weight}{expanded weight (mt) of all fish of given LENGTH in YEAR, NEGEAR etc..}
 #'
 #'@section Notes:
 #'
