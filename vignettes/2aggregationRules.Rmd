@@ -25,13 +25,14 @@ Gear is defined using the field NEGEAR which characterizes gear by a three chara
 
 * This step ignores time (YEAR, QTR), MARKET_CODE, and length distributions and looks at aggregated landings by gear type to determine dominant gear types in fishery. The resulting number of distinct gear types to be selected is controlled by a user defined parameter indicating the total percentage of landings to be accounted for by distinct gear types. (Others lumped in **otherGear** category)
 
-For example, using a value of 95% would select the gear types, when ordered by each gears landings, for which the cumulative sum > 95% of total landings. All other gear types (those comprising < 5% of total landings) would be combined into an **otherGear** category. Below gear types (050,010,110) would be retained. All other gear types would be lumped together.
+For example, using a value of 95% would select the gear types, when ordered by each gears landings, for which the cumulative sum > 95% of total landings. All other gear types (those comprising < 5% of total landings) would be combined into an **otherGear** category. Below, the gear types (050,010,110) would be retained. All other gear types would be lumped together.
 
 ```{r gearExample, echo=F, eval=T}
 readr::read_csv("data/gearAgg.csv",col_names = T, show_col_types = F,skip=3) %>%
+  dplyr::slice(1:8) %>% 
   kableExtra::kbl() %>%
   kableExtra::row_spec(1:3,color = "green") %>% 
-  kableExtra::row_spec(4:17,color = "#d3d3d3") 
+  kableExtra::row_spec(4:8,color = "#d3d3d3") 
 ```
 
 ## Market Category
@@ -56,7 +57,7 @@ The borrowing of length samples from one time interval to use in another time in
 * Aggregate all to YEAR and borrow length samples where necessary
 * A MIX of both YEAR and QTR
 
-### YEAR
+#### YEAR
 
 The following are performed sequentially:
 
@@ -70,13 +71,13 @@ The following are performed sequentially:
 
 * The sampling program for most species started several years after landings were first recorded. So there is a stretch of consecutive years in the early part of the time series without any length samples. These years are assigned length samples from the first year in which samples were taken.
 
-### QTR
+#### QTR
 
 * For YEARs where there are landings before any length samples were taken all YEAR/QTRs are assigned the length samples from the most first YEAR in which length samples were taken (from the same QTR)
 
 * For YEARs when QTRs have missing length samples the previous years length samples for the same QTR are assigned. If there are not length samples in the previous year then the process is repeated until a length sample is available. If this still results in no length samples then the nearest neighbor is used. Length samples from the nearest QTR (any QTR) are used. If this still results in no length samples then the nearest neighbor is used from the NEGEAR type that is attributed with the majority of the landings.
 
-### MIX
+#### MIX
 
 * A tolerance for the allowed proportion of missing length samples by QTR (for each NEGEAR and MARKET_CODE) is used to determine if length samples should be assigned to ALL QTRs (as described by the methods above) or whether landings should be aggregated to annual data. 
 

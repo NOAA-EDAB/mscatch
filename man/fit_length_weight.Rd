@@ -4,16 +4,22 @@
 \alias{fit_length_weight}
 \title{Fit length weight relationship to species data from SVDBS}
 \usage{
-fit_length_weight(lengthWeightData, speciesName, outputDir, logfile)
+fit_length_weight(
+  lengthWeightData,
+  speciesName,
+  outputDir = NULL,
+  logfile = NULL
+)
 }
 \arguments{
 \item{lengthWeightData}{Data frame. length-weight pairs. Each row represents an individual fish}
 
 \item{speciesName}{Character string. Common name for species}
 
-\item{outputDir}{Character string. Path to output directory (png files saved here)}
+\item{outputDir}{Character string. Path to output directory (Default = NULL, no output written)}
 
-\item{logfile}{Character string. Specify the name for the log file generated describing all decisions made.}
+\item{logfile}{Character string. Specify the name for the log file generated describing all decisions made.
+(Default = NULL, no output written)}
 }
 \value{
 List of model fit objects
@@ -21,21 +27,43 @@ List of model fit objects
 \item{seasonalSlope}{\code{\link{lm}} object. Fit for seasonal slopes}
 }
 \description{
-Fits a length weight relationship for use in length expansion
+Fits a length weight relationship for use in catch expansion
 }
-\section{Notes on model fitting }{
+\section{Notes on model fitting}{
 
 
-The simplest Null model (H0) is assumed to be
-\deqn{W_i = \alpha L_i^\beta  exp(e_i)}
+The Weight-Length relationship is defined as
 
-where W_i = Weight and L_i = Length of fish i, e_i ~ \eqn{N(0,\sigma^2)} and
-\eqn{\alpha} &  \eqn{\beta} are intercept and slope parameters (on the log scale) to be estimated.
+\deqn{W_{ij} = \alpha L_{ij}^{\beta_j} e^{z_{ij}}}
 
-The alternative H1: \eqn{\beta_j != \beta} where \eqn{\beta_j} is the slope parameter (on the log scale) for season i.
-i = 1, ..., 4 (spring, summer, fall, winter)
+where,
 
-The above hypothesis is tested and the pvalue is output in the log file.
-Plots of model fits are also produced and saved in the output directory
+\eqn{W_{ij}} = Weight of fish \emph{i} in season \emph{j}, \eqn{i = 1, ..., n, j = 1, ... J}
+
+\eqn{L_{ij}} = Length of fish \emph{i} in season \emph{j},
+
+\eqn{z_{ij}} ~ \eqn{N(0,\sigma^2)},
+
+and \eqn{\beta_j} is effect of season \emph{j}
+
+On the more familiar log scale the model is
+
+\deqn{log(W_{ij}) = log(\alpha) + \beta_j log(L_{ij}) + {z_{ij}}}
+
+To test for a seasonal effect, we test the Null hypothesis:
+
+ \deqn{{H_0}:  \beta_j = \beta}
+
+ against the alternative,
+
+ \deqn{{H_1}: \beta_j \neq \beta}
+
+The test statistic is the standard F statistic
+
+\deqn{F = \frac{(RSS_{H_0}-RSS_{H_1})/(J-1)}{RSS_{H_1}/(n-J-1)}}
+
+which will have an F distribution with (J-1, n-J-1) degrees of freedom
+
+where RSS= Residual Sum of Square s
 }
 
