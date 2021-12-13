@@ -28,7 +28,8 @@ Suggests:
     DT,
     DBI,
     cfdbs,
-    kableExtra
+    kableExtra,
+    readr
 VignetteBuilder: knitr
 Imports: 
     dplyr,
