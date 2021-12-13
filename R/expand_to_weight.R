@@ -20,7 +20,7 @@
 expand_to_weight <- function(fishLength,numAtLength,landings,lengthWeightParams) {
 
   # length-weight parameters (for ease of reading code)
-  alpha <- exp(as.double(lengthWeightParams$alpha))
+  alpha <- exp(as.double(lengthWeightParams$logAlpha))
   beta <- as.double(lengthWeightParams$betas)
   sigma2 <- as.double(lengthWeightParams$var)
 

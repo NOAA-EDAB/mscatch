@@ -16,7 +16,7 @@
 #'@section Notes:
 #'
 #'The length weight relationship (see \code{\link{fit_length_weight}}) was fit assuming log normal errors (normal on the log scale)
-#'Therefor when exponentiation we need to correct for the mean:
+#'Therefore when exponentiation we need to correct for the mean:
 #'
 #'E(W) = \eqn{ L^\beta exp(\alpha + \sigma^2 / 2)}
 #'
