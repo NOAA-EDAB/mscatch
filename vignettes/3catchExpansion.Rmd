@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 library(magrittr)
 ```
 
-The final stage in data preparation (after [aggregating the data](articles/2aggregationRules.html)) is to expand the catch data to a distribution of weights using a length-weight relationship, then finally to scale the weights to match total landings.
+The final stage in data preparation (after [aggregating the data](2aggregationRules.html)) is to expand the catch data to a distribution of weights using a length-weight relationship, then finally to scale the weights to match total landings.
 
 ## Length-weight relationship {#len-weight}
 
@@ -32,7 +32,7 @@ This model can be extended to :
 $$ W_{ji} = \alpha L_{ji} ^ {\beta_j} e^{z_i} $$
 for season j, j= 1, ..., 4 (spring, summer, fall, winter) or sex j, j = 1, ..., 3 (0, 1, 2 categories) or extended further to include season:sex combinations. These models are all nested and can therefore be tested using standard statistical methods.
 
-## Expansion of landings to lengths
+## Expansion of landings
 
 The fitted length-weight relationship is applied to the length distributions and the aggregated landings are split accordingly using `mscatch::expand_landings_to_lengths`. All unclassified landings are then expanded using a similar method. 
 
@@ -61,18 +61,5 @@ $$expansion \; factor = \frac{landings \; of \; unclassifieds}{\sum landings \; 
 leading to the expanded weights of the unclassified sample
 
 $$expanded \; unclassified\; weights \; = expansion \; factor \;*\; fish \; weights \; of \; known \; market \; codes$$
-
-
-# Discards
-
-Need to deal with discards in a similar fashion.
-It seems that Susan Wigley has a SAS script that most/some stock assessment scientists use to help with this.
-Edit: Spoke to Susan Wigley she says that they will have all of the discard estimates over time for all of the species in a database similar to that of the landings, length, age databases. This will make life heck of a lot simpler for us.
-
-Discards tracked in observer database from 1989. However spotty coverage (mostly from otter trawls) until 2005
-			
-# NAFO data
-
-Non US landings need to be integrated also.
 
 
