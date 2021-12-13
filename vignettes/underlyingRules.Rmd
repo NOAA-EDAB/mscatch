@@ -29,7 +29,8 @@ Note: minimum number of length samples ~ 1 per 200 metric tonnes landed. (unwrit
 * Are there *gear* types with total landings greater than 0 but total sample sizes less than *X*?  
 
 ```
-    + if YES: Combine gear types (explore to see if combined lengths similar) to increase sample size or Ignore and continue (add to total at the end).
+    + if YES: Combine gear types (explore to see if combined lengths similar) 
+    to increase sample size or Ignore and continue (add to total at the end).
     + if NO: Count your blessings and continue.  
 ```
     
@@ -57,9 +58,12 @@ Note: minimum number of length samples ~ 1 per 200 metric tonnes landed. (unwrit
 * Interpolate remaining holes.  
 
 ```
-	  + Select length within year/market category from adjacent strata or strata group (after determining if appropriate).  
-	  + Select length within year/market category from adjacent quarter or semester (after determining if appropriate).  
-	  + Select length within year/market category from adjacent year (after determining if appropriate).  
+	  + Select length within year/market category from adjacent strata or strata group
+	  (after determining if appropriate).  
+	  + Select length within year/market category from adjacent quarter or semester
+	  (after determining if appropriate).  
+	  + Select length within year/market category from adjacent year
+	  (after determining if appropriate).  
 	  
 ```
 	  
@@ -73,7 +77,9 @@ Note: minimum number of length samples ~ 1 per 200 metric tonnes landed. (unwrit
 * If holes remain  
 
 ```
-	  + Calculate ratio of sampled to un-sampled landings and expand total length frequency such that expanded sample weight equals total landings weight for year t.
+	  + Calculate ratio of sampled to un-sampled landings and expand
+	  total length frequency such that expanded sample weight equals
+	  total landings weight for year t.
 ```
 
 
