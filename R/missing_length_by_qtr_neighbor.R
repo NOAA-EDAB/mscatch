@@ -11,6 +11,7 @@
 #' @return
 #'\item{numSamples}{tibble (nx4). Columns =  YEAR, QTR, len_totalNumLen, len_numLengthSamples}
 #'
+#'@noRd
 
 missing_length_by_qtr_neighbor <- function(QTRData,iyear,iqtr,nLengthSamples) {
 

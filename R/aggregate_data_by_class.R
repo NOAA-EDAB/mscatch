@@ -2,7 +2,7 @@
 #'
 #'The landings or length data are aggregated over a variable (for example MARKET_CODE) conditional on another variable (eg NEGAR == "050")
 #'
-#'@param data tibble. Data set to aggreate
+#'@param data tibble. Data set to aggregate
 #'@param variable Character string. Name of the variable to aggregate over
 #'@param classes Character vector. Two codes (from the variable) to aggregate (Assign 1st to 2nd)
 #'@param conditionalOn Character Vector. Name and value of variable to condition the aggregation on eg. c("NEGEAR","050"). Default = NULL
@@ -11,6 +11,7 @@
 #'@return tibble
 #'\item{data}{The same form and content as the input tibble, just aggregated}
 #'
+#'@noRd
 
 
 aggregate_data_by_class <- function(data,variable,classes,conditionalOn=NULL,dataset) {

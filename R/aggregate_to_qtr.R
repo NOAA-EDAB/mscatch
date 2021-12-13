@@ -16,6 +16,8 @@
 #' @param logFile Character string. Specify the name for the log file generated describing all decisions made.
 #'
 #' @return List. Same as input data
+#'
+#' @noRd
 
 
 
@@ -55,11 +57,11 @@ aggregate_to_qtr <- function(data,gearType,marketCode,QTRData,missingEarlyYears,
     # select same quarter in the previous year if not zero
     minYear <- min(data$lengthData$YEAR)
     numSamples <- missing_length_by_qtr(QTRData,missingQTRs$YEAR[iyear],missingQTRs$QTR[iyear],nLengthSamples,minYear)
-    if (dim(numSamples)[1]==0) {
+    if (dim(numSamples)[1]==0) { # no samples available
       message(paste0(missingQTRs$YEAR[iyear]," - No lengthData available for QTR = ",missingQTRs$QTR[iyear],". Using nearest neighbor."))
       # still zero after going back many years!! This could be a problem.
       write_to_logfile(outputDir,logfile,data=paste0("Gear: ",gearType," - ",missingQTRs$YEAR[iyear],"-",missingQTRs$QTR[iyear],". No samples found. Looking at nearest neighbor. - MARKET_CODE:",marketCode),label=NULL,append=T)
-      # selet length samples closest in time to target year/qtr
+      # select length samples closest in time to target year/qtr
       numSamples <- missing_length_by_qtr_neighbor(QTRData,missingQTRs$YEAR[iyear],missingQTRs$QTR[iyear],nLengthSamples)
       if (dim(numSamples)[1]==0) {
         # Still no samples, borrow from main Fleet in closest year. Presumably dealer still categorizes a small as a small

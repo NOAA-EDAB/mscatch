@@ -1,7 +1,7 @@
 #' Function to fill in missing sample lengths by year
 #'
 #' Obtain the YEAR length samples to be used for missing YEAR data
-#' Assuption is the data has been aggregated to YEAR from QTR.
+#' Assumption is the data has been aggregated to YEAR from QTR.
 #' The closest year that contains length samples is chosen
 #'
 #'@param YEARData dataframe. YEAR and number of length samples for the year
@@ -12,6 +12,7 @@
 #'
 #'\item{numSamples}{tibble (nx4). Columns =  YEAR, QTR, len_totalNumLen, len_numLengthSamples}
 #'
+#'@noRd
 
 
 missing_length_by_year <- function(YEARData,targetYEAR,minNumSamples) {

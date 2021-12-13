@@ -8,6 +8,7 @@
 #'
 #'@return Nothing: outout written to log file
 #'
+#'@noRd
 
 
 
@@ -25,9 +26,13 @@ write_to_logfile <- function(outputDir,logfile,data,label,append = F) {
     cat(data, file=fileConn)
     cat("\n", file=fileConn, append=T)
   } else if (length(dim(data))==2){ # matrix or dataframe
+    namesData <- sprintf("%15s ",names(data))
+    cat(namesData, file=fileConn, append=T) # print field names
+    cat("\n", file=fileConn, append=T)
 
     for (irow in 1:nrow(data)){
-      cat(data[irow,], file=fileConn, append=T)
+      printData <-  sprintf("%15s ",unlist(data[irow,]))
+      cat(printData, file=fileConn, append=T)
       cat("\n", file=fileConn, append=T)
     }
 

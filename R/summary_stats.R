@@ -4,7 +4,7 @@
 #'Eventually this needs to be embedded into an rmarkdown document with species title etc.
 #'
 #'@param data numeric scalar (proportion). Minimum proportion of cumulative landings to avoid aggregation of gear. Default = .9
-#'@param species_itis Numeric scalar. Species_itis code
+#'@param speciesName Character string. speciesName
 #'@param outputDir Character string. Path to output directory (png files saved here)
 #'@param outputPlots Boolean. Should plots be created. T or F
 
@@ -13,9 +13,9 @@
 #' @importFrom dplyr "summarize" "summarise" "group_by"
 #' @importFrom magrittr "%>%"
 #'
-#'@export
+#'@noRd
 
-summary_stats <- function(data,species_itis,outputDir,outputPlots) {
+summary_stats <- function(data,speciesName,outputDir,outputPlots) {
 
   if (outputPlots == F) return()
 
@@ -35,7 +35,7 @@ summary_stats <- function(data,species_itis,outputDir,outputPlots) {
   g <- ggplot() +
     geom_col(gears, mapping = aes(x=YEAR, y=totLand, fill = NEGEAR)) +
     theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-    labs(title = paste0("landings of ",species_itis," by NEGEAR")) +
+    labs(title = paste0("landings of ",speciesName," by NEGEAR")) +
     ylab("Total Landings (lbs)")
 
   print(g)
@@ -47,7 +47,7 @@ summary_stats <- function(data,species_itis,outputDir,outputPlots) {
   g <- ggplot() +
     geom_col(gears, mapping = aes(x=YEAR, y=totLand, fill = MARKET_CODE)) +
     theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-    labs(title = paste0("landings of ",species_itis," by MARKET_CODE")) +
+    labs(title = paste0("landings of ",speciesName," by MARKET_CODE")) +
     ylab("Total Landings (lbs)")
 
   print(g)

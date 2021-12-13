@@ -1,0 +1,82 @@
+---
+title: "1. Data Requirements"
+#output: html_document
+output: rmarkdown::html_vignette
+csl: apa-annotated-bibliography.csl
+bibliography: references.bib
+link-citations: yes
+vignette: >
+  %\VignetteIndexEntry{1. Data Requirements}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+ library(magrittr)
+```
+
+To use `mscatch` you will need to compile two data sets for a specific region of interest, whether a stock area, an ecological production unit, or a larger area:
+
+* Length data
+* Catch data
+
+## Length data
+
+Length data can be pulled from the oracle table (`stockeff.mv_cf_len`) under the stock efficiency initiative or from the annual (cflen, wolen) AA tables. It is then aggregated by YEAR, QTR, GEAR, MARKET_CODE to summarize two data sets
+
+* The size of the biological samples taken on trips
+* Individual fish lengths and their frequencies from these samples
+
+### Size of biological samples
+
+* The number of length samples (number trips in which samples were taken) 
+* The total number of lengths (number of actual fish that were sampled) 
+
+This is then merged with the catch data.
+
+### Individual fish lengths
+
+* The individual lengths of a sampled fish (1 cm increments)
+* The number of times a fish of this length was sampled
+
+The data set should have this form
+
+``` {r lengths, echo = F, eval = T}
+sl <- readRDS(here::here("data-raw/data/sampleLengths.RDS")) %>%
+  dplyr::select(-tripid)
+sl
+```
+
+where for each sampled in the YEAR, QTR, caught using NEGEAR and classed as MARKET_CODE
+
+* LENGTH is the length in cm of sampled fish and 
+* NUMLEN is the number of fish of this size sampled 
+
+## Catch data
+
+Landings data can be pulled from the oracle table (`stockeff.mv_cf_landings`) under the stock efficiency initiative or from the annual (cfdet, wodet, woland) AA tables. If pulled from the AA tables, the MARKET_CODE field does not exist. NESPP4 codes will need to be mapped to MARKET_CODE categories outlined `mscatch::marketCodeLookupTable`. (created from `comlandr::get_species_itis`)
+
+Some trips will have missing information in the AREA field. These trips will need to be assigned an area using the methods outlined by [@Palmer2008] prior to using `mscatch`. The package `comlandr` replicates these methods.
+
+Trips with missing gear information is handled in `mscatch`. It is assumed that trips with unknown gear information are catching fish with lengths proportional to trips with known gear types.
+
+Discards are not included in this data. At a future date both `comlandr` and the stock efficiency initiative will contain discard estimates using the methods of [@Wigley2020].
+
+The resulting Catch data is then merged with the biological samples to summarize total catch (metric tons) by YEAR, QTR, GEAR, MARKET_CODE, the number of trips associated with the landings, the number of biological samples taken, and the total number of fish sampled. The data set should have this form:
+
+``` {r catch, echo = F, eval = T}
+sc <- readRDS(here::here("data-raw/data/sampleCatch.RDS"))
+sc
+```
+
+## Use `mscatch`
+
+Once the above data sets have been assembled they can now be used to [aggregate the landings and length samples](articles/2aggregationRules.html) and then [expand](3catchExpansion.html) the commercial landings data to length distributions using `mscatch`
+
+
+## References
+

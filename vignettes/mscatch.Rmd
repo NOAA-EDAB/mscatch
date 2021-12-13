@@ -1,0 +1,99 @@
+---
+title: "mscatch"
+#output: html_document
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{mscatch}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+ library(magrittr)
+```
+
+When working with `mscatch` you will need to:
+
+*   [Assemble data](1dataNeeds.html) for use in the package
+*   [Aggregate the data](2aggregationRules.html) based on a set of rules
+*   Use length-weight relationships to [expand the catch](3catchExpansion.html) to weights using the length samples
+
+## Example
+
+Assuming you have data assembled the first step is determine how you would like to aggregate the data and how you would like to deal with YEARs/ QTRs with missing samples. 
+
+### Aggregate the data
+
+The following example implements the following decisions:
+
+* Assign the name of species (`speciesName = "Haddock"`)
+
+* Aggregate landings over QTR year to YEARly data and combine all length samples to same level of aggregation (`aggregate_to = "YEAR"`).
+
+* Only use gear types (NEGEARs) which contribute the most to total landings. Use a cumulative landings threshold of 90% to select gears. Other gears will be aggregated into an "other Gear" category (`landingThresholdGear = 0.9`)
+
+* Assign other gears to code "998" (`otherGear = "998"`)
+
+* Borrow length samples from nearest neighbor, whether by QTR, YEAR, or NEGEAR (`borrowLengths = T`). 
+
+* Minimum number of length samples required when borrowing samples from other NEGEARs, QTRs, or YEARs (`nLengthSamples = 1`)
+
+* Assign an output folder (`outputDir=here::here("output/Groundfish")`)
+
+* Assign a name to the log file produced (`logfile = "logfile.txt"`)
+
+
+```{r , echo =T, eval = F}
+ aggregatedData <- mscatch::aggregate_landings(landingsData,
+                                               lengthData,
+                                               outputDir=here::here("output/Groundfish"),
+                                               speciesName = "Haddock"
+                                               landingThresholdGear = 0.9,
+                                               nLengthSamples = 1,
+                                               aggregate_to = "YEAR",
+                                               borrowLengths = T,
+                                               otherGear = "998",
+                                               logfile = "logfile.txt"
+                                               outputPlots = T)
+```
+
+At this point,`aggregateData` contains length samples for every combination of YEAR, NEGEAR, MARKET_CODE. This is the requirement to expand the catch data by the length compositions.
+
+### Expand the catch
+
+* Obtain length-weight parameters that satisfy the [length-weight relationship](3catchExpansion.html). For this example we will use the bottom trawl survey data and pull lengths and weights for individual fish. A series of nested length-weight models are then fit to the data.
+
+The data is pulled using the [`survdat`](https://noaa-edab.github.io/survdat/) package and fit using `mscatch::fit_length_weight()`
+
+```{r lw, echo =T , eval = F}
+# Permissions and credentials are required to conect to the database
+channel <- dbutils::connect_to_database("server","user")
+# Haddock data are pulled (SVSPP = 74)
+lengthWeightData <- survdat::get_length_weight_data(channel,year="all", species=74)
+# Length-Weight models are thenn fit
+fits <- mscatch::fit_length_weight(lengthWeightData$data,speciesName,outputDir,logfile="logfile.txt")
+
+```
+
+* The fitted model is then used to expand the catch. This is achieved by using `mscatch::expand_landings_to_lengths()`
+
+```{r expand, echo = T, eval = F}
+
+  expandedLandings <- mscatch::expand_landings_to_lengths(aggregatedData$landings,aggregatedData$lengthData,fits$paramsH0) %>%
+    dplyr::mutate(speciesName = speciesName)
+
+```
+
+The resulting data will look like this
+
+```{r expdata,echo=F,eval=T}
+
+sl <- readRDS(here::here("data-raw/data/sampleExpanded.RDS")) 
+sl
+```
+where the `weight` column represents the weight (metric tons) of all fish of a given `LENGTH`
+

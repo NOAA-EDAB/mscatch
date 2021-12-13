@@ -3,7 +3,6 @@
 #' Creates a facet plot for each market category across all years for each gear type
 #'
 #'@param lengthData data frame.
-#'@param species_itis Numeric scalar.  Species_itis code for species
 #'@param outputDir Character string. Path to output directory (png files saved here)
 #'@param outputPlots Boolean. Should plots be created. T or F
 
@@ -12,32 +11,39 @@
 #'@importFrom dplyr "summarize" "summarise" "group_by"
 #'@importFrom magrittr "%>%"
 #'
-#' @export
+#' @noRd
 
-plot_length_histogram <- function(lengthData,species_itis,outputDir,outputPlots){
+plot_length_histogram <- function(lengthData,outputDir,outputPlots){
 
   if (outputPlots == F) return()
 
-  lengthDataGEARS <- lengthData %>% dplyr::group_by(NEGEAR,MARKET_CODE,LENGTH) %>% dplyr::summarise(numlens=sum(as.numeric(NUMLEN)))
+  lengthDataGEARS <- lengthData %>%
+    dplyr::group_by(NEGEAR,MARKET_CODE,LENGTH) %>%
+    dplyr::summarise(numlens=sum(as.numeric(NUMLEN)))
 
-  png(paste0(outputDir,"/5_market_category_lengths_by_gear.png"))
+  # check to see if any length data
+  if (any(!is.na(lengthDataGEARS$LENGTH))) {
 
-  p <- ggplot(data = lengthDataGEARS) +
-    geom_bar(stat="identity",mapping = aes(x=LENGTH,y=numlens),na.rm=T) +
-    facet_wrap(~NEGEAR+MARKET_CODE,scales="free_y",nrow=length(unique(lengthData$NEGEAR)), ncol = length(unique(lengthData$MARKET_CODE))) +
-    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-    scale_x_discrete(name="Length (cm)", breaks=seq(0, max(lengthData$LENGTH),10))
-  print(p)
-  dev.off()
+    png(paste0(outputDir,"/5_market_category_lengths_by_gear.png"))
 
-  png(paste0(outputDir,"/6_market_category_lengths.png"))
-  p <- ggplot(data = lengthDataGEARS) +
-    geom_bar(stat="identity",mapping = aes(x=LENGTH,y=numlens),na.rm=T) +
-    facet_wrap(~MARKET_CODE,scales="free_y",nrow = length(unique(lengthData$MARKET_CODE)),ncol=1) +
-    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-    scale_x_discrete(name="Length (cm)", breaks=seq(0, max(lengthData$LENGTH),10))
-  print(p)
+    p <- ggplot(data = lengthDataGEARS) +
+      geom_bar(stat="identity",mapping = aes(x=LENGTH,y=numlens),na.rm=T) +
+      facet_wrap(~NEGEAR+MARKET_CODE,scales="free_y",nrow=length(unique(lengthData$NEGEAR)), ncol = length(unique(lengthData$MARKET_CODE))) +
+      theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+      scale_x_discrete(name="Length (cm)", breaks=seq(0, max(lengthData$LENGTH),10))
+    print(p)
+    dev.off()
 
-  dev.off()
+    png(paste0(outputDir,"/6_market_category_lengths.png"))
+    p <- ggplot(data = lengthDataGEARS) +
+      geom_bar(stat="identity",mapping = aes(x=LENGTH,y=numlens),na.rm=T) +
+      facet_wrap(~MARKET_CODE,scales="free_y",nrow = length(unique(lengthData$MARKET_CODE)),ncol=1) +
+      theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+      scale_x_discrete(name="Length (cm)", breaks=seq(0, max(lengthData$LENGTH),10))
+    print(p)
 
+    dev.off()
+  } else {
+    # no length samples
+  }
 }

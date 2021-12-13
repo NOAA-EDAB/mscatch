@@ -12,12 +12,14 @@
 #'@return
 #'\item{numSamples}{tibble (nx4). Columns =  YEAR, QTR, len_totalNumLen, len_numLengthSamples}
 #'
+#'@noRd
 
 
 update_early_years <- function(QTRData,maxEarlyYear,iqtr,nLengthSamples) {
 
-  numSamples <- QTRData %>% dplyr::filter(YEAR==(maxEarlyYear+1) & QTR==iqtr) %>%
-  dplyr::select(YEAR,QTR,len_totalNumLen,len_numLengthSamples)
+  numSamples <- QTRData %>%
+    dplyr::filter(YEAR==(maxEarlyYear+1) & QTR==iqtr) %>%
+    dplyr::select(YEAR,QTR,len_totalNumLen,len_numLengthSamples)
 
   if (dim(numSamples)[1] == 0)  { # empty tibble or zero length samples
     # look another year back

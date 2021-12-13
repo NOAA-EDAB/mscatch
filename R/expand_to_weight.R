@@ -15,12 +15,12 @@
 #' This an internal function called within a dplyr::mutate statement operating on a group
 #'
 #'
-#'
+#' @noRd
 
 expand_to_weight <- function(fishLength,numAtLength,landings,lengthWeightParams) {
 
   # length-weight parameters (for ease of reading code)
-  alpha <- exp(as.double(lengthWeightParams$alpha))
+  alpha <- exp(as.double(lengthWeightParams$logAlpha))
   beta <- as.double(lengthWeightParams$betas)
   sigma2 <- as.double(lengthWeightParams$var)
 
@@ -34,6 +34,11 @@ expand_to_weight <- function(fishLength,numAtLength,landings,lengthWeightParams)
 
   # scaled weight to landings total.
   fishWeight <- fishWeight * expansionFactor
+
+  # if length samples are missing, just assign the landings as the weight.
+  if(anyNA(fishWeight)) {
+    fishWeight <- landings
+  }
 
   return(fishWeight)
 }

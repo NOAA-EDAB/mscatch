@@ -8,10 +8,12 @@
 #'@section Notes:
 #'
 #'Values are access from the \code{landingsRecord} using the \code{categories} and strung together to make an expression in the form of
-#'labe == value & label = value etc.
+#'label == value & label = value etc.
 #'
 #'
-#'@export
+#' @importFrom magrittr "%>%"
+#'
+#'@noRd
 
 create_filter_expression <- function(landingsRecord,categories){
 

@@ -1,6 +1,6 @@
 #' Aggregates landings and length data based on MARKET_CODE
 #'
-#' Aggregates data by MARKET_CODE. User intervention is required since this is prety subjective.
+#' Aggregates data by MARKET_CODE. User intervention may be required since this is prety subjective.
 #'
 #'
 #'@param data List. Landings data and length data
@@ -14,6 +14,7 @@
 #'\item{landings}{same as input}
 #'\item{lengthData}{Same as input}
 #'
+#'@noRd
 
 
 aggregate_market_codes <- function(data,pValue,outputDir,outputPlots,logfile) {
@@ -34,6 +35,9 @@ aggregate_market_codes <- function(data,pValue,outputDir,outputPlots,logfile) {
   if (any (market$len_numLengthSamples == 0)) {
     message("Some market codes have NO length samples. Below is a table of market codes and their relative contribution to landings \n")
     print(market)
+
+    write_to_logfile(outputDir,logfile,as.data.frame(market),label="Landings and length samples by MARKET_CODE:",append = T)
+
     zeroLandings <- market$MARKET_CODE[market$len_numLengthSamples == 0]
     message(paste0("As you can see, code = ",as.character(zeroLandings)," needs to be combined with other market categories. \n" ))
     message("We'll walk through each one in turn:\n")
@@ -57,22 +61,33 @@ aggregate_market_codes <- function(data,pValue,outputDir,outputPlots,logfile) {
       dplyr::arrange(desc(totalLandings)) %>%
       dplyr::mutate(percent = totalLandings/sum(totalLandings) , cumsum=cumsum(totalLandings),cum_percent=cumsum/sum(totalLandings))
 
+    plot_market_codes(newmarket,8,outputDir,outputPlots)
   }
-  plot_market_codes(newmarket,8,outputDir,outputPlots)
+
 
   # now test for equality of length distributions.
   # aggregate until can no longer
-  message("Performing KS tests to compare GLOBAL length distributions of market codes")
-  while (1) {
-    codesToAggregate <- compare_length_distributions(data$landings,data$lengthData,variableToAggregate = "MARKET_CODE", groupBy=c("NEGEAR","LENGTH","NUMLEN","MARKET_CODE"), pValue,outputDir,logfile)
-    if (is.null(codesToAggregate)) {
-      break
-    } else {
-      codes <- codesToAggregate[1,]
-      filteredLandings <- aggregate_data_by_class(data$landings,variable="MARKET_CODE",classes=codes,dataset="landings")
-      data$landings <- filteredLandings
-      lengthData <- aggregate_data_by_class(data$lengthData,variable="MARKET_CODE",classes=codes,dataset="lengths")
-      data$lengthData <- lengthData
+  mc <- unique(data$landings$MARKET_CODE)
+  if (length(mc) <= 1) { # can not compare and aggregate since only 1 category
+    write_to_logfile(outputDir,logfile,paste(" Only 1 Market Category: ",mc,"\n"),label="Limitied Market Categories",append = T)
+  } else { # compare and aggregate
+    message("Performing KS tests to compare GLOBAL length distributions of market codes")
+    while (1) {
+      codesToAggregate <- compare_length_distributions(data$landings,data$lengthData,variableToAggregate = "MARKET_CODE", groupBy=c("NEGEAR","LENGTH","NUMLEN","MARKET_CODE"), pValue,outputDir,logfile)
+      if (is.null(codesToAggregate)) {
+        write_to_logfile(outputDir,logfile,data=paste0("All remaining MARKET_CODEs have significantly different length distributions at ",pValue, " level."),label=NULL,append=T)
+        break
+      } else {
+        # Select the first pair of codes, combine codes (using first code),
+        # update the landings and lengths, repeat
+        # The while loop uses the updated data so will eventually break
+        codes <- codesToAggregate[1,]
+
+        filteredLandings <- aggregate_data_by_class(data$landings,variable="MARKET_CODE",classes=codes,dataset="landings")
+        data$landings <- filteredLandings
+        lengthData <- aggregate_data_by_class(data$lengthData,variable="MARKET_CODE",classes=codes,dataset="lengths")
+        data$lengthData <- lengthData
+      }
     }
   }
 

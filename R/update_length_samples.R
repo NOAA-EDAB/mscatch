@@ -6,7 +6,7 @@
 #' @param data List. landings and lengthData
 #' @param missingRow Dataframe. Specifies the YEAR and QTR where length samples are missing
 #' @param gearType Character string. Name of NEGEAR
-#' @param mainGearType Character string. Name of NEGEAR with most landings
+#' @param mainGearType Character string. Name of NEGEAR for which samples are borrowed from
 #' @param marketCode Character string. Name of MARKET_CODE
 #' @param numSamples Tibble. Filtered landings data (YEAR, QTR, len_totalNumLen, len_numLengthSamples) by NEGEAR, MARKET_CODE
 #'
@@ -14,6 +14,7 @@
 #' \item{landings}{Tibble (n x 8). Aggregated landings data. YEAR, QTR, NEGEAR, MARKET_CODE,landings_land (metric tonnes), landings_nn (# trips), len_totalNumLen (# fish lengths), len_numLengthSamples (# independent samples) }
 #' \item{lengthData}{Tibble (m x 8 ). Aggregated length data. YEAR, QTR, NEGEAR, MARKET_CODE, LENGTH (length of fish), NUMLEN (# fish at LENGTH)}
 #'
+#'@noRd
 
 update_length_samples <- function(data,missingRow,gearType,marketCode,numSamples,mainGearType = NULL) {
 

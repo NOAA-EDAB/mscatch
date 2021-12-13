@@ -7,6 +7,7 @@
 test_main.r
 *.png
 !/vignettes/figures/*.png
+!/man/figures/*.png
 # folders
 docs/
 other/
@@ -18,3 +19,4 @@ output/
 !/data/marketCodeLookupTable.RData
 
 tests/
+inst/doc

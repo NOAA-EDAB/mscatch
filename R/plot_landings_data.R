@@ -9,7 +9,7 @@
 #'
 #' @importFrom ggplot2 "aes" "geom_bar" "geom_col" "theme" "element_text" "ylab" "xlab"
 #'
-#' @export
+#' @noRd
 
 plot_landings_data <- function(species,data,dataType,threshold) {
 

@@ -1,0 +1,107 @@
+---
+title: "Underlying Rules"
+#output: html_document
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Underlying Rules}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+The following set of rules are the basis for `mscatch`.
+
+In many stock assessments each year may result in a different level of aggregation (i.e quarters, semesters or different gear types).
+
+Note: minimum number of length samples ~ 1 per 200 metric tonnes landed. (unwritten rule of thumb, check )
+
+(Within each year, t)
+
+## Combine:
+
+* Are there *gear* types with total landings greater than 0 but total sample sizes less than *X*?  
+
+```
+    + if YES: Combine gear types (explore to see if combined lengths similar) 
+    to increase sample size or Ignore and continue (add to total at the end).
+    + if NO: Count your blessings and continue.  
+```
+    
+* Are there *market categories* (they are not on ordinal scale) with total landings greater than 0 but sample sizes less than *X*? (after combining gears). 
+
+```    
+	  + if YES: combine market categories with similar length distributions. 
+	  + if NO : Count your blessings and continue.  
+```	  
+	  
+* Are there *quarters* with landings but sample sizes less than *X*? 
+
+```
+    + if YES: Create semesters?  (Currently semesters are skipped and jump straight to annual)
+	  + if NO: Count your blessings and continue.  
+```
+
+* Are there *strata* with landings but sample sizes less than *X*?
+
+```
+	  + If YES: define groups of similar strata  
+	  + If NO: Count your blessings and continue.  
+```
+
+* Interpolate remaining holes.  
+
+```
+	  + Select length within year/market category from adjacent strata or strata group
+	  (after determining if appropriate).  
+	  + Select length within year/market category from adjacent quarter or semester
+	  (after determining if appropriate).  
+	  + Select length within year/market category from adjacent year
+	  (after determining if appropriate).  
+	  
+```
+	  
+* If unclassified market category and no other information available:  
+
+```
+	  + Combine market category samples to create an unclassified  
+	  + Use appropriate observer length samples to apply to unclassified. 
+```
+
+* If holes remain  
+
+```
+	  + Calculate ratio of sampled to un-sampled landings and expand
+	  total length frequency such that expanded sample weight equals
+	  total landings weight for year t.
+```
+
+
+
+
+
+## Interpolate only:
+If examination of sample matrix shows only sporadic missing cells with landings but sample sizes less than *X*:  
+
+* Samples by year/gear/quarter/stat area/market category
+
+	  + Nearest stat area within market category/quarter/gear/year  
+	  	  + Keeping year/market category constant:  
+	  	  	  + Adjacent quarter/ same stat area  
+	  	  	  	  + Adjacent quarter/ any stat area within ecoregion  
+	  	  	  	  	  + Adjacent semester/matching stat area  
+	  	  	  	  	  	  + Adjacent semester/ any stat area within ecoregion  
+                            +  If lengths by gear are similar: Alternative gear/same quarter/stat area	
+	  	  	  	  	  	  	  	  + Alternative gear/same quarter/any stat area
+	  	  	  	  	  	  	  	  	  + Alternative gear/semester/same stat area
+	  	  	  	  	  	  	  	  	  	  + Alternative gear/semester/any stat area
+	  	  	  	  	  	  	  	  	  	  	  + No options- extrapolate to total
+
+*Or combination of both approaches*
+

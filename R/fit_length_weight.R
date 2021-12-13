@@ -1,86 +1,125 @@
 #' Fit length weight relationship to species data from SVDBS
 #'
-#'Fits a length weight relationship for use in length expansion
+#'Fits a length weight relationship for use in catch expansion
 #'
 #'@param lengthWeightData Data frame. length-weight pairs. Each row represents an individual fish
 #'@param speciesName Character string. Common name for species
-## #' @inheritParams get_species
+#'@param outputDir Character string. Path to output directory (Default = NULL, no output written)
+#'@param logfile Character string. Specify the name for the log file generated describing all decisions made.
+#'(Default = NULL, no output written)
+
 #'
 #'@return List of model fit objects
-#'\item{commonSlope}{\code{\url{lm}} object. Fit for single slope (beta)}
-#'\item{seasonalSlope}{\code{\url{lm}} object. Fit for seasonal slopes}
+#'\item{commonSlope}{\code{\link{lm}} object. Fit for single slope (beta)}
+#'\item{seasonalSlope}{\code{\link{lm}} object. Fit for seasonal slopes}
 #'
-#'@section Notes on model fitting :
+#'@section Notes on model fitting:
 #'
-#'The simplest Null model (H0) is assumed to be
-#'\deqn{W_i = \alpha L_i^\beta  exp(e_i)}
+#'The Weight-Length relationship is defined as
 #'
-#'where W_i = Weight and L_i = Length of fish i, e_i ~ \eqn{N(0,\sigma^2)} and
-#' \eqn{\alpha} &  \eqn{\beta} are intercept and slope parameters (on the log scale) to be estimated.
+#' \deqn{W_{ij} = \alpha L_{ij}^{\beta_j} e^{z_{ij}}}
 #'
-#'The alternative H1: \eqn{\beta_j != \beta} where \eqn{\beta_j} is the slope parameter (on the log scale) for season i.
-#'i = 1, ..., 4 (spring, summer, fall, winter)
+#'where,
 #'
-#'The above hypothesis is tested and the pvalue is output in the log file.
-#'Plots of model fits are also produced and saved in the output directory
+#' \eqn{W_{ij}} = Weight of fish \emph{i} in season \emph{j}, \eqn{i = 1, ..., n, j = 1, ... J}
 #'
+#' \eqn{L_{ij}} = Length of fish \emph{i} in season \emph{j},
+#'
+#' \eqn{z_{ij}} ~ \eqn{N(0,\sigma^2)},
+#'
+#' and \eqn{\beta_j} is effect of season \emph{j}
+#'
+#' On the more familiar log scale the model is
+#'
+#' \deqn{log(W_{ij}) = log(\alpha) + \beta_j log(L_{ij}) + {z_{ij}}}
+#'
+#' To test for a seasonal effect, we test the Null hypothesis:
+#'
+#'  \deqn{{H_0}:  \beta_j = \beta}
+#'
+#'  against the alternative,
+#'
+#'  \deqn{{H_1}: \beta_j \neq \beta}
+#'
+#' The test statistic is the standard F statistic
+#'
+#' \deqn{F = \frac{(RSS_{H_0}-RSS_{H_1})/(J-1)}{RSS_{H_1}/(n-J-1)}}
+#'
+#' which will have an F distribution with (J-1, n-J-1) degrees of freedom
+#'
+#' where RSS= Residual Sum of Square s
 #'
 #' @export
 
-fit_length_weight <- function(lengthWeightData,speciesName,outputDir,logfile){
+fit_length_weight <- function(lengthWeightData,speciesName,outputDir=NULL,logfile=NULL){
 
   # filter for null values
   lwd <- lengthWeightData %>% dplyr::filter(INDWT > 0) %>% dplyr::select(INDWT,LENGTH,SEX,SEASON)
 
   # fit Weight = a.Length^b.exp(E)  where E ~ N(0,sig^2)
   # fit  no seasonal effect
-  fit <- lm(log(INDWT) ~ log(LENGTH) , data=lwd)
-  evar <- sum(fit$residuals^2)/fit$df.residual
-  lwd$predWt <- exp(fit$fitted.values + evar/2)
+  nullFit <- lm(log(INDWT) ~ log(LENGTH) , data=lwd)
+  evar <- sum(nullFit$residuals^2)/nullFit$df.residual
+  lwd$predWt <- exp(nullFit$fitted.values + evar/2)
   # fit seasonal effect
-  fit2 <- lm(log(INDWT) ~ log(LENGTH):SEASON, data=lwd )
-  evar <- sum(fit2$residuals^2)/fit2$df.residual
-  lwd$predSeasWt <- exp(fit2$fitted.values + evar/2)
+  altFit <- lm(log(INDWT) ~ log(LENGTH):SEASON, data=lwd )
+  evar <- sum(altFit$residuals^2)/altFit$df.residual
+  lwd$predSeasWt <- exp(altFit$fitted.values + evar/2)
 
   # test the null H0: bi=b vs alternative H1: bi != b
-  reductionSS <- sum(fit$residuals^2) - sum(fit2$residuals^2)
-  dfModel <- fit$df.residual- fit2$df.residual
-  SSR <- sum(fit2$residuals^2)
-  df <- fit2$df.residual
+  reductionSS <- sum(nullFit$residuals^2) - sum(altFit$residuals^2)
+  dfModel <- nullFit$df.residual- altFit$df.residual
+  SSR <- sum(altFit$residuals^2)
+  df <- altFit$df.residual
   Fstat <- (reductionSS/dfModel)/(SSR/df)
   pVal <- 1-pf(Fstat,dfModel,df)
 
-
-  write_to_logfile(outputDir,logfile,"",label=paste0(speciesName,": LENGTH-WEIGHT RELATIONSHIPS from SVDBS"),append=T)
-  write_to_logfile(outputDir,logfile,data=pVal,label="pvalue: H0: single slope (beta) vs H1:seasonal (beta)",append=T)
-
+  if (!is.null(logfile)) {
+    write_to_logfile(outputDir,logfile,"",label=paste0(speciesName,": LENGTH-WEIGHT RELATIONSHIPS from SVDBS"),append=T)
+    write_to_logfile(outputDir,logfile,data=pVal,label="pvalue: H0: single slope (beta) vs H1:seasonal (beta)",append=T)
+  }
   # plots common slope fit and separate seasonal fits on facet plot
   figText <- data.frame(SEASON = sort(unique(lwd$SEASON)),
                         x = c(rep(min(lwd$LENGTH),4)),
                         y = c(rep(max(lwd$INDWT),4)),
-                        text = c(rep(paste0("Common slope: W = ",signif(exp(fit$coefficients[1]),6),"L^",signif(fit$coefficients[2],6)),4)),
-                        textSeas = c(paste0("Seasonal slope: W = ",signif(exp(fit2$coefficients[1]),6),"L^",signif(fit2$coefficients[2:5],6))))
+                        text = c(rep(paste0("Common slope (red): W = ",signif(exp(nullFit$coefficients[1]),6),"L^",signif(nullFit$coefficients[2],6)),4)),
+                        textSeas = c(paste0("Seasonal slope (blue): W = ",signif(exp(altFit$coefficients[1]),6),"L^",signif(altFit$coefficients[2:5],6))))
 
   figText <- figText %>% dplyr::mutate_if(is.factor, as.character)
   figText$SEASON <- as.factor(figText$SEASON)
 
 
-  png(paste0(outputDir,"/length_weight_relationship_",speciesName,".png"),width = 1000,height = 1000,units="px")
+  if (!is.null(outputDir)) {
+    png(paste0(outputDir,"/length_weight_relationship_",speciesName,".png"),width = 1000,height = 1000,units="px")
 
-  p <- ggplot2::ggplot(data = lwd,ggplot2::aes(x=LENGTH, y = INDWT, color = as.factor(SEX))) +
-    ggplot2::geom_point(shape = 1) +
-    ggplot2::facet_wrap(facets="SEASON") +
-    ggplot2::geom_line(ggplot2::aes(y = predWt),color = "red") +
-    ggplot2::geom_line(ggplot2::aes(y = predSeasWt),color = "blue") +
-    ggplot2::xlab("Length (cm)") +
-    ggplot2::ylab("Weight (kg)") +
-    ggplot2::ggtitle(paste0("Length-weight (SVDBS) relationship for ",speciesName)) +
-    ggplot2::geom_text(data = figText,ggplot2::aes(x=x,y=y,label = text ),show.legend = F,size=3,color="black",hjust="inward") +
-    ggplot2::geom_text(data = figText,ggplot2::aes(x=x,y=.9*y,label = textSeas ),show.legend = F,size=3,color="black",hjust="inward")
+    p <- ggplot2::ggplot(data = lwd,ggplot2::aes(x=LENGTH, y = INDWT, color = as.factor(SEX))) +
+      ggplot2::geom_point(shape = 1) +
+      ggplot2::facet_wrap(facets="SEASON") +
+      ggplot2::geom_line(ggplot2::aes(y = predWt),color = "red") +
+      ggplot2::geom_line(ggplot2::aes(y = predSeasWt),color = "blue") +
+      ggplot2::xlab("Length (cm)") +
+      ggplot2::ylab("Weight (kg)") +
+      ggplot2::ggtitle(paste0("Length-weight (SVDBS) relationship for ",speciesName)) +
+      ggplot2::geom_text(data = figText,ggplot2::aes(x=x,y=y,label = text ),show.legend = F,size=3,color="black",hjust="inward") +
+      ggplot2::geom_text(data = figText,ggplot2::aes(x=x,y=.9*y,label = textSeas ),show.legend = F,size=3,color="black",hjust="inward")
 
-  print(p)
-  dev.off()
+    print(p)
+    dev.off()
+  }
 
-  return(list(commonSlope=fit,SeasonSlope=fit2))
+  nParams <- length(nullFit$coefficients)
+  lengthWeightParamsH0 <- list()
+  lengthWeightParamsH0$logAlpha <- nullFit$coefficients[1]
+  lengthWeightParamsH0$betas <- nullFit$coefficients[2:nParams]
+  lengthWeightParamsH0$var <- sum(nullFit$residuals^2)/nullFit$df.residual
+
+  nParams <- length(altFit$coefficients)
+  lengthWeightParamsH1 <- list()
+  lengthWeightParamsH1$logAlpha <- altFit$coefficients[1]
+  lengthWeightParamsH1$betas <- altFit$coefficients[2:nParams]
+  lengthWeightParamsH1$var <- sum(altFit$residuals^2)/altFit$df.residual
+
+
+  return(list(commonSlope=nullFit,SeasonSlope=altFit, pValue = pVal,paramsH0=lengthWeightParamsH0,paramsH1=lengthWeightParamsH1))
 
 }

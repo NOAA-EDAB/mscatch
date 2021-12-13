@@ -1,0 +1,65 @@
+---
+title: "3. Catch Expansion"
+#output: html_document
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{3. Catch Expansion}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(magrittr)
+```
+
+The final stage in data preparation (after [aggregating the data](2aggregationRules.html)) is to expand the catch data to a distribution of weights using a length-weight relationship, then finally to scale the weights to match total landings.
+
+## Length-weight relationship {#len-weight}
+
+Length-weight data is obtained from SVDBS (other data sources can be substituted if necessary). A length-weight relationship is fit to the data using `mscatch::fit_length_weight` (as an alternative parameter values from database svdbs.LENGTH_WEIGHT_COEFFICIENTS can be used). The relationship between the weight and length of fish *i* is modelled as,
+
+$$ W_i = \alpha L_i ^ \beta e^{z_i}$$
+
+
+where $\alpha$ and $\beta$ are intercept and slope parameters (on log scale) and $z_i \sim N(0,\sigma^2)$ 
+
+This model can be extended to :
+
+$$ W_{ji} = \alpha L_{ji} ^ {\beta_j} e^{z_i} $$
+for season j, j= 1, ..., 4 (spring, summer, fall, winter) or sex j, j = 1, ..., 3 (0, 1, 2 categories) or extended further to include season:sex combinations. These models are all nested and can therefore be tested using standard statistical methods.
+
+## Expansion of landings
+
+The fitted length-weight relationship is applied to the length distributions and the aggregated landings are split accordingly using `mscatch::expand_landings_to_lengths`. All unclassified landings are then expanded using a similar method. 
+
+
+### Known market codes
+
+For each unique category (YEAR, QTR, NEGEAR, MARKET_CODE) we have both total landings (metric tons) and a sample of fish lengths for this category. The sampled fish lengths are converted to mean weights using the [weight-length relationship](#len-weight). The resulting sample fish weights are mean weights (metric tons). The weight distribution of sampled fish is then scaled to the weight of total landings. This scaling assumes that the landed (commercial) fish have the same length distribution as the sampled fish.
+
+For each unique category we define 
+
+$$expansion \; factor = \frac{total \; landings}{\sum sampled \; fish \; weigths} $$
+The expanded weights of each unique category are then scaled by this expansion factor to equal the total landings of the category.
+
+$$expanded \; sample\; weights \; = expansion \; factor \;*\; sampled \; fish \; weights$$
+
+The result is a distribution of weights based on lengths for each unique category.
+
+### Unclassified market code
+
+The unclassified landings for a specific (YEAR, QTR, NEGEAR) are assumed to be a mixture of fish lengths similar to that in the observed MARKET_CODEs. Therefore the length distribution for the unclassified landings are assumed to have the same distribution as the length distributions of the landed fish in all of the known market codes combined. The sampled fish lengths (from the known market codes) are converted to weights using the [weight-length relationship](#len-weight). 
+
+For each unique category we define
+
+$$expansion \; factor = \frac{landings \; of \; unclassifieds}{\sum landings \; of \; known \; market \; codes  } $$
+
+leading to the expanded weights of the unclassified sample
+
+$$expanded \; unclassified\; weights \; = expansion \; factor \;*\; fish \; weights \; of \; known \; market \; codes$$
+
+

@@ -10,7 +10,7 @@
 #'
 #'@return Nothing
 #'
-#'@export
+#'@noRd
 
 plot_market_code_by_qtr <- function(data,plotID,outputDir,outputPlots=T) {
 
