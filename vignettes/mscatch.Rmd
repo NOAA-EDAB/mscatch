@@ -24,27 +24,27 @@ When working with `mscatch` you will need to:
 
 ## Example
 
-Assuming you have data assembled the first step is determine how you would like to aggregate the data and how you would like to deal with YEARs/ QTRs with missing samples. 
+Assuming you have assembled the data, the next step is determine how you would like to aggregate the data and how you would like to deal with YEARs/QTRs with missing length samples. 
 
 ### Aggregate the data
 
 The following example implements the following decisions:
 
-* Assign the name of species (`speciesName = "Haddock"`)
+* Assigns the name of species (`speciesName = "Haddock"`)
 
-* Aggregate landings over QTR year to YEARly data and combine all length samples to same level of aggregation (`aggregate_to = "YEAR"`).
+* Aggregates landings over QTR year to YEARly data and combines all length samples to same level of aggregation (`aggregate_to = "YEAR"`).
 
-* Only use gear types (NEGEARs) which contribute the most to total landings. Use a cumulative landings threshold of 90% to select gears. Other gears will be aggregated into an "other Gear" category (`landingThresholdGear = 0.9`)
+* Uses gear types (NEGEARs) which contribute the most to total landings. Uses a cumulative landings threshold of 90% to select gears. Other gears will be aggregated into an "other Gear" category (`landingThresholdGear = 0.9`)
 
-* Assign other gears to code "998" (`otherGear = "998"`)
+* Assigns other gears to code "998" (`otherGear = "998"`)
 
-* Borrow length samples from nearest neighbor, whether by QTR, YEAR, or NEGEAR (`borrowLengths = T`). 
+* Borrows length samples from nearest neighbor, whether by QTR, YEAR, or NEGEAR (`borrowLengths = T`). 
 
 * Minimum number of length samples required when borrowing samples from other NEGEARs, QTRs, or YEARs (`nLengthSamples = 1`)
 
-* Assign an output folder (`outputDir=here::here("output/Groundfish")`)
+* Assigns an output folder (`outputDir=here::here("output/Haddock")`)
 
-* Assign a name to the log file produced (`logfile = "logfile.txt"`)
+* Assigns a name to the log file produced (`logfile = "logfile.txt"`)
 
 
 ```{r , echo =T, eval = F}
@@ -61,13 +61,19 @@ The following example implements the following decisions:
                                                outputPlots = T)
 ```
 
-At this point,`aggregateData` contains length samples for every combination of YEAR, NEGEAR, MARKET_CODE. This is the requirement to expand the catch data by the length compositions.
+At this point,`aggregateData` contains length samples for every combination of YEAR, NEGEAR, MARKET_CODE. All decisions made regarding gear type selection, market code selection, and which YEAR length samples were borrowed from are recorded in the `logfile`. If `outputPlots=T` a suite of plots are also output in the `outputDir`.
 
 ### Expand the catch
 
-* Obtain length-weight parameters that satisfy the [length-weight relationship](3catchExpansion.html). For this example we will use the bottom trawl survey data and pull lengths and weights for individual fish. A series of nested length-weight models are then fit to the data.
+To expand the catch to weight-by-length a length-weight key is required. This is achieved by obtaining parameter values that satisfy the [length-weight relationship](3catchExpansion.html). This can be obtained in one of two ways: 
 
-The data is pulled using the [`survdat`](https://noaa-edab.github.io/survdat/) package and fit using `mscatch::fit_length_weight()`
+* Pull parameter values from Survey database (svdbs) using function [`get_length_weight`](https://noaa-edab.github.io/survdat/reference/get_length_weight.html) function from the [`survdat`](https://noaa-edab.github.io/survdat/index.html) package.
+
+or
+
+* Pull raw length-weight data and fit own model. The bottom trawl survey data is used (for this example). A series of nested length-weight models are then fit to the data.
+
+The data is pulled using the function `get_length_weight_data`(https://noaa-edab.github.io/survdat/reference/get_length_weight_data.html) from the [`survdat`](https://noaa-edab.github.io/survdat/) package and fit using `mscatch::fit_length_weight()`
 
 ```{r lw, echo =T , eval = F}
 # Permissions and credentials are required to conect to the database
@@ -82,7 +88,6 @@ fits <- mscatch::fit_length_weight(lengthWeightData$data,speciesName,outputDir,l
 * The fitted model is then used to expand the catch. This is achieved by using `mscatch::expand_landings_to_lengths()`
 
 ```{r expand, echo = T, eval = F}
-
   expandedLandings <- mscatch::expand_landings_to_lengths(aggregatedData$landings,aggregatedData$lengthData,fits$paramsH0) %>%
     dplyr::mutate(speciesName = speciesName)
 
