@@ -1,7 +1,7 @@
-#' A lookup table for species_itis and market code
+#' A lookup table for species market codes
 #'
-#'Market codes are not on an ordinal scale therefore it is difficult to programatically aggregate neighboring size classes.
-#'Ordinal scale added manually for the included species
+#'Market codes are defined by the 4th digit of an NESPP4 code. These codes are mapped to descriptions.
+#' This data set includes the codes and descriptions of market codes for a set of 10 species
 #'
 #' @format A dataframe with 7 columns
 #' \describe{
