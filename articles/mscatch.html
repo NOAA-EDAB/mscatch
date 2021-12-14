@@ -121,20 +121,20 @@
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
-<p>Assuming you have data assembled the first step is determine how you would like to aggregate the data and how you would like to deal with YEARs/ QTRs with missing samples.</p>
+<p>Assuming you have assembled the data, the next step is determine how you would like to aggregate the data and how you would like to deal with YEARs/QTRs with missing length samples.</p>
 <div class="section level3">
 <h3 id="aggregate-the-data">Aggregate the data<a class="anchor" aria-label="anchor" href="#aggregate-the-data"></a>
 </h3>
 <p>The following example implements the following decisions:</p>
 <ul>
-<li><p>Assign the name of species (<code>speciesName = "Haddock"</code>)</p></li>
-<li><p>Aggregate landings over QTR year to YEARly data and combine all length samples to same level of aggregation (<code>aggregate_to = "YEAR"</code>).</p></li>
-<li><p>Only use gear types (NEGEARs) which contribute the most to total landings. Use a cumulative landings threshold of 90% to select gears. Other gears will be aggregated into an “other Gear” category (<code>landingThresholdGear = 0.9</code>)</p></li>
-<li><p>Assign other gears to code “998” (<code>otherGear = "998"</code>)</p></li>
-<li><p>Borrow length samples from nearest neighbor, whether by QTR, YEAR, or NEGEAR (<code>borrowLengths = T</code>).</p></li>
+<li><p>Assigns the name of species (<code>speciesName = "Haddock"</code>)</p></li>
+<li><p>Aggregates landings over QTR year to YEARly data and combines all length samples to same level of aggregation (<code>aggregate_to = "YEAR"</code>).</p></li>
+<li><p>Uses gear types (NEGEARs) which contribute the most to total landings. Uses a cumulative landings threshold of 90% to select gears. Other gears will be aggregated into an “other Gear” category (<code>landingThresholdGear = 0.9</code>)</p></li>
+<li><p>Assigns other gears to code “998” (<code>otherGear = "998"</code>)</p></li>
+<li><p>Borrows length samples from nearest neighbor, whether by QTR, YEAR, or NEGEAR (<code>borrowLengths = T</code>).</p></li>
 <li><p>Minimum number of length samples required when borrowing samples from other NEGEARs, QTRs, or YEARs (<code>nLengthSamples = 1</code>)</p></li>
-<li><p>Assign an output folder (<code>outputDir=here::here("output/Groundfish")</code>)</p></li>
-<li><p>Assign a name to the log file produced (<code>logfile = "logfile.txt"</code>)</p></li>
+<li><p>Assigns an output folder (<code>outputDir=here::here("output/Haddock")</code>)</p></li>
+<li><p>Assigns a name to the log file produced (<code>logfile = "logfile.txt"</code>)</p></li>
 </ul>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a> aggregatedData &lt;-<span class="st"> </span>mscatch<span class="op">::</span><span class="kw">aggregate_landings</span>(landingsData,</span>
 <span id="cb1-2"><a href="#cb1-2"></a>                                               lengthData,</span>
@@ -147,15 +147,20 @@
 <span id="cb1-9"><a href="#cb1-9"></a>                                               <span class="dt">otherGear =</span> <span class="st">"998"</span>,</span>
 <span id="cb1-10"><a href="#cb1-10"></a>                                               <span class="dt">logfile =</span> <span class="st">"logfile.txt"</span></span>
 <span id="cb1-11"><a href="#cb1-11"></a>                                               <span class="dt">outputPlots =</span> T)</span></code></pre></div>
-<p>At this point,<code>aggregateData</code> contains length samples for every combination of YEAR, NEGEAR, MARKET_CODE. This is the requirement to expand the catch data by the length compositions.</p>
+<p>At this point,<code>aggregateData</code> contains length samples for every combination of YEAR, NEGEAR, MARKET_CODE. All decisions made regarding gear type selection, market code selection, and which YEAR length samples were borrowed from are recorded in the <code>logfile</code>. If <code>outputPlots=T</code> a suite of plots are also output in the <code>outputDir</code>.</p>
 </div>
 <div class="section level3">
 <h3 id="expand-the-catch">Expand the catch<a class="anchor" aria-label="anchor" href="#expand-the-catch"></a>
 </h3>
+<p>To expand the catch to weight-by-length a length-weight key is required. This is achieved by obtaining parameter values that satisfy the <a href="3catchExpansion.html">length-weight relationship</a>. This can be obtained in one of two ways:</p>
 <ul>
-<li>Obtain length-weight parameters that satisfy the <a href="3catchExpansion.html">length-weight relationship</a>. For this example we will use the bottom trawl survey data and pull lengths and weights for individual fish. A series of nested length-weight models are then fit to the data.</li>
+<li>Pull parameter values from Survey database (svdbs) using function <a href="https://noaa-edab.github.io/survdat/reference/get_length_weight.html" class="external-link"><code>get_length_weight</code></a> function from the <a href="https://noaa-edab.github.io/survdat/index.html" class="external-link"><code>survdat</code></a> package.</li>
 </ul>
-<p>The data is pulled using the <a href="https://noaa-edab.github.io/survdat/" class="external-link"><code>survdat</code></a> package and fit using <code><a href="../reference/fit_length_weight.html">mscatch::fit_length_weight()</a></code></p>
+<p>or</p>
+<ul>
+<li>Pull raw length-weight data and fit own model. The bottom trawl survey data is used (for this example). A series of nested length-weight models are then fit to the data.</li>
+</ul>
+<p>The data is pulled using the function <code>get_length_weight_data</code>(<a href="https://noaa-edab.github.io/survdat/reference/get_length_weight_data.html" class="external-link uri">https://noaa-edab.github.io/survdat/reference/get_length_weight_data.html</a>) from the <a href="https://noaa-edab.github.io/survdat/" class="external-link"><code>survdat</code></a> package and fit using <code><a href="../reference/fit_length_weight.html">mscatch::fit_length_weight()</a></code></p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Permissions and credentials are required to conect to the database</span>
 <span class="va">channel</span> <span class="op">&lt;-</span> <span class="fu">dbutils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dbutils/man/connect_to_database.html" class="external-link">connect_to_database</a></span><span class="op">(</span><span class="st">"server"</span>,<span class="st">"user"</span><span class="op">)</span>
@@ -168,8 +173,7 @@
 </li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R">
-  <span class="va">expandedLandings</span> <span class="op">&lt;-</span> <span class="fu">mscatch</span><span class="fu">::</span><span class="fu"><a href="../reference/expand_landings_to_lengths.html">expand_landings_to_lengths</a></span><span class="op">(</span><span class="va">aggregatedData</span><span class="op">$</span><span class="va">landings</span>,<span class="va">aggregatedData</span><span class="op">$</span><span class="va">lengthData</span>,<span class="va">fits</span><span class="op">$</span><span class="va">paramsH0</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<code class="sourceCode R">  <span class="va">expandedLandings</span> <span class="op">&lt;-</span> <span class="fu">mscatch</span><span class="fu">::</span><span class="fu"><a href="../reference/expand_landings_to_lengths.html">expand_landings_to_lengths</a></span><span class="op">(</span><span class="va">aggregatedData</span><span class="op">$</span><span class="va">landings</span>,<span class="va">aggregatedData</span><span class="op">$</span><span class="va">lengthData</span>,<span class="va">fits</span><span class="op">$</span><span class="va">paramsH0</span><span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>speciesName <span class="op">=</span> <span class="va">speciesName</span><span class="op">)</span></code></pre></div>
 <p>The resulting data will look like this</p>
 <pre><code><span class="co">#&gt;    YEAR NEGEAR MARKET_CODE LENGTH NUMLEN    weight  speciesName</span>
