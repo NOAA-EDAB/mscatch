@@ -15,25 +15,25 @@
 #'081 - cod (mike palmer assessment)
 #'
 
-#channel <- cfdbs::connect_to_database("sole","abeet") eventually remove this
 
-test_data_pull <- function(channel,species=164744,species_itis = T){ # species = 147
+test_data_pull <- function(channel,species=164744,species_itis = T,area="all", fileName=NULL){ # species = 147
   library(magrittr)
 
   ################ pull sample landings data and massage it
   #############################################################################################################
-  message("Pulling landings data ...")
-  testDataPullLandings <- cfdbs::get_landings(channel,year="all",species=species,species_itis=species_itis)
+  message("Pulling landings data from STOCKEFF ...")
+  testDataPullLandings <- cfdbs::get_landings(channel,year="all",area=area,species=species,species_itis=species_itis)
+
   ## for test data assume we this is EPU data. To achive this we just sum over AREAS for now
   lands <- testDataPullLandings$data %>%
     dplyr::group_by(YEAR, MONTH, NEGEAR, MARKET_CODE) %>%
-    dplyr::summarize(landings=sum(as.numeric(SPPLNDLB)),n=dplyr::n())
+    dplyr::summarize(landings=sum(as.numeric(SPPLNDLB)),n=dplyr::n(),.groups="drop")
   lands <- dplyr::mutate(lands,QTR = as.character(ceiling(as.numeric(MONTH)/3 )))
 
   # aggregate landings by variables and count the number of trips
   sampleLandings <- lands %>%
     dplyr::group_by(YEAR,QTR,NEGEAR, MARKET_CODE) %>%
-    dplyr::summarize(landings_land = sum(landings),landings_nn=sum(n))
+    dplyr::summarize(landings_land = sum(landings),landings_nn=sum(n),.groups="drop")
   # this needs to be checked.
   # filter all entries labelled quarter = 0
   sampleLandings <- sampleLandings %>%
@@ -43,14 +43,14 @@ test_data_pull <- function(channel,species=164744,species_itis = T){ # species =
   #############################################################################################################
   # pull sample length data and massage it
   message("Puling length data ...")
-  testDataPullLength <- cfdbs::get_landings_length(channel,year="all",species=species,species_itis=species_itis)
+  testDataPullLength <- cfdbs::get_landings_length(channel,year="all",area=area,species=species,species_itis=species_itis)
   # create unique tripid since NUMSAMP is replicated for each species reported within a trip
   lengths <- testDataPullLength$data %>%
     dplyr::mutate(tripid = paste0(PERMIT,YEAR,MONTH,DAY))
   # aggregate
   lengthsData <- lengths %>%
     dplyr::group_by(YEAR, QTR, NEGEAR, MARKET_CODE) %>%
-    dplyr::summarize(len_totalNumLen=sum(as.numeric(NUMLEN)),len_numLengthSamples=length(unique(tripid)))
+    dplyr::summarize(len_totalNumLen=sum(as.numeric(NUMLEN)),len_numLengthSamples=length(unique(tripid)),.groups="drop")
 
   # full join of tables by common fields
   sampleData <- as.data.frame(dplyr::full_join(sampleLandings,lengthsData, by=c("YEAR","QTR","NEGEAR","MARKET_CODE")))
@@ -66,16 +66,22 @@ test_data_pull <- function(channel,species=164744,species_itis = T){ # species =
   sampleLengths <- dplyr::as_tibble(sampleLengths)
   sampleData <- dplyr::as_tibble(sampleData)
   # save data
-  vName <- paste0("sampleData_",species)
+
+
+  if (is.null(fileName)) {
+    fileName <- species
+  }
+
+  vName <- paste0("sampleData_",fileName)
   assign(vName,sampleData)
 
-  save(list=vName,file=paste0(here::here("data"),"/sampleData_",species,".rdata"))
+  save(list=vName,file=paste0(here::here("data"),"/sampleData_",fileName,".rdata"))
 
-  vName <- paste0("sampleLengths_",species)
+  vName <- paste0("sampleLengths_",fileName)
   assign(vName,sampleLengths)
 
   #usethis::use_data(vName,overwite=T)
-  save(list=vName,file=paste0(here::here("data"),"/sampleLengths_",species,".rdata"))
+  save(list=vName,file=paste0(here::here("data"),"/sampleLengths_",fileName,".rdata"))
 
   #return(lengths)
 
