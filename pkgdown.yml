@@ -1,8 +1,15 @@
 pandoc: 2.7.3
-pkgdown: 1.6.1
+pkgdown: 2.0.1
 pkgdown_sha: ~
 articles:
-  commercial-catch-expansion: commercial-catch-expansion.html
-  data_notes: data_notes.html
-last_built: 2021-02-26T18:05Z
+  1dataNeeds: 1dataNeeds.html
+  2aggregationRules: 2aggregationRules.html
+  3catchExpansion: 3catchExpansion.html
+  4notes: 4notes.html
+  mscatch: mscatch.html
+  underlyingRules: underlyingRules.html
+last_built: 2021-12-14T14:34Z
+urls:
+  reference: https://noaa-edab.github.io/mscatch/reference
+  article: https://noaa-edab.github.io/mscatch/articles
 
