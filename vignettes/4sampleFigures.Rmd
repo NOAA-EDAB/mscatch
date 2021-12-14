@@ -1,0 +1,92 @@
+---
+title: "4. Sample Output"
+#output: html_document
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{4. Sample Output}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(magrittr)
+```
+
+## Logfile
+
+Several items are printed to the log file
+
+* Species name
+* The functional call made to `aggregate_landings`
+* Table of landings by gear
+* Table of landings by market category
+* Decisions relating to market category aggregations whether due to insufficient samples or due to similar length distributions.
+* Decisions relating to how length samples are used/borrowed from other time periods
+
+```{r logfile, echo = F,out.width="100%"}
+knitr::include_graphics("figures/sampleLogFile.PNG")
+```
+
+## Plots
+
+A subset of the full suite of plots are shown here
+
+### Landings by NEGEAR
+
+```{r fig1, echo = F,out.width="100%"}
+knitr::include_graphics("figures/1c_market_category_lengths_by_gear.PNG")
+```
+
+### Landings by MARKET_CODE
+
+```{r fig2, echo = F,out.width="100%"}
+knitr::include_graphics("figures/2_landings_by_market_cat.PNG")
+```
+
+### Number of length samples by QTR
+
+```{r fig3, echo = F,out.width="100%"}
+knitr::include_graphics("figures/3_length_samples.PNG")
+```
+
+### Number of samples by QTR/market category for NEGEAR 50
+
+```{r fig4, echo = F,out.width="100%"}
+knitr::include_graphics("figures/9_market_category_qtr_landings_050,.PNG")
+```
+
+
+### Market category lengths
+
+
+```{r fig5, echo = F,out.width="100%"}
+knitr::include_graphics("figures/6_market_category_lengths.PNG")
+
+```
+
+
+
+### Market category landings
+
+```{r fig6, echo = F,out.width="100%"}
+knitr::include_graphics("figures/7_market_category_landings.PNG")
+```
+
+
+### Length Weight data
+
+```{r fig7, echo = F,out.width="100%"}
+knitr::include_graphics("figures/length_weight_relationship_HADDOCK.png")
+```
+
+
+
+
+
+
+
+

@@ -1,0 +1,417 @@
+DECISIONS MADE DURING AGGREGATION OF DATA
+
+---------------
+Species Name:
+Haddock
+---------------
+Arguments passed to aggregate_landings:
+mscatch::aggregate_landings(landingsData = eval(landName),
+			    lengthData = eval(lengthName),   
+			    speciesName = "Haddock",
+			    landingsThresholdGear = 0.99,      
+			    nLengthSamples = 1, 
+			    pValue = 0.05,
+			    aggregate_to = "YEAR",      
+	                    borrowLengths = T, 
+			    proportionMissing = 0.2, 
+			    otherGear = "998",      
+			    outputDir = here::here("output/HADDOCK"),
+			    outputPlots = T,
+			    logfile = "logFile.txt")
+---------------
+Landings by gear type (NEGEAR):
+         NEGEAR    totalLandings          cum_sum proportion
+            050        873853197        873853197  0.942
+            057         23360096        897213293  0.967
+            010         20296099        917509392  0.989
+            100          3198679        920708071  0.992
+            054          2068958        922777029  0.995
+            ...
+             50                0        927230273  1
+---------------
+Landings and length samples by MARKET_CODE:
+    MARKET_CODE    totalLandings  len_numLengthSamples  proportion      cum_proportion
+             SK        452450965             1922     0.4879      0.4879
+             LG        451452574             1751     0.4868      0.9748
+             SR         16947563              245     0.0182      0.9931
+             UN          6315702               12     0.0068      0.9999
+             MD            29552                0     3.1871e-05  0.9999
+             XG            22964                1     2.4766e-05  0.9999
+             MK            10833                0      1.168e-05  0.9999
+             X1              100                0     1.0784e-07  0.9999
+             X2               20                0     2.1569e-08  1
+---------------
+market code relabelling, from:to
+
+             MD               UN
+             MK               UN
+             X1               UN
+             X2               UN
+---------------
+ks test aggregation
+ Combine LG with XG . SIG =  0.247869601864942
+
+---------------
+All remaining MARKET_CODEs have significantly different length distributions at 0.05 level.
+---------------
+Length samples started in 1969. All landings prior to this year will use this years data
+
+---------------
+NEGEAR: 050 - MARKET_CODE: SK - There are 0 years out of 51 (in which there are landings) where no length samples exist 
+---------------
+Aggregate over QRTs to Annual data
+---------------
+Gear: 050 - QTR 1 codes to 0 - MARKET_CODE:SK
+---------------
+Gear: 050 - QTR 2 codes to 0 - MARKET_CODE:SK
+---------------
+Gear: 050 - QTR 3 codes to 0 - MARKET_CODE:SK
+---------------
+Gear: 050 - QTR 4 codes to 0 - MARKET_CODE:SK
+---------------
+Gear: 050 - 1964-0 used length samples from 1969 - MARKET_CODE:SK
+---------------
+Gear: 050 - 1965-0 used length samples from 1969 - MARKET_CODE:SK
+---------------
+Gear: 050 - 1966-0 used length samples from 1969 - MARKET_CODE:SK
+---------------
+Gear: 050 - 1967-0 used length samples from 1969 - MARKET_CODE:SK
+---------------
+Gear: 050 - 1968-0 used length samples from 1969 - MARKET_CODE:SK
+---------------
+NEGEAR: 050 - MARKET_CODE: SR - There are 16 years out of 30 (in which there are landings) where no length samples exist
+---------------
+Aggregate over QRTs to Annual data
+---------------
+Gear: 050 - QTR 1 codes to 0 - MARKET_CODE:SR
+---------------
+Gear: 050 - QTR 2 codes to 0 - MARKET_CODE:SR
+---------------
+Gear: 050 - QTR 3 codes to 0 - MARKET_CODE:SR
+---------------
+Gear: 050 - QTR 4 codes to 0 - MARKET_CODE:SR
+---------------
+Gear: 050 - 1969 used length samples from 1971 - MARKET_CODE:SR
+---------------
+Gear: 050 - 1970 used length samples from 1971 - MARKET_CODE:SR
+---------------
+Gear: 050 - 1972 used length samples from 1971 - MARKET_CODE:SR
+---------------
+Gear: 050 - 1974 used length samples from 1973 - MARKET_CODE:SR
+---------------
+Gear: 050 - 1976 used length samples from 1975 - MARKET_CODE:SR
+---------------
+Gear: 050 - 1978 used length samples from 1977 - MARKET_CODE:SR
+---------------
+Gear: 050 - 1979 used length samples from 1980 - MARKET_CODE:SR
+---------------
+Gear: 050 - 1983 used length samples from 1982 - MARKET_CODE:SR
+---------------
+Gear: 050 - 1984 used length samples from 1982 - MARKET_CODE:SR
+---------------
+Gear: 050 - 1985 used length samples from 1982 - MARKET_CODE:SR
+---------------
+Gear: 050 - 1986 used length samples from 1982 - MARKET_CODE:SR
+---------------
+Gear: 050 - 1987 used length samples from 1982 - MARKET_CODE:SR
+---------------
+Gear: 050 - 1989 used length samples from 1982 - MARKET_CODE:SR
+---------------
+Gear: 050 - 1993 used length samples from 1982 - MARKET_CODE:SR
+---------------
+Gear: 050 - 2001 used length samples from 2013 - MARKET_CODE:SR
+---------------
+Gear: 050 - 2003 used length samples from 2013 - MARKET_CODE:SR
+---------------
+Gear: 050 - 1964-0 used length samples from 1969 - MARKET_CODE:SR
+---------------
+Gear: 050 - 1965-0 used length samples from 1969 - MARKET_CODE:SR
+---------------
+Gear: 050 - 1966-0 used length samples from 1969 - MARKET_CODE:SR
+---------------
+Gear: 050 - 1967-0 used length samples from 1969 - MARKET_CODE:SR
+---------------
+Gear: 050 - 1968-0 used length samples from 1969 - MARKET_CODE:SR
+---------------
+NEGEAR: 050 - MARKET_CODE: XG - Approx : 2.5 years have NO length samples - based on mean(QTRs)
+---------------
+NEGEAR: 050 - MARKET_CODE: XG - There are 0 years out of 51 (in which there are landings) where no length samples exist - based on # YEARS
+---------------
+Aggregate over QRTs to Annual data
+---------------
+Gear: 050 - QTR 1 codes to 0 - MARKET_CODE:XG
+---------------
+Gear: 050 - QTR 2 codes to 0 - MARKET_CODE:XG
+---------------
+Gear: 050 - QTR 3 codes to 0 - MARKET_CODE:XG
+---------------
+Gear: 050 - QTR 4 codes to 0 - MARKET_CODE:XG
+---------------
+Gear: 050 - 1964-0 used length samples from 1969 - MARKET_CODE:XG
+---------------
+Gear: 050 - 1965-0 used length samples from 1969 - MARKET_CODE:XG
+---------------
+Gear: 050 - 1966-0 used length samples from 1969 - MARKET_CODE:XG
+---------------
+Gear: 050 - 1967-0 used length samples from 1969 - MARKET_CODE:XG
+---------------
+Gear: 050 - 1968-0 used length samples from 1969 - MARKET_CODE:XG
+---------------
+NEGEAR: 998 - MARKET_CODE: SK - Approx : 43 years have NO length samples - based on mean(QTRs)
+---------------
+NEGEAR: 998 - MARKET_CODE: SK - There are 35 years out of 51 (in which there are landings) where no length samples exist - based on # YEARS
+---------------
+Aggregate over QRTs to Annual data
+---------------
+Gear: 998 - QTR 1 codes to 0 - MARKET_CODE:SK
+---------------
+Gear: 998 - QTR 2 codes to 0 - MARKET_CODE:SK
+---------------
+Gear: 998 - QTR 3 codes to 0 - MARKET_CODE:SK
+---------------
+Gear: 998 - QTR 4 codes to 0 - MARKET_CODE:SK
+---------------
+Gear: 998 - 1969 used length samples from 1973 - MARKET_CODE:SK
+---------------
+Gear: 998 - 1970 used length samples from 1973 - MARKET_CODE:SK
+---------------
+Gear: 998 - 1971 used length samples from 1973 - MARKET_CODE:SK
+---------------
+Gear: 998 - 1972 used length samples from 1973 - MARKET_CODE:SK
+---------------
+Gear: 998 - 1974 used length samples from 1973 - MARKET_CODE:SK
+---------------
+Gear: 998 - 1975 used length samples from 1973 - MARKET_CODE:SK
+---------------
+Gear: 998 - 1976 used length samples from 1973 - MARKET_CODE:SK
+---------------
+Gear: 998 - 1977 used length samples from 1973 - MARKET_CODE:SK
+---------------
+Gear: 998 - 1978 used length samples from 1973 - MARKET_CODE:SK
+---------------
+Gear: 998 - 1979 used length samples from 1973 - MARKET_CODE:SK
+---------------
+Gear: 998 - 1980 used length samples from 1973 - MARKET_CODE:SK
+---------------
+Gear: 998 - 1981 used length samples from 1988 - MARKET_CODE:SK
+---------------
+Gear: 998 - 1982 used length samples from 1988 - MARKET_CODE:SK
+---------------
+Gear: 998 - 1983 used length samples from 1988 - MARKET_CODE:SK
+---------------
+Gear: 998 - 1984 used length samples from 1988 - MARKET_CODE:SK
+---------------
+Gear: 998 - 1985 used length samples from 1988 - MARKET_CODE:SK
+---------------
+Gear: 998 - 1986 used length samples from 1988 - MARKET_CODE:SK
+---------------
+Gear: 998 - 1987 used length samples from 1988 - MARKET_CODE:SK
+---------------
+Gear: 998 - 1989 used length samples from 1988 - MARKET_CODE:SK
+---------------
+Gear: 998 - 1990 used length samples from 1988 - MARKET_CODE:SK
+---------------
+Gear: 998 - 1991 used length samples from 1992 - MARKET_CODE:SK
+---------------
+Gear: 998 - 1994 used length samples from 1993 - MARKET_CODE:SK
+---------------
+Gear: 998 - 1995 used length samples from 1993 - MARKET_CODE:SK
+---------------
+Gear: 998 - 1996 used length samples from 1998 - MARKET_CODE:SK
+---------------
+Gear: 998 - 1997 used length samples from 1998 - MARKET_CODE:SK
+---------------
+Gear: 998 - 1999 used length samples from 1998 - MARKET_CODE:SK
+---------------
+Gear: 998 - 2001 used length samples from 2000 - MARKET_CODE:SK
+---------------
+Gear: 998 - 2002 used length samples from 2003 - MARKET_CODE:SK
+---------------
+Gear: 998 - 2009 used length samples from 2008 - MARKET_CODE:SK
+---------------
+Gear: 998 - 2011 used length samples from 2010 - MARKET_CODE:SK
+---------------
+Gear: 998 - 2012 used length samples from 2010 - MARKET_CODE:SK
+---------------
+Gear: 998 - 2013 used length samples from 2014 - MARKET_CODE:SK
+---------------
+Gear: 998 - 2016 used length samples from 2015 - MARKET_CODE:SK
+---------------
+Gear: 998 - 2017 used length samples from 2015 - MARKET_CODE:SK
+---------------
+Gear: 998 - 2018 used length samples from 2019 - MARKET_CODE:SK
+---------------
+Gear: 998 - 1964-0 used length samples from 1969 - MARKET_CODE:SK
+---------------
+Gear: 998 - 1965-0 used length samples from 1969 - MARKET_CODE:SK
+---------------
+Gear: 998 - 1966-0 used length samples from 1969 - MARKET_CODE:SK
+---------------
+Gear: 998 - 1967-0 used length samples from 1969 - MARKET_CODE:SK
+---------------
+Gear: 998 - 1968-0 used length samples from 1969 - MARKET_CODE:SK
+---------------
+NEGEAR: 998 - MARKET_CODE: SR - Approx : 8.75 years have NO length samples - based on mean(QTRs)
+---------------
+NEGEAR: 998 - MARKET_CODE: SR - There are 13 years out of 14 (in which there are landings) where no length samples exist - based on # YEARS
+---------------
+Aggregate over QRTs to Annual data
+---------------
+Gear: 998 - QTR 1 codes to 0 - MARKET_CODE:SR
+---------------
+Gear: 998 - QTR 2 codes to 0 - MARKET_CODE:SR
+---------------
+Gear: 998 - QTR 3 codes to 0 - MARKET_CODE:SR
+---------------
+Gear: 998 - QTR 4 codes to 0 - MARKET_CODE:SR
+---------------
+Gear: 998 - 1970 used length samples from 2019 - MARKET_CODE:SR
+---------------
+Gear: 998 - 1971 used length samples from 2019 - MARKET_CODE:SR
+---------------
+Gear: 998 - 1977 used length samples from 2019 - MARKET_CODE:SR
+---------------
+Gear: 998 - 1978 used length samples from 2019 - MARKET_CODE:SR
+---------------
+Gear: 998 - 1980 used length samples from 2019 - MARKET_CODE:SR
+---------------
+Gear: 998 - 1981 used length samples from 2019 - MARKET_CODE:SR
+---------------
+Gear: 998 - 1982 used length samples from 2019 - MARKET_CODE:SR
+---------------
+Gear: 998 - 2013 used length samples from 2019 - MARKET_CODE:SR
+---------------
+Gear: 998 - 2014 used length samples from 2019 - MARKET_CODE:SR
+---------------
+Gear: 998 - 2015 used length samples from 2019 - MARKET_CODE:SR
+---------------
+Gear: 998 - 2016 used length samples from 2019 - MARKET_CODE:SR
+---------------
+Gear: 998 - 2017 used length samples from 2019 - MARKET_CODE:SR
+---------------
+Gear: 998 - 2018 used length samples from 2019 - MARKET_CODE:SR
+---------------
+Gear: 998 - 1965-0 used length samples from 1970 - MARKET_CODE:SR
+---------------
+Gear: 998 - 1966-0 used length samples from 1970 - MARKET_CODE:SR
+---------------
+Gear: 998 - 1967-0 used length samples from 1970 - MARKET_CODE:SR
+---------------
+NEGEAR: 998 - MARKET_CODE: XG - Approx : 43.75 years have NO length samples - based on mean(QTRs)
+---------------
+NEGEAR: 998 - MARKET_CODE: XG - There are 35 years out of 51 (in which there are landings) where no length samples exist - based on # YEARS
+---------------
+Aggregate over QRTs to Annual data
+---------------
+Gear: 998 - QTR 1 codes to 0 - MARKET_CODE:XG
+---------------
+Gear: 998 - QTR 2 codes to 0 - MARKET_CODE:XG
+---------------
+Gear: 998 - QTR 3 codes to 0 - MARKET_CODE:XG
+---------------
+Gear: 998 - QTR 4 codes to 0 - MARKET_CODE:XG
+---------------
+Gear: 998 - 1970 used length samples from 1969 - MARKET_CODE:XG
+---------------
+Gear: 998 - 1971 used length samples from 1969 - MARKET_CODE:XG
+---------------
+Gear: 998 - 1972 used length samples from 1969 - MARKET_CODE:XG
+---------------
+Gear: 998 - 1973 used length samples from 1969 - MARKET_CODE:XG
+---------------
+Gear: 998 - 1974 used length samples from 1969 - MARKET_CODE:XG
+---------------
+Gear: 998 - 1975 used length samples from 1969 - MARKET_CODE:XG
+---------------
+Gear: 998 - 1976 used length samples from 1969 - MARKET_CODE:XG
+---------------
+Gear: 998 - 1977 used length samples from 1969 - MARKET_CODE:XG
+---------------
+Gear: 998 - 1978 used length samples from 1969 - MARKET_CODE:XG
+---------------
+Gear: 998 - 1979 used length samples from 1988 - MARKET_CODE:XG
+---------------
+Gear: 998 - 1980 used length samples from 1988 - MARKET_CODE:XG
+---------------
+Gear: 998 - 1981 used length samples from 1988 - MARKET_CODE:XG
+---------------
+Gear: 998 - 1982 used length samples from 1988 - MARKET_CODE:XG
+---------------
+Gear: 998 - 1983 used length samples from 1988 - MARKET_CODE:XG
+---------------
+Gear: 998 - 1984 used length samples from 1988 - MARKET_CODE:XG
+---------------
+Gear: 998 - 1985 used length samples from 1988 - MARKET_CODE:XG
+---------------
+Gear: 998 - 1986 used length samples from 1988 - MARKET_CODE:XG
+---------------
+Gear: 998 - 1987 used length samples from 1988 - MARKET_CODE:XG
+---------------
+Gear: 998 - 1989 used length samples from 1988 - MARKET_CODE:XG
+---------------
+Gear: 998 - 1990 used length samples from 1988 - MARKET_CODE:XG
+---------------
+Gear: 998 - 1991 used length samples from 1992 - MARKET_CODE:XG
+---------------
+Gear: 998 - 1993 used length samples from 1992 - MARKET_CODE:XG
+---------------
+Gear: 998 - 1994 used length samples from 1992 - MARKET_CODE:XG
+---------------
+Gear: 998 - 1995 used length samples from 1992 - MARKET_CODE:XG
+---------------
+Gear: 998 - 1996 used length samples from 1998 - MARKET_CODE:XG
+---------------
+Gear: 998 - 1997 used length samples from 1998 - MARKET_CODE:XG
+---------------
+Gear: 998 - 2010 used length samples from 2009 - MARKET_CODE:XG
+---------------
+Gear: 998 - 2011 used length samples from 2009 - MARKET_CODE:XG
+---------------
+Gear: 998 - 2012 used length samples from 2014 - MARKET_CODE:XG
+---------------
+Gear: 998 - 2013 used length samples from 2014 - MARKET_CODE:XG
+---------------
+Gear: 998 - 2015 used length samples from 2014 - MARKET_CODE:XG
+---------------
+Gear: 998 - 2016 used length samples from 2014 - MARKET_CODE:XG
+---------------
+Gear: 998 - 2017 used length samples from 2014 - MARKET_CODE:XG
+---------------
+Gear: 998 - 2018 used length samples from 2014 - MARKET_CODE:XG
+---------------
+Gear: 998 - 2019 used length samples from 2014 - MARKET_CODE:XG
+---------------
+Gear: 998 - 1964-0 used length samples from 1969 - MARKET_CODE:XG
+---------------
+Gear: 998 - 1965-0 used length samples from 1969 - MARKET_CODE:XG
+---------------
+Gear: 998 - 1966-0 used length samples from 1969 - MARKET_CODE:XG
+---------------
+Gear: 998 - 1967-0 used length samples from 1969 - MARKET_CODE:XG
+---------------
+Gear: 998 - 1968-0 used length samples from 1969 - MARKET_CODE:XG
+---------------
+Gear: 998 - QTR 1 coded to 0 - MARKET_CODE:UN
+---------------
+Gear: 998 - QTR 2 coded to 0 - MARKET_CODE:UN
+---------------
+Gear: 998 - QTR 3 coded to 0 - MARKET_CODE:UN
+---------------
+Gear: 998 - QTR 4 coded to 0 - MARKET_CODE:UN
+---------------
+Gear: 998 - QTR 1 coded to 0 - MARKET_CODE:UN
+---------------
+Gear: 998 - QTR 2 coded to 0 - MARKET_CODE:UN
+---------------
+Gear: 998 - QTR 3 coded to 0 - MARKET_CODE:UN
+---------------
+Gear: 998 - QTR 4 coded to 0 - MARKET_CODE:UN
+---------------
+Gear: 998 - QTR 1 coded to 0 - MARKET_CODE:UN
+---------------
+Gear: 998 - QTR 2 coded to 0 - MARKET_CODE:UN
+---------------
+Gear: 998 - QTR 3 coded to 0 - MARKET_CODE:UN
+---------------
+Gear: 998 - QTR 4 coded to 0 - MARKET_CODE:UN
+---------------
