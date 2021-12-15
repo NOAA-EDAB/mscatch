@@ -1,0 +1,18 @@
+url: https://noaa-edab.github.io/mscatch/
+
+reference:
+- title: "Aggregate & expand"
+  desc: "Main functions to aggregate landings and expand"
+- contents:
+  - aggregate_landings
+  - fit_length_weight
+  - expand_landings_to_lengths
+- title: "Lazy Data"
+  desc: "Data loaded with the package"
+- contents:
+  - marketCodeLookupTable
+  - speciesLookupTable
+- title: "Package info"
+  desc: ""
+- contents:
+  - mscatch

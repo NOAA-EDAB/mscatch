@@ -2,7 +2,6 @@
 
 export(aggregate_landings)
 export(expand_landings_to_lengths)
-export(expand_unclassified_landings)
 export(fit_length_weight)
 importFrom(dplyr,"arrange")
 importFrom(dplyr,"filter")

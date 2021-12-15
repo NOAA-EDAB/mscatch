@@ -28,7 +28,8 @@ Suggests:
     DT,
     DBI,
     cfdbs,
-    kableExtra
+    kableExtra,
+    readr
 VignetteBuilder: knitr
 Imports: 
     dplyr,
@@ -40,7 +41,7 @@ Imports:
     stringr,
     dbutils
 Remotes:
-    andybeet/cfdbs
+    andybeet/cfdbs,
     andybeet/dbutils
 Depends: 
     R (>= 3.60)

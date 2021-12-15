@@ -5,7 +5,7 @@
 #'@param nLengthSamples Numeric scalar. The minimum number of length sample sizes required to avoid combination of data. Default = 1
 #'@param otherGear Character string. Code to indicate the class for "other Gear". This is the group of gear types that land the species of interest but in small numbers
 #'
-#'@export
+#'@noRd
 
 
 expand_unclassified_landings <- function(landingsData,lengthData,nLengthSamples,otherGear){
