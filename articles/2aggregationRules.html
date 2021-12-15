@@ -258,7 +258,7 @@ Proportion
 <div class="section level2">
 <h2 id="market-category">Market Category<a class="anchor" aria-label="anchor" href="#market-category"></a>
 </h2>
-<p>Market categories are defined by the field MARKET_CODE which characterizes market codes by a two character code. A list of market codes for a species can be found using [<code>comlandr::get_species_itis()</code>]<a href="https://noaa-edab.github.io/comlandr/reference/get_species_itis.html" class="external-link uri">https://noaa-edab.github.io/comlandr/reference/get_species_itis.html</a>)</p>
+<p>Market categories are defined by the field MARKET_CODE which characterizes market codes by a two character code. A list of market codes for a species can be found using <a href="https://noaa-edab.github.io/comlandr/reference/get_species_itis.html" class="external-link"><code>comlandr::get_species_itis()</code></a></p>
 <ul>
 <li><p>Any MARKET_CODEs that do not have any length samples (when aggregated over YEAR, QTR) are treated first. The user has the option to aggregate these market codes with any other market code. The default option is to relabel these as unknowns, “UN”. Often these MARKET_CODEs have a small amount of landings attributed to them and the impact of this aggregation is negligible</p></li>
 <li><p>The length distributions for the remaining MARKET_CODEs (aggregated over YEAR, QTR) are then tested against each other (using the Kolmogorov-Smirnov test) at a predetermined significance level (<code>pValue=0.05</code>) to determine if they are significantly different. Any MARKET_CODEs that are found to be statistically insignificant are aggregated.</p></li>
