@@ -29,10 +29,10 @@ Proportions commercial landings based on length sample distribution
 \section{Notes}{
 
 
-The length weight relationship (see \code{\link{fit_length_weight}}) was fit assuming log normal errors (normal on the log scale)
-Therefore when exponentiation we need to correct for the mean:
+The length weight relationship (see \code{\link{fit_length_weight}}) is fit assuming log normal errors (normal on the log scale).
+Therefore when exponentiating a correction for the estimate is required:
 
-E(W) = \eqn{ L^\beta exp(\alpha + \sigma^2 / 2)}
+E(W) = \eqn{\alpha  L^\beta exp(\sigma^2 / 2)}
 }
 
 \section{Expansion calculations}{

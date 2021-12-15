@@ -25,7 +25,7 @@ expand_to_weight <- function(fishLength,numAtLength,landings,lengthWeightParams)
   sigma2 <- as.double(lengthWeightParams$var)
 
   # vector of total weight for the number of fish (in the sample) of a given length
-  fishWeight <- (alpha*fishLength^beta)*numAtLength
+  fishWeight <- (alpha*fishLength^beta)*exp(sigma2/2)*numAtLength
 
   #mean Sample Weight
   sampleWeight <- sum(fishWeight)
