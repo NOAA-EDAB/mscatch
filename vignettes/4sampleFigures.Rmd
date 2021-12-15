@@ -21,7 +21,7 @@ library(magrittr)
 Several items are printed to the log file
 
 * Species name
-* The functional call made to `aggregate_landings`
+* The functional call made to [`aggregate_landings`](../reference/aggregate_landings.html)
 * Table of landings by gear
 * Table of landings by market category
 * Decisions relating to market category aggregations whether due to insufficient samples or due to similar length distributions.
@@ -40,25 +40,25 @@ A subset of the full suite of plots are shown below
 ### Landings by NEGEAR
 
 ```{r fig1, echo = F,out.width="100%"}
-knitr::include_graphics("figures/1c_market_category_lengths_by_gear.PNG")
+knitr::include_graphics("figures/1c_market_category_lengths_by_gear.png")
 ```
 
 ### Landings by MARKET_CODE
 
 ```{r fig2, echo = F,out.width="100%"}
-knitr::include_graphics("figures/2_landings_by_market_cat.PNG")
+knitr::include_graphics("figures/2_landings_by_market_cat.png")
 ```
 
 ### Number of length samples by QTR
 
 ```{r fig3, echo = F,out.width="100%"}
-knitr::include_graphics("figures/3_length_samples.PNG")
+knitr::include_graphics("figures/3_length_samples.png")
 ```
 
 ### Number of samples by QTR/market category for NEGEAR 50
 
 ```{r fig4, echo = F,out.width="100%"}
-knitr::include_graphics("figures/9_market_category_qtr_landings_050,.PNG")
+knitr::include_graphics("figures/9_market_category_qtr_landings_050,.png")
 ```
 
 
@@ -66,7 +66,7 @@ knitr::include_graphics("figures/9_market_category_qtr_landings_050,.PNG")
 
 
 ```{r fig5, echo = F,out.width="100%"}
-knitr::include_graphics("figures/6_market_category_lengths.PNG")
+knitr::include_graphics("figures/6_market_category_lengths.png")
 
 ```
 
@@ -75,7 +75,7 @@ knitr::include_graphics("figures/6_market_category_lengths.PNG")
 ### Market category landings
 
 ```{r fig6, echo = F,out.width="100%"}
-knitr::include_graphics("figures/7_market_category_landings.PNG")
+knitr::include_graphics("figures/7_market_category_landings.png)
 ```
 
 
