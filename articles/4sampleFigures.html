@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>3. Catch Expansion • mscatch</title>
+<title>4. Sample Output • mscatch</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -17,7 +17,7 @@
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="3. Catch Expansion">
+<script src="../pkgdown.js"></script><meta property="og:title" content="4. Sample Output">
 <meta property="og:description" content="mscatch">
 <meta property="og:image" content="https://noaa-edab.github.io/mscatch/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -100,50 +100,73 @@
 
       
 
-      </header><script src="3catchExpansion_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="4sampleFigures_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>3. Catch Expansion</h1>
+      <h1 data-toc-skip>4. Sample Output</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/NOAA-EDAB/mscatch/blob/HEAD/vignettes/3catchExpansion.Rmd" class="external-link"><code>vignettes/3catchExpansion.Rmd</code></a></small>
-      <div class="hidden name"><code>3catchExpansion.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/NOAA-EDAB/mscatch/blob/HEAD/vignettes/4sampleFigures.Rmd" class="external-link"><code>vignettes/4sampleFigures.Rmd</code></a></small>
+      <div class="hidden name"><code>4sampleFigures.Rmd</code></div>
 
     </div>
 
     
     
-<p>The final stage in data preparation (after <a href="2aggregationRules.html">aggregating the data</a>) is to expand the catch data to a distribution of weights using a length-weight relationship, then finally to scale the weights to match total landings.</p>
 <div class="section level2">
-<h2 id="len-weight">Length-weight relationship<a class="anchor" aria-label="anchor" href="#len-weight"></a>
+<h2 id="logfile">Logfile<a class="anchor" aria-label="anchor" href="#logfile"></a>
 </h2>
-<p>Length-weight data is obtained from SVDBS (other data sources can be substituted if necessary). A length-weight relationship is fit to the data using <code><a href="../reference/fit_length_weight.html">mscatch::fit_length_weight</a></code> (as an alternative parameter values from database svdbs.LENGTH_WEIGHT_COEFFICIENTS can be used, see <code>comlandr::get_length_weight</code>). The relationship between the weight and length of fish <em>i</em> is modelled as,</p>
-<p><span class="math display">\[ W_i = \alpha L_i ^ \beta e^{z_i}\]</span></p>
-<p>where <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> are intercept and slope parameters (on log scale) and <span class="math inline">\(z_i \sim N(0,\sigma^2)\)</span></p>
-<p>This model can be extended to :</p>
-<p><span class="math display">\[ W_{ji} = \alpha L_{ji} ^ {\beta_j} e^{z_i} \]</span> for season j, j= 1, …, 4 (spring, summer, fall, winter) or sex j, j = 1, …, 3 (0, 1, 2 categories) or extended further to include season:sex combinations. These models are all nested and can therefore be tested using standard statistical methods. See <a href="../reference/fit_length_weight.html"><code>fit_length_weight</code></a> for fitting details</p>
+<p>Several items are printed to the log file</p>
+<ul>
+<li>Species name</li>
+<li>The functional call made to <code>aggregate_landings</code>
+</li>
+<li>Table of landings by gear</li>
+<li>Table of landings by market category</li>
+<li>Decisions relating to market category aggregations whether due to insufficient samples or due to similar length distributions.</li>
+<li>Decisions relating to how length samples are used/borrowed from other time periods</li>
+</ul>
+<p>Below is a sample from a logfile:</p>
+<p><img src="figures/sampleLogFile.PNG" width="100%"></p>
 </div>
 <div class="section level2">
-<h2 id="expansion-of-landings">Expansion of landings<a class="anchor" aria-label="anchor" href="#expansion-of-landings"></a>
+<h2 id="plots">Plots<a class="anchor" aria-label="anchor" href="#plots"></a>
 </h2>
-<p>The fitted length-weight relationship is applied to the length distributions and the aggregated landings are split accordingly using <code>expand_landings_to_lengths</code>. All unclassified landings are then expanded using a similar method.</p>
+<p>A subset of the full suite of plots are shown below</p>
 <div class="section level3">
-<h3 id="known-market-codes">Known market codes<a class="anchor" aria-label="anchor" href="#known-market-codes"></a>
+<h3 id="landings-by-negear">Landings by NEGEAR<a class="anchor" aria-label="anchor" href="#landings-by-negear"></a>
 </h3>
-<p>For each unique category (YEAR, QTR, NEGEAR, MARKET_CODE) we have both total landings (metric tons) and a sample of fish lengths for this category. The sampled fish lengths are converted to mean weights using the <a href="#len-weight">weight-length relationship</a>. The resulting sample fish weights are mean weights (metric tons). The weight distribution of sampled fish is then scaled to the weight of total landings. This scaling assumes that the landed (commercial) fish have the same length distribution as the sampled fish.</p>
-<p>For each unique category we define</p>
-<p><span class="math display">\[expansion \; factor = \frac{total \; landings}{\sum sampled \; fish \; weigths} \]</span> The expanded weights of each unique category are then scaled by this expansion factor to equal the total landings of the category.</p>
-<p><span class="math display">\[expanded \; sample\; weights \; = expansion \; factor \;*\; sampled \; fish \; weights\]</span></p>
-<p>The result is a distribution of weights based on lengths for each unique category.</p>
+<p><img src="figures/1c_market_category_lengths_by_gear.png" width="100%"></p>
 </div>
 <div class="section level3">
-<h3 id="unclassified-market-code">Unclassified market code<a class="anchor" aria-label="anchor" href="#unclassified-market-code"></a>
+<h3 id="landings-by-market_code">Landings by MARKET_CODE<a class="anchor" aria-label="anchor" href="#landings-by-market_code"></a>
 </h3>
-<p>The unclassified landings for a specific (YEAR, QTR, NEGEAR) are assumed to be a mixture of fish lengths similar to that in the observed MARKET_CODEs. Therefore the length distribution for the unclassified landings are assumed to have the same distribution as the length distributions of the landed fish in all of the known market codes combined. The sampled fish lengths (from the known market codes) are converted to weights using the <a href="#len-weight">weight-length relationship</a>.</p>
-<p>For each unique category we define</p>
-<p><span class="math display">\[expansion \; factor = \frac{landings \; of \; unclassifieds}{\sum landings \; of \; known \; market \; codes  } \]</span></p>
-<p>leading to the expanded weights of the unclassified sample</p>
-<p><span class="math display">\[expanded \; unclassified\; weights \; = expansion \; factor \;*\; fish \; weights \; of \; known \; market \; codes\]</span></p>
+<p><img src="figures/2_landings_by_market_cat.png" width="100%"></p>
+</div>
+<div class="section level3">
+<h3 id="number-of-length-samples-by-qtr">Number of length samples by QTR<a class="anchor" aria-label="anchor" href="#number-of-length-samples-by-qtr"></a>
+</h3>
+<p><img src="figures/3_length_samples.png" width="100%"></p>
+</div>
+<div class="section level3">
+<h3 id="number-of-samples-by-qtrmarket-category-for-negear-50">Number of samples by QTR/market category for NEGEAR 50<a class="anchor" aria-label="anchor" href="#number-of-samples-by-qtrmarket-category-for-negear-50"></a>
+</h3>
+<p><img src="figures/9_market_category_qtr_landings_050,.png" width="100%"></p>
+</div>
+<div class="section level3">
+<h3 id="market-category-lengths">Market category lengths<a class="anchor" aria-label="anchor" href="#market-category-lengths"></a>
+</h3>
+<p><img src="figures/6_market_category_lengths.png" width="100%"></p>
+</div>
+<div class="section level3">
+<h3 id="market-category-landings">Market category landings<a class="anchor" aria-label="anchor" href="#market-category-landings"></a>
+</h3>
+<p><img src="figures/7_market_category_landings.png" width="100%"></p>
+</div>
+<div class="section level3">
+<h3 id="length-weight-data">Length Weight data<a class="anchor" aria-label="anchor" href="#length-weight-data"></a>
+</h3>
+<p><img src="figures/length_weight_relationship_HADDOCK.png" width="100%"></p>
 </div>
 </div>
   </div>
