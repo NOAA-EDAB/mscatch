@@ -39,7 +39,7 @@ readr::read_csv("data/gearAgg.csv",col_names = T, show_col_types = F,skip=3) %>%
 
 ## Market Category
 
-Market categories are defined by the field MARKET_CODE which characterizes market codes by a two character code. A list of market codes for a species can be found using [`comlandr::get_species_itis()`]https://noaa-edab.github.io/comlandr/reference/get_species_itis.html)
+Market categories are defined by the field MARKET_CODE which characterizes market codes by a two character code. A list of market codes for a species can be found using [`comlandr::get_species_itis()`](https://noaa-edab.github.io/comlandr/reference/get_species_itis.html)
 
 * Any MARKET_CODEs that do not have any length samples (when aggregated over YEAR, QTR) are treated first. The user has the option to aggregate these market codes with any other market code. The default option is to relabel these as unknowns, "UN". Often these MARKET_CODEs have a small amount of landings attributed to them and the impact of this aggregation is negligible
 

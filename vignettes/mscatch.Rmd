@@ -73,7 +73,7 @@ or
 
 * Pull raw length-weight data and fit own model. The bottom trawl survey data is used (for this example). A series of nested length-weight models are then fit to the data.
 
-The data is pulled using the function `get_length_weight_data`(https://noaa-edab.github.io/survdat/reference/get_length_weight_data.html) from the [`survdat`](https://noaa-edab.github.io/survdat/) package and fit using `mscatch::fit_length_weight()`
+The data is pulled using the function [`get_length_weight_data`](https://noaa-edab.github.io/survdat/reference/get_length_weight_data.html) from the [`survdat`](https://noaa-edab.github.io/survdat/) package and fit using `mscatch::fit_length_weight()`
 
 ```{r lw, echo =T , eval = F}
 # Permissions and credentials are required to conect to the database
