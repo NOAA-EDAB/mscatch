@@ -1,7 +1,7 @@
 #' For a given species this is the abbreviated output after
 #' the aggregate_gear function is appled
 #'
-# NEGEAR,Landings,Cumulative,Percentage
+NEGEAR,Landings,Cumulative,Proportion
 050,1141407667,1141407667,0.828511893478365
 010,95196644,1236604311,0.89761214052728
 100,93069581,1329673892,0.96516841950534

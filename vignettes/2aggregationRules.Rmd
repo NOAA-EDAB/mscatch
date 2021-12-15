@@ -16,16 +16,18 @@ knitr::opts_chunk$set(
 library(magrittr)
 ```
 
-After [pulling the data](articles/1dataNeeds.html) (length sample data and the landings data) for a particular species a user can now use [`mscatch::aggregate_landings()`](reference/aggregate_landings.html) to aggregate the landings and the length data. All decision points are written to a [logfile](logExample.html) for the user to inspect. 
+After [pulling the data](1dataNeeds.html) (length sample data and the landings data) for a particular species a user can now use the [aggregate_landings()`](../reference/aggregate_landings.html) function to aggregate the landings and the length data. The user has several choices to make that determine how the data should be processed. All decision points are written to a [logfile](4sampleFigures.html) for the user to inspect. Many of the steps below are dictated by user inputs in the form of function arguments.
 
 ## Gear
 
 Gear is defined using the field NEGEAR which characterizes gear by a three character code. A list of gear types with their codes and descriptions can be found using `comlandr::get_gears()`
 
 
-* This step ignores time (YEAR, QTR), MARKET_CODE, and length distributions and looks at aggregated landings by gear type to determine dominant gear types in fishery. The resulting number of distinct gear types to be selected is controlled by a user defined parameter indicating the total percentage of landings to be accounted for by distinct gear types. (Others lumped in **otherGear** category)
+* This step ignores time (YEAR, QTR), MARKET_CODE, and length distributions and looks at aggregated landings by gear type to determine dominant gear types in fishery. The resulting number of distinct gear types to be selected is controlled by a user defined parameter indicating the total percentage of landings to be accounted for by distinct gear types. (The remaining gears are combined into an **otherGear** category)
 
-For example, using a value of 95% would select the gear types, when ordered by each gears landings, for which the cumulative sum > 95% of total landings. All other gear types (those comprising < 5% of total landings) would be combined into an **otherGear** category. Below, the gear types (050,010,110) would be retained. All other gear types would be lumped together.
+For example, using a value of 95% (`landingsThresholdGear = .95`) would select the distinct gear types, when ordered by landings, for which the cumulative sum > 95% of total landings. All other gear types (those comprising < 5% of total landings) would be combined into an **otherGear** category. 
+
+In the table, the gear types (050,010,100) would be retained. All other gear types would be combined together.
 
 ```{r gearExample, echo=F, eval=T}
 readr::read_csv("data/gearAgg.csv",col_names = T, show_col_types = F,skip=3) %>%
@@ -39,17 +41,17 @@ readr::read_csv("data/gearAgg.csv",col_names = T, show_col_types = F,skip=3) %>%
 
 Market categories are defined by the field MARKET_CODE which characterizes market codes by a two character code. A list of market codes for a species can be found using `comlandr::get_species_itis()`
 
-* Any MARKET_CODEs that do not have any length samples (aggregated over YEAR, QTR) are treated first. The user has the option to aggregate these market codes with any other market code. The default option is to relabel these as unknowns, "UN". Often these MARKET_CODEs have a small amount of landings attributed to them and the impact of this aggregation is negligible
+* Any MARKET_CODEs that do not have any length samples (when aggregated over YEAR, QTR) are treated first. The user has the option to aggregate these market codes with any other market code. The default option is to relabel these as unknowns, "UN". Often these MARKET_CODEs have a small amount of landings attributed to them and the impact of this aggregation is negligible
 
-* The length distributions for the remaining MARKET_CODEs (aggregated over YEAR, QTR) are then tested against each other (using the Kolmogorov-Smirnov) to determine if they are significantly different. Any MARKET_CODEs that are found to be statistically insignificant are aggregated.
+* The length distributions for the remaining MARKET_CODEs (aggregated over YEAR, QTR) are then tested against each other (using the Kolmogorov-Smirnov test) at a predetermined significance level (`pValue=0.05`) to determine if they are significantly different. Any MARKET_CODEs that are found to be statistically insignificant are aggregated.
 
 * **Future development: Include option to do this for each YEAR**
 
-The user has the option of stopping at this point. The data returned will either be at the QTR or YEAR level depending on user inputs.
+The user has the option of stopping at this point (`borrowLengths=F`). The data returned will either be at the QTR or YEAR level depending on user inputs.
 
 ## Time
 
-The user supplies the level in which landings should be aggregated, (YEAR, QTR, or a MIX of the two). **Future development: Include SEMESTER option**. All combinations of Time, NEGEAR, MARKET_CODE that do not have associated length samples borrow samples from the nearest neighbor based on time. **Future development: Include nearest neighbor based on spatial units and/or GEAR**
+The user supplies the level in which landings should be aggregated, (YEAR, QTR, or a MIX of the two). **Future development: Include SEMESTER option**. All combinations of Time, NEGEAR, MARKET_CODE that do not have associated length samples borrow samples from the nearest neighbor in time. **Future development: Include nearest neighbor based on spatial units and/or GEAR**
 
 The borrowing of length samples from one time interval to use in another time interval can be a subjective process that differs among species based on life history traits. To complicate matters length distributions sampled within MARKET_CODEs may have shifted over time. These issues will be dealt with at a future date. A generalized method is currently applied (**Future development: Include additional options based on life history traits and fishing industry changes**)
 
@@ -67,13 +69,13 @@ The following are performed sequentially:
 
 * For each gear type (NEGEAR) and market code: A YEAR with missing length samples borrows length samples from the YEAR closest to it in time (in the future or the past)
 
-* For any NEGEAR/MARKET_CODE combinations where the number of length samples is less than the user defined value (`nLengthSamples`), for all YEARS then length samples are borrowed from another NEGEAR type with the same MARKET_CODE. Samples are borrowed from the NEGEAR with the most landings (since is is assumed they will have the most length samples). If there are insufficient length samples, the next NEGEAR in order of total landings is checked. And so on.
+* For any NEGEAR/MARKET_CODE combinations where the number of length samples is less than the user defined value (`nLengthSamples`), for all YEARS, length samples are borrowed from another NEGEAR type with the same MARKET_CODE. Samples are borrowed from the NEGEAR with the most landings (since it is assumed they will have the most length samples). If there are insufficient length samples, the next NEGEAR in order of total landings is checked. And so on.
 
 * The sampling program for most species started several years after landings were first recorded. So there is a stretch of consecutive years in the early part of the time series without any length samples. These years are assigned length samples from the first year in which samples were taken.
 
 #### QTR
 
-* For YEARs where there are landings before any length samples were taken all YEAR/QTRs are assigned the length samples from the most first YEAR in which length samples were taken (from the same QTR)
+* For YEARs where there are landings before any length samples were taken all YEAR/QTRs are assigned the length samples from the first YEAR in which length samples were taken (from the same QTR)
 
 * For YEARs when QTRs have missing length samples the previous years length samples for the same QTR are assigned. If there are not length samples in the previous year then the process is repeated until a length sample is available. If this still results in no length samples then the nearest neighbor is used. Length samples from the nearest QTR (any QTR) are used. If this still results in no length samples then the nearest neighbor is used from the NEGEAR type that is attributed with the majority of the landings.
 
@@ -81,7 +83,7 @@ The following are performed sequentially:
 
 * A tolerance for the allowed proportion of missing length samples by QTR (for each NEGEAR and MARKET_CODE) is used to determine if length samples should be assigned to ALL QTRs (as described by the methods above) or whether landings should be aggregated to annual data. 
 
-## other GEAR
+## Other Gear
 
 In all methods above the `otherGear` category is by definition sparse. This gear type is always aggregated to annual data.
 

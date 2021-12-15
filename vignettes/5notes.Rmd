@@ -114,14 +114,14 @@ Insignificant amount of missing species info (NULL, '000' or, '999')
 Most assessments start in either 1982 (rec fishing data starts) or 1989 (discard data starts). Often discards are back calculated in some way from 1982-1988 when needed.
 
 ``` {r specieslookup, echo=F,eval=T}
-knitr::kable(speciesLookupTable)
+knitr::kable(mscatch::speciesLookupTable)
 ```
 
 ## Market Code Lookup Table
 
 ``` {r itis}
 
-DT::datatable(marketCodeLookupTable %>% dplyr::distinct(),
+DT::datatable(mscatch::marketCodeLookupTable %>% dplyr::distinct(),
               rownames=F,
               options=list(pageLength=15,
                            order=list(list(0,"asc"))))

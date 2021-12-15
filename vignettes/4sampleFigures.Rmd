@@ -27,13 +27,15 @@ Several items are printed to the log file
 * Decisions relating to market category aggregations whether due to insufficient samples or due to similar length distributions.
 * Decisions relating to how length samples are used/borrowed from other time periods
 
+Below is a sample from a logfile:
+
 ```{r logfile, echo = F,out.width="100%"}
 knitr::include_graphics("figures/sampleLogFile.PNG")
 ```
 
 ## Plots
 
-A subset of the full suite of plots are shown here
+A subset of the full suite of plots are shown below
 
 ### Landings by NEGEAR
 
