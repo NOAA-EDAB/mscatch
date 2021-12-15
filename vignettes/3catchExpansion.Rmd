@@ -20,7 +20,7 @@ The final stage in data preparation (after [aggregating the data](2aggregationRu
 
 ## Length-weight relationship {#len-weight}
 
-Length-weight data is obtained from SVDBS (other data sources can be substituted if necessary). A length-weight relationship is fit to the data using `mscatch::fit_length_weight` (as an alternative parameter values from database svdbs.LENGTH_WEIGHT_COEFFICIENTS can be used, see [`comlandr::get_length_weight`](https://noaa-edab.github.io/comlandr/reference/get_length_weight.html). The relationship between the weight and length of fish *i* is modelled as,
+Length-weight data is obtained from SVDBS (other data sources can be substituted if necessary). A length-weight relationship is fit to the data using `mscatch::fit_length_weight` (as an alternative parameter values from database svdbs.LENGTH_WEIGHT_COEFFICIENTS can be used, see [`survdat::get_length_weight`](https://noaa-edab.github.io/survdat/reference/get_length_weight.html). The relationship between the weight and length of fish *i* is modelled as,
 
 $$ W_i = \alpha L_i ^ \beta e^{z_i}$$
 
