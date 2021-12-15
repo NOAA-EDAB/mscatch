@@ -98,12 +98,12 @@ All market category descriptions are unique to each species.
 eg. 
 Mackerel (NESPP3='212', ITIS = 172414)
 ```
-channel = dbutils::connect_to_database(server,username)
+channel <- dbutils::connect_to_database(server,username)
 table <- comlandr::get_species_itis(channel,species=172414)
 ```
 vs Cod (NESPP3 = '081', ITIS = 164712)
 ```
-channel = cfdbs::connect_to_database(server,username)
+channel <- dbutils::connect_to_database(server,username)
 table <- comlandr::get_species_itis(channel,species=164712)
 ```
 

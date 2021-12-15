@@ -75,7 +75,7 @@ knitr::include_graphics("figures/6_market_category_lengths.png")
 ### Market category landings
 
 ```{r fig6, echo = F,out.width="100%"}
-knitr::include_graphics("figures/7_market_category_landings.png)
+knitr::include_graphics("figures/7_market_category_landings.png")
 ```
 
 
