@@ -117,7 +117,7 @@
 <div class="section level2">
 <h2 id="len-weight">Length-weight relationship<a class="anchor" aria-label="anchor" href="#len-weight"></a>
 </h2>
-<p>Length-weight data is obtained from SVDBS (other data sources can be substituted if necessary). A length-weight relationship is fit to the data using <code><a href="../reference/fit_length_weight.html">mscatch::fit_length_weight</a></code> (as an alternative parameter values from database svdbs.LENGTH_WEIGHT_COEFFICIENTS can be used, see <a href="https://noaa-edab.github.io/comlandr/reference/get_length_weight.html" class="external-link"><code>comlandr::get_length_weight</code></a>. The relationship between the weight and length of fish <em>i</em> is modelled as,</p>
+<p>Length-weight data is obtained from SVDBS (other data sources can be substituted if necessary). A length-weight relationship is fit to the data using <code><a href="../reference/fit_length_weight.html">mscatch::fit_length_weight</a></code> (as an alternative parameter values from database svdbs.LENGTH_WEIGHT_COEFFICIENTS can be used, see <a href="https://noaa-edab.github.io/survdat/reference/get_length_weight.html" class="external-link"><code>survdat::get_length_weight</code></a>. The relationship between the weight and length of fish <em>i</em> is modelled as,</p>
 <p><span class="math display">\[ W_i = \alpha L_i ^ \beta e^{z_i}\]</span></p>
 <p>where <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> are intercept and slope parameters (on log scale) and <span class="math inline">\(z_i \sim N(0,\sigma^2)\)</span></p>
 <p>This model can be extended to :</p>
