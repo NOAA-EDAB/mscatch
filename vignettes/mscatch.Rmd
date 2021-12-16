@@ -24,7 +24,7 @@ When working with `mscatch` you will need to:
 
 ## Example
 
-Assuming you have assembled the data, the next step is determine how you would like to aggregate the data and how you would like to deal with YEARs/QTRs with missing length samples. 
+Assuming you have assembled the data (for a sample data set see,  [`get_sample_data`](../reference/get_sample_data.html)), the next step is determine how you would like to aggregate the data and how you would like to deal with YEARs/QTRs with missing length samples. 
 
 ### Aggregate the data
 

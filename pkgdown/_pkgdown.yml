@@ -4,6 +4,7 @@ reference:
 - title: "Aggregate & expand"
   desc: "Main functions to aggregate landings and expand"
 - contents:
+  - get_sample_data
   - aggregate_landings
   - fit_length_weight
   - expand_landings_to_lengths

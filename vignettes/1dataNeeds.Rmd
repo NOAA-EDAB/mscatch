@@ -24,6 +24,8 @@ To use `mscatch` you will need to compile two data sets for a specific region of
 * Length data
 * Catch data
 
+If you want a sample data set to begin to use `mscatch` then you can use the function [`get_sample_data`](../reference/get_sample_data.html)
+
 ## Length data
 
 Length data (lengths of sampled catch taken by port samplers) can be pulled from the oracle table (`stockeff.mv_cf_len`) under the stock efficiency initiative or from the annual (cflen, wolen) AA tables. It is then aggregated by YEAR, QTR, GEAR, MARKET_CODE to summarize two data sets

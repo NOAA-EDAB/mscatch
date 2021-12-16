@@ -1,30 +1,52 @@
-#' sample Data pull
+#' Pull a sample data set
 #'
-#'Sample data in the format we'll need from proper data pulls using Seans comland script.
-#'Landings pulled from "MV_CF_Landings", lengths pulled from "mv_cf_len"
+#' Data in the format needed for processing.
+#' Landings are pulled from STOCKEFF database using the tables:
+#' "MV_CF_Landings" for landings and
+#' "MV_CF_LEN" for lengths
 #'
-#'All missing areas need to dealt with prior to pulling species data.
-#'Not the case in this sample. We aggregate all data as if from one EPU
+#' THIS IS A SAMPLE DATASET.
 #'
-#'@param channel obtained from logging into the sole database.
-#'@param species species_itis or nespp3 code. default = 164744 (147) (haddock - should be the easiest with most complete data)
-#'@param species_itis. boolean. TRUE indicates species code is species_itis, FALSE = nespp3
+#' There are missing Areas in the database which wont be used.
 #'
-#'@section Other species of interest:
-#'212 - atlantic mackerel - (K.Curti assessment)
-#'081 - cod (mike palmer assessment)
+#' There are QTR values coded as zero which wont be used.
 #'
+#' All of the missing data needs to be dealt with prior to using the processing algorithm
+#'
+#' To get access to the data base you will need credentials, permissions, and software. See \code{\link[dbutils]{connect_to_database}}
+#'
+#'@param channel an Object inherited from \link[DBI]{DBIConnection-class}.
+#'This object is used to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})
+#'@param species Numeric scalar. Species_itis or NESPP3 code. Default = 164744 (147, Haddock)
+#'@param species_itis. Boolean . TRUE indicates species code is species_itis, FALSE = nespp3
+#'@param area Numeric vector. Statistical areas for which to pull data from. Default = "all"
+#'
+#'@return A list of two objects
+#'
+#'\item{landingsData}{Tibble containing landing data in format required for processing}
+#'\item{lengthData}{Tibble containing landing data in format required for processing}
+#'
+#'@examples
+#'\dontrun{
+#'#Pull all Haddock data
+#'channel <- dbutils::connect_to_database("serverName","userName")
+#'data <- get_sample_data(channel,species = 164744, area="all")
+#'}
+#'
+#'@export
 
-library(magrittr)
-test_data_pull <- function(channel,species=164744,species_itis = T,area="all", fileName=NULL){ # species = 147
+get_sample_data <- function(channel,species=164744,species_itis = T,area="all"){
 
 
   ################ pull sample landings data and massage it
   #############################################################################################################
   message("Pulling landings data from STOCKEFF ...")
+  message("This coule take a few minutes ...")
+
+  ## For test data, use raw data. Eventually we will want to use massage it using comlandr
   testDataPullLandings <- cfdbs::get_landings(channel,year="all",area=area,species=species,species_itis=species_itis)
 
-  ## for test data assume we this is EPU data. To achive this we just sum over AREAS for now
+  # summarize landings
   lands <- testDataPullLandings$data %>%
     dplyr::group_by(YEAR, MONTH, NEGEAR, MARKET_CODE) %>%
     dplyr::summarize(landings=sum(as.numeric(SPPLNDLB)),n=dplyr::n(),.groups="drop")
@@ -34,8 +56,8 @@ test_data_pull <- function(channel,species=164744,species_itis = T,area="all", f
   sampleLandings <- lands %>%
     dplyr::group_by(YEAR,QTR,NEGEAR, MARKET_CODE) %>%
     dplyr::summarize(landings_land = sum(landings),landings_nn=sum(n),.groups="drop")
-  # this needs to be checked.
-  # filter all entries labelled quarter = 0
+
+  # filter all entries labeled, QTR = 0
   sampleLandings <- sampleLandings %>%
     dplyr::select_all() %>%
     dplyr::filter(QTR != "0")
@@ -63,27 +85,13 @@ test_data_pull <- function(channel,species=164744,species_itis = T,area="all", f
   sampleLengths$LENGTH <- as.numeric(sampleLengths$LENGTH)
   sampleLengths$NUMLEN <- as.integer(sampleLengths$NUMLEN)
 
-  sampleLengths <- dplyr::as_tibble(sampleLengths)
+  sampleLengths <- dplyr::as_tibble(sampleLengths) %>%
+    dplyr::select(-tripid)
   sampleData <- dplyr::as_tibble(sampleData)
-  # save data
 
+  sampleData <- list(lengthData=sampleLengths,landingsData=sampleData)
 
-  if (is.null(fileName)) {
-    fileName <- species
-  }
-
-  vName <- paste0("sampleData_",fileName)
-  assign(vName,sampleData)
-
-  save(list=vName,file=paste0(here::here("data"),"/sampleData_",fileName,".rdata"))
-
-  vName <- paste0("sampleLengths_",fileName)
-  assign(vName,sampleLengths)
-
-  #usethis::use_data(vName,overwite=T)
-  save(list=vName,file=paste0(here::here("data"),"/sampleLengths_",fileName,".rdata"))
-
-  #return(lengths)
+  return(sampleData)
 
 
 }
