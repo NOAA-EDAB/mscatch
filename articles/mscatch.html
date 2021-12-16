@@ -124,7 +124,7 @@
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
-<p>Assuming you have assembled the data, the next step is determine how you would like to aggregate the data and how you would like to deal with YEARs/QTRs with missing length samples.</p>
+<p>Assuming you have assembled the data (for a sample data set see, <a href="../reference/get_sample_data.html"><code>get_sample_data</code></a>), the next step is determine how you would like to aggregate the data and how you would like to deal with YEARs/QTRs with missing length samples.</p>
 <div class="section level3">
 <h3 id="aggregate-the-data">Aggregate the data<a class="anchor" aria-label="anchor" href="#aggregate-the-data"></a>
 </h3>
@@ -166,7 +166,7 @@
 <p>The data is pulled using the function <a href="https://noaa-edab.github.io/survdat/reference/get_length_weight_data.html" class="external-link"><code>get_length_weight_data</code></a> from the <a href="https://noaa-edab.github.io/survdat/" class="external-link"><code>survdat</code></a> package and fit using <code><a href="../reference/fit_length_weight.html">mscatch::fit_length_weight()</a></code></p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Permissions and credentials are required to conect to the database</span>
-<span class="va">channel</span> <span class="op">&lt;-</span> <span class="fu">dbutils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dbutils/man/connect_to_database.html" class="external-link">connect_to_database</a></span><span class="op">(</span><span class="st">"server"</span>,<span class="st">"user"</span><span class="op">)</span>
+<span class="va">channel</span> <span class="op">&lt;-</span> <span class="fu">dbutils</span><span class="fu">::</span><span class="fu"><a href="https://andybeet.github.io/dbutils/reference/connect_to_database.html" class="external-link">connect_to_database</a></span><span class="op">(</span><span class="st">"server"</span>,<span class="st">"user"</span><span class="op">)</span>
 <span class="co"># Haddock data are pulled (SVSPP = 74)</span>
 <span class="va">lengthWeightData</span> <span class="op">&lt;-</span> <span class="fu">survdat</span><span class="fu">::</span><span class="fu">get_length_weight_data</span><span class="op">(</span><span class="va">channel</span>,year<span class="op">=</span><span class="st">"all"</span>, species<span class="op">=</span><span class="fl">74</span><span class="op">)</span>
 <span class="co"># Length-Weight models are thenn fit</span>
