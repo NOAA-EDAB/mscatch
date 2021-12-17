@@ -31,9 +31,11 @@ update_length_samples <- function(data,missingRow,gearType,marketCode,numSamples
 
   # since no lengths exist for this YEAR/QTR/NEGEAR/MARKET_CODE duplicate rows from year to use
   if (is.null(mainGearType)) {
-    newLengthData <- data$lengthData %>% dplyr::filter(YEAR==numSamples$YEAR & QTR==numSamples$QTR & NEGEAR==gearType & MARKET_CODE==marketCode)
+    newLengthData <- data$lengthData %>%
+      dplyr::filter(YEAR==numSamples$YEAR & QTR==numSamples$QTR & NEGEAR==gearType & MARKET_CODE==marketCode)
   } else { # borrow from different gear
-    newLengthData <- data$lengthData %>% dplyr::filter(YEAR==numSamples$YEAR & QTR==numSamples$QTR & NEGEAR==mainGearType & MARKET_CODE==marketCode)
+    newLengthData <- data$lengthData %>%
+      dplyr::filter(YEAR==numSamples$YEAR & QTR==numSamples$QTR & NEGEAR==mainGearType & MARKET_CODE==marketCode)
     #newLengthData <- newLengthData %>% dplyr::mutate(NEGEAR = replace(NEGEAR,NEGEAR==gearType,mainGearType))
     # now replace the data for mainGearType to data for current gear type
     newLengthData$NEGEAR <- gearType

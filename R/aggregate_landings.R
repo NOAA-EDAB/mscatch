@@ -83,6 +83,8 @@ aggregate_landings <- function(landingsData,
 
   data <- aggregate_gear(data,otherGear,landingsThresholdGear,speciesName,logfile,outputDir,outputPlots)
 
+
+
   # list of gears in ordered by landings
   gearList <- data$landings %>%
     dplyr::group_by(NEGEAR) %>%
@@ -120,6 +122,9 @@ aggregate_landings <- function(landingsData,
 
   data <- aggregate_market_codes(data,pValue,outputDir,outputPlots,logfile)
   marketCodeList <- unique(data$landings$MARKET_CODE)
+
+
+
 
   ## Return data without any length borrowing
   #  This terminates the algorithm without any length borrowing.
@@ -310,18 +315,49 @@ aggregate_landings <- function(landingsData,
   nUnclass <- dim(unclass)[1] # number of cases
   # for each row, select length distribution from master and expand
   for(irow in 1:nUnclass) {
-    # pull all lengths for YEAR, QTR, NEGEAR where MARKET CODE != "UN"
     missingRow <- unclass[irow,]
-    lengthDist <- lengthData %>%
+    # pull all lengths for YEAR, QTR, NEGEAR where MARKET CODE != "UN"
+    lengthDist <- data$lengthData %>%
       dplyr::filter(YEAR == missingRow$YEAR & QTR == missingRow$QTR & NEGEAR == missingRow$NEGEAR & MARKET_CODE != "UN")
-
+    # pull number of samples and number of lengths for YEAR, QTR, NEGEAR where MARKET CODE != "UN"
+    landDist <- data$landings %>%
+      dplyr::filter(YEAR == missingRow$YEAR & QTR == missingRow$QTR & NEGEAR == missingRow$NEGEAR & MARKET_CODE != "UN")
     # no length samples for any market codes. Therefore cant obtain a scaling.
     # Have to find nearest neighbor where Unclassifieds have samples.
     if (dim(lengthDist)[1] == 0){
+      message(paste0("Unclassified have no samples and there are no samples for other MARKET_CODES in YEAR = ", missingRow$YEAR ))
+      write_to_logfile(outputDir,logfile,data=paste0("Unclassified have no samples and there are no samples for other MARKET_CODES in YEAR = ", missingRow$YEAR ),label=NULL,append=T)
+
       UNData <- data$landings %>% dplyr::filter(NEGEAR == missingRow$NEGEAR,MARKET_CODE=="UN")
       numSamples <- missing_length_by_qtr_neighbor(UNData,missingRow$YEAR,missingRow$QTR,nLengthSamples)
       data <- update_length_samples(data,missingRow,missingRow$NEGEAR,marketCode="UN",numSamples,mainGearType = NULL)
       #readline(prompt = "Press [Enter] to continue ...")
+    } else {
+      # use length distribution of other market codes to assign to unclassifieds
+      message(paste0("Unclassified have no samples in ",missingRow$YEAR,". Using all samples from this YEAR"))
+      write_to_logfile(outputDir,logfile,data=paste0("Unclassified have no samples in ",missingRow$YEAR," for NEGEAR = ",missingRow$NEGEAR," . Using all samples from this YEAR"),label=NULL,append=T)
+
+      newLengthData <- lengthDist %>%
+        dplyr::group_by(YEAR,QTR,NEGEAR,LENGTH) %>%
+        dplyr::summarize(NUMLEN = sum(NUMLEN),.groups="drop") %>%
+        dplyr::mutate(MARKET_CODE = "UN") %>%
+        dplyr::relocate(YEAR,QTR,NEGEAR,MARKET_CODE,LENGTH,NUMLEN)
+
+      numSamples <- landDist %>%
+        dplyr::group_by(YEAR,QTR,NEGEAR) %>%
+        dplyr::summarise(len_totalNumLen = sum(len_totalNumLen),len_numLengthSamples=sum(len_numLengthSamples),.groups="drop")
+
+      # pick out row with missing data (zero length samples) in LANDINGS
+      ind <- (data$landings$YEAR == missingRow$YEAR) &
+        (data$landings$QTR == missingRow$QTR) &
+        (data$landings$NEGEAR == missingRow$NEGEAR) &
+        (data$landings$MARKET_CODE == "UN")
+
+      data$landings[ind,]$len_totalNumLen <- numSamples$len_totalNumLen
+      data$landings[ind,]$len_numLengthSamples <- numSamples$len_numLengthSamples
+
+      data$lengthData <- rbind(data$lengthData,newLengthData)
+
     }
   }
 
