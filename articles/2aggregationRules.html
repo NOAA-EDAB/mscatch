@@ -312,8 +312,12 @@ Proportion
 <div class="section level2">
 <h2 id="unclassified-market-code">Unclassified Market Code<a class="anchor" aria-label="anchor" href="#unclassified-market-code"></a>
 </h2>
-<p>In all methods above the landings and length sample data for the unclassified market category, <code>UN</code>, is aggregated to the same level as other MARKET_CODEs.</p>
+<p>In all methods above the landings and length sample data for the unclassified market category, <code>UN</code>, are aggregated to the same level as other MARKET_CODEs.</p>
 <p>The unclassified landings for a specific (YEAR, QTR, NEGEAR) are assumed to be a mixture of fish lengths similar to that in the observed MARKET_CODEs. Therefore the length distribution for the unclassified landings are assumed to have the same distribution as the length distributions of the landed fish in all of the known market codes combined.</p>
+<ul>
+<li><p>For each YEAR, QTR, NEGEARs where there are no length samples available then all length samples over all MARKET_CODES are assigned to the Unclassifieds.</p></li>
+<li><p>For cases where there are no samples for these other MARKET_CODEs then the nearest neighbor in time is used.</p></li>
+</ul>
 </div>
   </div>
 
