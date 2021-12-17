@@ -89,10 +89,14 @@ In all methods above the `otherGear` category is by definition sparse. This gear
 
 ## Unclassified Market Code
 
-In all methods above the landings and length sample data for the unclassified market category, `UN`, is aggregated to the same level as other MARKET_CODEs.
+In all methods above the landings and length sample data for the unclassified market category, `UN`, are aggregated to the same level as other MARKET_CODEs.
 
 
 The unclassified landings for a specific (YEAR, QTR, NEGEAR) are assumed to be a mixture of fish lengths similar to that in the observed MARKET_CODEs. Therefore the length distribution for the unclassified landings are assumed to have the same distribution as the length distributions of the landed fish in all of the known market codes combined.
+
+* For each YEAR, QTR, NEGEARs where there are no length samples available then all length samples over all MARKET_CODES are assigned to the Unclassifieds.
+
+* For cases where there are no samples for these other MARKET_CODEs then the nearest neighbor in time is used.
 
 
 
