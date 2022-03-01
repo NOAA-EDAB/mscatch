@@ -45,7 +45,7 @@ aggregate_landings <- function(landingsData,
                                outputPlots=F,
                                logfile="logFile.txt") {
 
-  if (!(aggregate_to %in% c("YEAR","QTR","MIX"))) {
+  if (!(aggregate_to %in% c("YEAR","QTR","MIX","SEMESTER"))) {
     stop(paste0("Aggregation to ",aggretage_to," is not currently implemented. Please create an issue
                 at https://github.com/NOAA-EDAB/mscatch/issues"))
 
@@ -156,7 +156,22 @@ aggregate_landings <- function(landingsData,
         dplyr::group_by(YEAR,QTR, NEGEAR,LENGTH) %>%
         dplyr::summarise(NUMLEN = sum(NUMLEN),.groups="drop")
 
-    } else { # do nothing
+    } else if (aggregate_to == "SEMESTER") {
+      data$landings <- data$landings %>%
+        dplyr::mutate(SEMESTER = dplyr::case_when(QTR %in% c(1,2) ~ 1, TRUE ~ 2)) %>%
+        dplyr::group_by(YEAR, SEMESTER, NEGEAR) %>%
+        dplyr::summarise(landings_land = sum(landings_land),
+                         len_totalNumLen = sum(len_totalNumLen),
+                         len_numLengthSamples = sum(len_numLengthSamples),
+                         landings_nn = sum(landings_nn),
+                         .groups="drop")
+
+      data$lengthData <- data$lengthData %>%
+        dplyr::mutate(SEMESTER = dplyr::case_when(QTR %in% c(1,2) ~ 1, TRUE ~ 2)) %>%
+        dplyr::group_by(YEAR,SEMESTER, NEGEAR,LENGTH) %>%
+        dplyr::summarise(NUMLEN = sum(NUMLEN),.groups="drop")
+    } else {# do nothing
+
     }
 
     return(data)
