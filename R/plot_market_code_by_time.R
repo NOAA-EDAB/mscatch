@@ -16,6 +16,9 @@ plot_market_code_by_time <- function(data,plotID,outputDir,outputPlots=T,aggrega
 
   if (outputPlots == F) return()
 
+  if (aggregate_to == "YEAR") {
+    aggregate_to <- "QTR"
+  }
 
   # for each geartype
   for (gearType in unique(data$landings$NEGEAR)) {

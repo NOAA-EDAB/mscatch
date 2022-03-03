@@ -49,8 +49,10 @@ aggregate_to_semester <- function(data,gearType,marketCode,SEMESTERData,missingE
   #message("The following table shows YEAR/SEMESTER that have missing samples:")
   message("We will borrow length data from the same SEMESTER in previous YEAR(s).")
 
+
+
   # cycle through the table of YEAR/SEMESTER combos
-  for (iyear in 1:dim(missingSEMESTERS)[1]) {
+  for (iyear in 1:dim(missingSEMESTERs)[1]) {
     mainGear <- F
     # select same quarter in the previous year if not zero
     minYear <- min(data$lengthData$YEAR)
@@ -71,6 +73,8 @@ aggregate_to_semester <- function(data,gearType,marketCode,SEMESTERData,missingE
       }
       #stop("PROBLEM!!!. Finding zero length samples in all previous years")
     }
+
+    # Update the data with length samples
 
     if (mainGear == T) {
       # update year/SEMESTER info with filled in data

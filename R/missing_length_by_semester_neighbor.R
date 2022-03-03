@@ -19,12 +19,12 @@ missing_length_by_semester_neighbor <- function(SEMESTERData,iyear,isem,nLengthS
   closestYearSEMESTERs <- SEMESTERData %>%
     dplyr::filter(len_numLengthSamples >= nLengthSamples) %>%
     dplyr::mutate(DecimalYEAR = (as.double(YEAR) + 0.5*(as.double(SEMESTER)-1))) %>%
-    dplyr::select(YEAR,QTR,DecimalYEAR)
+    dplyr::select(YEAR,SEMESTER,DecimalYEAR)
 
   targetYEAR <- as.double(iyear) + 0.5*(as.double(isem)-1)
 
   # find closest YEAR to target
-  diffYear <- abs(targetYEAR-closestYearSEMESTERSs$DecimalYEAR)
+  diffYear <- abs(targetYEAR-closestYearSEMESTERs$DecimalYEAR)
   useYear <- closestYearSEMESTERs[which(diffYear == min(diffYear)),][1,]
 
   numSamples <- SEMESTERData %>%
