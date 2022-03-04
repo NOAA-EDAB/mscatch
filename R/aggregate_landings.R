@@ -45,7 +45,7 @@ aggregate_landings <- function(landingsData,
                                outputPlots=F,
                                logfile="logFile.txt") {
 
-  if (!(aggregate_to %in% c("YEAR","QTR","MIX"))) {
+  if (!(aggregate_to %in% c("YEAR","QTR","MIX","SEMESTER"))) {
     stop(paste0("Aggregation to ",aggretage_to," is not currently implemented. Please create an issue
                 at https://github.com/NOAA-EDAB/mscatch/issues"))
 
@@ -82,8 +82,6 @@ aggregate_landings <- function(landingsData,
   # 1. aggregate the gears based on landings
 
   data <- aggregate_gear(data,otherGear,landingsThresholdGear,speciesName,logfile,outputDir,outputPlots)
-
-
 
   # list of gears in ordered by landings
   gearList <- data$landings %>%
@@ -123,8 +121,24 @@ aggregate_landings <- function(landingsData,
   data <- aggregate_market_codes(data,pValue,outputDir,outputPlots,logfile)
   marketCodeList <- unique(data$landings$MARKET_CODE)
 
-
-
+  # aggregate over QTRs based on semester designation
+  if (aggregate_to == "SEMESTER") {
+    data$landings <- data$landings %>%
+      dplyr::mutate(SEMESTER = dplyr::case_when(QTR %in% c(1,2) ~ 1, TRUE ~ 2)) %>%
+      dplyr::select(-QTR) %>%
+      dplyr::group_by(YEAR,NEGEAR,MARKET_CODE,SEMESTER) %>%
+      dplyr::summarise(landings_land = sum(landings_land),
+                    landings_nn = sum(landings_nn),
+                    len_totalNumLen = sum(len_totalNumLen),
+                    len_numLengthSamples  = sum(len_numLengthSamples),
+                    .groups= "drop")
+    data$lengthData <- data$lengthData %>%
+      dplyr::mutate(SEMESTER = dplyr::case_when(QTR %in% c(1,2) ~ 1, TRUE ~ 2)) %>%
+      dplyr::select(-QTR) %>%
+      dplyr::group_by(YEAR,NEGEAR,MARKET_CODE,SEMESTER,LENGTH) %>%
+      dplyr::summarise(NUMLEN = sum(NUMLEN),
+                    .groups="drop")
+  }
 
   ## Return data without any length borrowing
   #  This terminates the algorithm without any length borrowing.
@@ -156,7 +170,23 @@ aggregate_landings <- function(landingsData,
         dplyr::group_by(YEAR,QTR, NEGEAR,LENGTH) %>%
         dplyr::summarise(NUMLEN = sum(NUMLEN),.groups="drop")
 
-    } else { # do nothing
+    } else if (aggregate_to == "SEMESTER") {
+      ## Assumes 1st SEMESTER = QTR 1 + 2
+      ## Assumes 2nd SEMESTER = QTR 3 + 4
+      data$landings <- data$landings %>%
+        dplyr::group_by(YEAR, SEMESTER, NEGEAR) %>%
+        dplyr::summarise(landings_land = sum(landings_land),
+                         len_totalNumLen = sum(len_totalNumLen),
+                         len_numLengthSamples = sum(len_numLengthSamples),
+                         landings_nn = sum(landings_nn),
+                         .groups="drop")
+
+      data$lengthData <- data$lengthData %>%
+        dplyr::group_by(YEAR,SEMESTER, NEGEAR,LENGTH) %>%
+        dplyr::summarise(NUMLEN = sum(NUMLEN),.groups="drop")
+    } else {# do nothing
+      stop("This isn't currently supported, please select a level of aggregation (\"QTR\", \"SEMESTER\", \"YEAR\")")
+
     }
 
     return(data)
@@ -172,18 +202,17 @@ aggregate_landings <- function(landingsData,
 
   # 3. look at QTR to see if need to lump quarters or borrow from other years
   # plot all diagnostics again with current aggregated data
-  plot_market_code_by_qtr(data,9,outputDir,outputPlots)
+
+  plot_market_code_by_time(data,9,outputDir,outputPlots,aggregate_to = aggregate_to)
   write_to_logfile(outputDir,logfile,paste0("Length samples started in ",as.character(sampleStartYear),". All landings prior to this year will use this years data"),label=NULL,append = T)
   #write_to_logfile(outputDir,logfile,"Other gear (code 998) will be aggregated similarly to other gears",label="market code by qrt",append = T)
-
-
 
   # find set of years where samples were not taken but landings were. Early years
   landYrs <- unique(data$landings$YEAR)
   missingEarlyYears <- seq(min(landYrs),sampleStartYear-1)
 
   # Need to start in latest year and work backward, filling in for each gear type
-  write_to_logfile(outputDir,logfile,data="",label="Length samples by QTR.  YEAR-QRT missing: YEAR-QTR used",append=T)
+  write_to_logfile(outputDir,logfile,data="",label=paste0("Length samples by ",aggregate_to,"  YEAR-",aggregate_to," missing: YEAR-",aggregate_to," used"),append=T)
   yrsList <- unique(data$landings$YEAR) # full list of years in landings data
 
   # loop through NEGEAR / MARKET_CODE combinations to determine where to borrow length samples from
@@ -193,35 +222,31 @@ aggregate_landings <- function(landingsData,
     for (marketCode in marketCodeList) { # loop over market category
       if (marketCode == "UN") next # deal with Unclassifieds differently
       print(c(gearType,marketCode))
-      # if (gearType == "100")
-      #   return(data)
+
       # filter data by gear, market code and years where samples were taken
-      QTRData <- data$landings %>%
+      samplesData <- data$landings %>%
         dplyr::filter(YEAR >= sampleStartYear & NEGEAR == gearType & MARKET_CODE == marketCode)
-      # find number of times no samples seen by QTR
-      aggQTRData <- QTRData %>%
-        dplyr::group_by(QTR) %>%
-        dplyr::summarise(numSamples=sum(len_numLengthSamples < nLengthSamples))
       # find number of times no samples seen by YEAR
-      aggYEARData <- QTRData %>%
+      aggYEARData <- samplesData %>%
         dplyr::group_by(YEAR) %>%
         dplyr::summarize(totLand=sum(landings_land),numSamples=all(len_numLengthSamples < nLengthSamples))
 
-      # determines if number of years missing data is small enough to borrow data from other years
-      write_to_logfile(outputDir,logfile,data=paste0("NEGEAR: ",gearType," - MARKET_CODE: ",marketCode," - Approx : ",mean(aggQTRData$numSamples)," years have NO length samples - based on mean(QTRs)"),label=NULL,append=T)
       write_to_logfile(outputDir,logfile,data=paste0("NEGEAR: ",gearType," - MARKET_CODE: ",marketCode," - There are ",sum(aggYEARData$numSamples)," years out of ",length(aggYEARData$numSamples)," (in which there are landings) where no length samples exist - based on # YEARS"),label=NULL,append=T)
 
-      numYearsLengthsStarted <-  length(unique(QTRData$YEAR))
+      numYearsLengthsStarted <-  length(unique(samplesData$YEAR))
 
       # deal with other gear differently since by definition may be sparse. aggregate to year may be preferable
       if (gearType == otherGear) {
         # if (mean(aggQTRData$numSamples) < proportionMissing*numYearsLengthsStarted) {
         #   data <- aggregate_to_qtr(data,gearType,marketCode,QTRData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile)
         # } else {
-          data <- aggregate_to_year(data,gearType,gearList,marketCode,aggYEARData,sampleStartYear,missingEarlyYears,proportionMissing,nLengthSamples,pValue,outputDir,logfile)
+          data <- aggregate_to_year(data,gearType,gearList,marketCode,aggYEARData,sampleStartYear,missingEarlyYears,proportionMissing,nLengthSamples,pValue,outputDir,logfile,aggregate_to)
         # }
         next
       }
+
+
+      ## Main aggregation
 
       # several choices from user.
       # 1. aggregate all to QTRs and borrow where necessary
@@ -232,34 +257,51 @@ aggregate_landings <- function(landingsData,
 
 
       if (aggregate_to == "QTR") {
+        # find number of times no samples seen by QTR
+        aggQTRData <- samplesData %>%
+          dplyr::group_by(QTR) %>%
+          dplyr::summarise(numSamples=sum(len_numLengthSamples < nLengthSamples))
+        # determines if number of years missing data is small enough to borrow data from other years
+        write_to_logfile(outputDir,logfile,data=paste0("NEGEAR: ",gearType," - MARKET_CODE: ",marketCode," - Approx : ",mean(aggQTRData$numSamples)," years have NO length samples - based on mean(QTRs)"),label=NULL,append=T)
+        QTRData <- samplesData
+
         data <- aggregate_to_qtr(data,gearType,marketCode,QTRData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile)
+
       } else if (aggregate_to == "YEAR") {
-        data <- aggregate_to_year(data,gearType,gearList,marketCode,aggYEARData,sampleStartYear,missingEarlyYears,proportionMissing,nLengthSamples,pValue,outputDir,logfile)
+
+        data <- aggregate_to_year(data,gearType,gearList,marketCode,aggYEARData,sampleStartYear,missingEarlyYears,proportionMissing,nLengthSamples,pValue,outputDir,logfile,aggregate_to)
+
+      } else if (aggregate_to == "SEMESTER") {
+
+        SEMESTERData <- data$landings %>%
+          dplyr::filter(YEAR >= sampleStartYear & NEGEAR == gearType & MARKET_CODE == marketCode)
+
+        data <- aggregate_to_semester(data,gearType,marketCode,SEMESTERData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile)
+
       } else if (aggregate_to == "MIX") {
-        ###################################################################################################
-        # if mean number of missing years < specified tolerance
-        if (mean(aggQTRData$numSamples) < proportionMissing*numYearsLengthsStarted) {
-          # fill in missing QTRS using previous QTR(s): Borrow length sample data from previous QTR
-          data <- aggregate_to_qtr(data,gearType,marketCode,QTRData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile)
-
-        } else if (0) {
-          # maybe add rules for semester aggregation if we can work out a plan
-
-        } else  { # too many QTRs missing. aggregate the entire MARKET_CODE over QTR to annual data
-
-          print(aggYEARData)
-          if ((sum(aggYEARData$numSamples==1)/length(aggYEARData$numSamples)) > proportionMissing ){
-            print(paste0("Aggregate over QTRS to YEARly-",marketCode))
-            data <- aggregate_to_year(data,gearType,gearList,marketCode,aggYEARData,sampleStartYear,missingEarlyYears,proportionMissing,nLengthSamples,pValue,outputDir,logfile)
-          } else {
-            # need to aggregate MARKET_CODE over QTRs to YEAR
-            stop("# need to aggregate MARKET_CODE over QTRs to YEAR")
-
-          }
+        # ###################################################################################################
+        # # if mean number of missing years < specified tolerance
+        # if (mean(aggQTRData$numSamples) < proportionMissing*numYearsLengthsStarted) {
+        #   # fill in missing QTRS using previous QTR(s): Borrow length sample data from previous QTR
+        #   data <- aggregate_to_qtr(data,gearType,marketCode,samplesData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile)
+        #
+        # } else if (0) {
+        #   # maybe add rules for semester aggregation if we can work out a plan
+        #
+        # } else  { # too many QTRs missing. aggregate the entire MARKET_CODE over QTR to annual data
+        #
+        #   print(aggYEARData)
+        #   if ((sum(aggYEARData$numSamples==1)/length(aggYEARData$numSamples)) > proportionMissing ){
+        #     print(paste0("Aggregate over QTRS to YEARly-",marketCode))
+        #     data <- aggregate_to_year(data,gearType,gearList,marketCode,aggYEARData,sampleStartYear,missingEarlyYears,proportionMissing,nLengthSamples,pValue,outputDir,logfile)
+        #   } else {
+        #     # need to aggregate MARKET_CODE over QTRs to YEAR
+        #     stop("# need to aggregate MARKET_CODE over QTRs to YEAR")
+        #
+        #   }
 
         }
 
-      }
       ###################################################################################################
 
     } # marketCode
@@ -269,34 +311,57 @@ aggregate_landings <- function(landingsData,
   ## Aggregate UNclassified category for each gear type
   # We aggregate to the same level that the MARKET_CODE was aggregated. Either QTR or annual
   # for otherGear we always aggreagte to annual
+
+  ## This sections needs to change
+  if (aggregate_to %in% c("QTR","YEAR")) {
+    variable <- "QTR"
+  } else if(aggregate_to ==  "SEMESTER") {
+    variable <- "SEMESTER"
+  }
+
+
   marketCode <- "UN"
   for (gearType in gearList) {
     conditionalOn <- rbind(c("NEGEAR",gearType),c("MARKET_CODE",marketCode))
     if (aggregate_to == "QTR") {
+      nTimeIntervals <- 4
       # dont need to do anything already at QTR level
     } else if (aggregate_to == "YEAR") {
-      for (iq in 1:4) {
+      nTimeIntervals <- 4
+      for (iq in 1:nTimeIntervals) {
         landingsData <- aggregate_data_by_class(data$landings,variable="QTR",classes=c(iq,0),conditionalOn=conditionalOn,dataset="landings")
         data$landings <- landingsData
         lengthData <- aggregate_data_by_class(data$lengthData,variable="QTR",classes=c(iq,0),conditionalOn=conditionalOn,dataset="lengths")
         data$lengthData <- lengthData
         write_to_logfile(outputDir,logfile,data=paste0("Gear: ",otherGear," - QTR ",iq," coded to 0 - MARKET_CODE:",marketCode),label=NULL,append=T)
       }
+    } else if (aggregate_to == "SEMESTER"){
+      nTimeIntervals <- 2
+      for (iq in 1:nTimeIntervals) {
+        landingsData <- aggregate_data_by_class(data$landings,variable="SEMESTER",classes=c(iq,0),conditionalOn=conditionalOn,dataset="landings",aggregate_to)
+        data$landings <- landingsData
+        lengthData <- aggregate_data_by_class(data$lengthData,variable="SEMESTER",classes=c(iq,0),conditionalOn=conditionalOn,dataset="lengths",aggregate_to)
+        data$lengthData <- lengthData
+        write_to_logfile(outputDir,logfile,data=paste0("Gear: ",otherGear," - SEMESTER ",iq," coded to 0 - MARKET_CODE:",marketCode),label=NULL,append=T)
+      }
+
     } else {
       stop(paste0("ERROR: Not coded for this yet - aggregate_to = ",aggregate_to," in unclassifieds"))
     }
 
     if (gearType == otherGear) {
       # now deal with "other gear" category which should have market categories aggregated annually rather than by QTR.
-      # By definition other gear category will have few landings and therefor aggregated to annual
+      # By definition other gear category will have few landings and therefore aggregated to annual
       # we need to aggregate UN category to annual so we can expand
+      # aggregate QTR/SEMESTER to annual. Code QTR = 0
+
       conditionalOn <- rbind(c("NEGEAR",otherGear),c("MARKET_CODE",marketCode))
-      for (iq in 1:4) {
-        landingsData <- aggregate_data_by_class(data$landings,variable="QTR",classes=c(iq,0),conditionalOn=conditionalOn,dataset="landings")
+      for (iq in 1:nTimeIntervals) {
+        landingsData <- aggregate_data_by_class(data$landings,variable=variable,classes=c(iq,0),conditionalOn=conditionalOn,dataset="landings",aggregate_to)
         data$landings <- landingsData
-        lengthData <- aggregate_data_by_class(data$lengthData,variable="QTR",classes=c(iq,0),conditionalOn=conditionalOn,dataset="lengths")
+        lengthData <- aggregate_data_by_class(data$lengthData,variable=variable,classes=c(iq,0),conditionalOn=conditionalOn,dataset="lengths",aggregate_to)
         data$lengthData <- lengthData
-        write_to_logfile(outputDir,logfile,data=paste0("Gear: ",otherGear," - QTR ",iq," coded to 0 - MARKET_CODE:",marketCode),label=NULL,append=T)
+        write_to_logfile(outputDir,logfile,data=paste0("Gear: ",otherGear," - ",aggregate_to," ",iq," coded to 0 - MARKET_CODE:",marketCode),label=NULL,append=T)
       }
     }
 
@@ -307,21 +372,23 @@ aggregate_landings <- function(landingsData,
   #.b. dont have any landings for other market categories. Cant obtain a scaling factor
   # so we need to check for this prior to expanding
 
+  print("1")
   # unclassified over NEGEAR and season (QTR)
   # select all cases where we have UNclassified landings but no length samples
   unclass <- data$landings %>%
     dplyr::filter(MARKET_CODE == "UN" & len_totalNumLen < nLengthSamples )  %>%
-    dplyr::distinct(YEAR,QTR,NEGEAR)
+    dplyr::distinct(YEAR,.data[[variable]],NEGEAR)
   nUnclass <- dim(unclass)[1] # number of cases
+
   # for each row, select length distribution from master and expand
   for(irow in 1:nUnclass) {
     missingRow <- unclass[irow,]
-    # pull all lengths for YEAR, QTR, NEGEAR where MARKET CODE != "UN"
+    # pull all lengths for YEAR, QTR/SEMESTER, NEGEAR where MARKET CODE != "UN"
     lengthDist <- data$lengthData %>%
-      dplyr::filter(YEAR == missingRow$YEAR & QTR == missingRow$QTR & NEGEAR == missingRow$NEGEAR & MARKET_CODE != "UN")
-    # pull number of samples and number of lengths for YEAR, QTR, NEGEAR where MARKET CODE != "UN"
+      dplyr::filter(YEAR == missingRow$YEAR & get(variable) == missingRow[[variable]] & NEGEAR == missingRow$NEGEAR & MARKET_CODE != "UN")
+    # pull number of samples and number of lengths for YEAR, QTR/SEMESTER, NEGEAR where MARKET CODE != "UN"
     landDist <- data$landings %>%
-      dplyr::filter(YEAR == missingRow$YEAR & QTR == missingRow$QTR & NEGEAR == missingRow$NEGEAR & MARKET_CODE != "UN")
+      dplyr::filter(YEAR == missingRow$YEAR & get(variable) == missingRow[[variable]] & NEGEAR == missingRow$NEGEAR & MARKET_CODE != "UN")
     # no length samples for any market codes. Therefore cant obtain a scaling.
     # Have to find nearest neighbor where Unclassifieds have samples.
     if (dim(lengthDist)[1] == 0){
@@ -329,8 +396,12 @@ aggregate_landings <- function(landingsData,
       write_to_logfile(outputDir,logfile,data=paste0("Unclassified have no samples and there are no samples for other MARKET_CODES in YEAR = ", missingRow$YEAR ),label=NULL,append=T)
 
       UNData <- data$landings %>% dplyr::filter(NEGEAR == missingRow$NEGEAR,MARKET_CODE=="UN")
-      numSamples <- missing_length_by_qtr_neighbor(UNData,missingRow$YEAR,missingRow$QTR,nLengthSamples)
-      data <- update_length_samples(data,missingRow,missingRow$NEGEAR,marketCode="UN",numSamples,mainGearType = NULL)
+      if (aggregate_to == "SEMESTER") {
+        numSamples <- missing_length_by_semester_neighbor(UNData,missingRow$YEAR,missingRow[[variable]],nLengthSamples)
+      } else {
+        numSamples <- missing_length_by_qtr_neighbor(UNData,missingRow$YEAR,missingRow[[variable]],nLengthSamples)
+      }
+      data <- update_length_samples(data,missingRow,missingRow$NEGEAR,marketCode="UN",numSamples,mainGearType = NULL,TIME = variable)
       #readline(prompt = "Press [Enter] to continue ...")
     } else {
       # use length distribution of other market codes to assign to unclassifieds
@@ -338,18 +409,18 @@ aggregate_landings <- function(landingsData,
       write_to_logfile(outputDir,logfile,data=paste0("Unclassified have no samples in ",missingRow$YEAR," for NEGEAR = ",missingRow$NEGEAR," . Using all samples from this YEAR"),label=NULL,append=T)
 
       newLengthData <- lengthDist %>%
-        dplyr::group_by(YEAR,QTR,NEGEAR,LENGTH) %>%
+        dplyr::group_by(YEAR,.data[[variable]],NEGEAR,LENGTH) %>%
         dplyr::summarize(NUMLEN = sum(NUMLEN),.groups="drop") %>%
         dplyr::mutate(MARKET_CODE = "UN") %>%
-        dplyr::relocate(YEAR,QTR,NEGEAR,MARKET_CODE,LENGTH,NUMLEN)
+        dplyr::relocate(YEAR,.data[[variable]],NEGEAR,MARKET_CODE,LENGTH,NUMLEN)
 
       numSamples <- landDist %>%
-        dplyr::group_by(YEAR,QTR,NEGEAR) %>%
+        dplyr::group_by(YEAR,get(variable),NEGEAR) %>%
         dplyr::summarise(len_totalNumLen = sum(len_totalNumLen),len_numLengthSamples=sum(len_numLengthSamples),.groups="drop")
 
       # pick out row with missing data (zero length samples) in LANDINGS
       ind <- (data$landings$YEAR == missingRow$YEAR) &
-        (data$landings$QTR == missingRow$QTR) &
+        (data$landings[[variable]] == missingRow[[variable]]) &
         (data$landings$NEGEAR == missingRow$NEGEAR) &
         (data$landings$MARKET_CODE == "UN")
 

@@ -1,6 +1,6 @@
 #' Aggregates landings and length data based on MARKET_CODE
 #'
-#' Aggregates data by MARKET_CODE. User intervention may be required since this is prety subjective.
+#' Aggregates data by MARKET_CODE. User intervention may be required since this is subjective.
 #'
 #'
 #'@param data List. Landings data and length data

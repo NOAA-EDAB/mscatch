@@ -15,7 +15,16 @@
 #'@noRd
 
 
-missing_length_by_year <- function(YEARData,targetYEAR,minNumSamples) {
+missing_length_by_year <- function(YEARData,targetYEAR,minNumSamples,aggregate_to) {
+
+
+  # aggregate QTR/SEMESTER to annual. Code QTR = 0
+  if (aggregate_to %in% c("QTR","YEAR")) {
+    aggregate_to <- "QTR"
+  } else if (aggregate_to == "SEMESTER") {
+  } else {
+    stop("Check how you plan to aggregate data to annual data")
+  }
 
   # select a vector of Years with +ve number of length samples
   closestYears <- YEARData %>%
@@ -27,9 +36,10 @@ missing_length_by_year <- function(YEARData,targetYEAR,minNumSamples) {
   useYear <- min(closestYears[which(diffYear == min(diffYear))])
 
   numSamples <- YEARData %>% dplyr::filter(YEAR==useYear) %>%
-    dplyr::select(YEAR,QTR,len_totalNumLen,len_numLengthSamples)
+    dplyr::select(YEAR,.data[[aggregate_to]],len_totalNumLen,len_numLengthSamples)
 
 
   return(numSamples)
 
 }
+
