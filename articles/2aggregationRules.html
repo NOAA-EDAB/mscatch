@@ -269,15 +269,19 @@ Proportion
 <div class="section level2">
 <h2 id="time">Time<a class="anchor" aria-label="anchor" href="#time"></a>
 </h2>
-<p>The user supplies the level in which landings should be aggregated, (YEAR, QTR, or a MIX of the two). <strong>Future development: Include SEMESTER option</strong>. All combinations of Time, NEGEAR, MARKET_CODE that do not have associated length samples borrow samples from the nearest neighbor in time. <strong>Future development: Include nearest neighbor based on spatial units and/or GEAR</strong></p>
+<p>The user supplies the level in which landings should be aggregated, (YEAR, QTR, or SEMESTER). All combinations of Time, NEGEAR, MARKET_CODE that do not have associated length samples borrow samples from the nearest neighbor in time. <strong>Future development: Include nearest neighbor based on spatial units and/or GEAR</strong></p>
 <p>The borrowing of length samples from one time interval to use in another time interval can be a subjective process that differs among species based on life history traits. To complicate matters length distributions sampled within MARKET_CODEs may have shifted over time. These issues will be dealt with at a future date. A generalized method is currently applied (<strong>Future development: Include additional options based on life history traits and fishing industry changes</strong>)</p>
 <ul>
-<li>Aggregate all to QTRs and borrow length samples where necessary</li>
-<li>Aggregate all to YEAR and borrow length samples where necessary</li>
-<li>A MIX of both YEAR and QTR</li>
+<li>Aggregate landings to QTRs and borrow length samples where necessary <sup>1</sup>
+</li>
+<li>Aggregate landings to SEMESTERs and borrow length samples where necessary</li>
+<li>Aggregate landings to YEARs and borrow length samples where necessary</li>
+<li>Aggregate landings in each year to either YEAR, SEMESTER, QTR depending on availability of length samples in close proximity to the target year. <strong>Future development</strong>
+</li>
 </ul>
+<p><sup>1</sup> The method of borrowing length samples is complex and the user has several options. These methods are described below.</p>
 <div class="section level4">
-<h4 id="year">YEAR<a class="anchor" aria-label="anchor" href="#year"></a>
+<h4 id="aggregate-to-year">Aggregate to YEAR<a class="anchor" aria-label="anchor" href="#aggregate-to-year"></a>
 </h4>
 <p>The following are performed sequentially:</p>
 <ul>
@@ -289,7 +293,7 @@ Proportion
 </ul>
 </div>
 <div class="section level4">
-<h4 id="qtr">QTR<a class="anchor" aria-label="anchor" href="#qtr"></a>
+<h4 id="aggregate-to-qtr">Aggregate to QTR<a class="anchor" aria-label="anchor" href="#aggregate-to-qtr"></a>
 </h4>
 <ul>
 <li><p>For YEARs where there are landings before any length samples were taken all YEAR/QTRs are assigned the length samples from the first YEAR in which length samples were taken (from the same QTR)</p></li>
@@ -297,11 +301,12 @@ Proportion
 </ul>
 </div>
 <div class="section level4">
-<h4 id="mix">MIX<a class="anchor" aria-label="anchor" href="#mix"></a>
+<h4 id="aggregate-to-semester">Aggregate to SEMESTER<a class="anchor" aria-label="anchor" href="#aggregate-to-semester"></a>
 </h4>
 <ul>
-<li>A tolerance for the allowed proportion of missing length samples by QTR (for each NEGEAR and MARKET_CODE) is used to determine if length samples should be assigned to ALL QTRs (as described by the methods above) or whether landings should be aggregated to annual data.</li>
+<li>Landings and length data are relabeled from QTR to SEMESTER (SEMESTER 1 = QTR 1 and 2, SEMESTER 2 = QTR 3 and 4). The procedure for borrowing length samples is the same for QTRs</li>
 </ul>
+<!-- #### MIX --><!-- * A tolerance for the allowed proportion of missing length samples by QTR (for each NEGEAR and MARKET_CODE) is used to determine if length samples should be assigned to ALL QTRs (as described by the methods above) or whether landings should be aggregated to annual data. -->
 </div>
 </div>
 <div class="section level2">
