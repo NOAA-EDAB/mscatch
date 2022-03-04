@@ -53,7 +53,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -101,7 +101,7 @@
       
 
       </header><script src="5notes_files/accessible-code-block-0.0.1/empty-anchor.js"></script><script src="5notes_files/htmlwidgets-1.5.4/htmlwidgets.js"></script><link href="5notes_files/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
-<script src="5notes_files/datatables-binding-0.20/datatables.js"></script><script src="5notes_files/jquery-3.6.0/jquery-3.6.0.min.js"></script><link href="5notes_files/dt-core-1.11.3/css/jquery.dataTables.min.css" rel="stylesheet">
+<script src="5notes_files/datatables-binding-0.21/datatables.js"></script><link href="5notes_files/dt-core-1.11.3/css/jquery.dataTables.min.css" rel="stylesheet">
 <link href="5notes_files/dt-core-1.11.3/css/jquery.dataTables.extra.css" rel="stylesheet">
 <script src="5notes_files/dt-core-1.11.3/js/jquery.dataTables.min.js"></script><link href="5notes_files/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet">
 <script src="5notes_files/crosstalk-1.2.0/js/crosstalk.min.js"></script><div class="row">
@@ -117,20 +117,20 @@
 
     
     
-<div class="section level1">
-<h1 id="discards">Discards<a class="anchor" aria-label="anchor" href="#discards"></a>
-</h1>
+<div class="section level2">
+<h2 id="discards">Discards<a class="anchor" aria-label="anchor" href="#discards"></a>
+</h2>
 <p>Need to deal with discards in a similar fashion. It seems that Susan Wigley has a SAS script that most/some stock assessment scientists use to help with this. Edit: Spoke to Susan Wigley she says that they will have all of the discard estimates over time for all of the species in a database similar to that of the landings, length, age databases. This will make life heck of a lot simpler for us.</p>
 <p>Discards tracked in observer database from 1989. However spotty coverage (mostly from otter trawls) until 2005</p>
 </div>
-<div class="section level1">
-<h1 id="nafo-data">NAFO data<a class="anchor" aria-label="anchor" href="#nafo-data"></a>
-</h1>
+<div class="section level2">
+<h2 id="nafo-data">NAFO data<a class="anchor" aria-label="anchor" href="#nafo-data"></a>
+</h2>
 <p>Non US landings need to be integrated also.</p>
 </div>
-<div class="section level1">
-<h1 id="adiosstockeff">ADIOS/STOCKEFF<a class="anchor" aria-label="anchor" href="#adiosstockeff"></a>
-</h1>
+<div class="section level2">
+<h2 id="adiosstockeff">ADIOS/STOCKEFF<a class="anchor" aria-label="anchor" href="#adiosstockeff"></a>
+</h2>
 <p>This is the database that the population dynamics (Pop Dy) branch use for their stock assessments.</p>
 <ul>
 <li><p>Access to the GUI is on network drive (net)</p></li>
@@ -143,9 +143,9 @@
 <li><p>STOCKEFF.MV_CF_LEN (WOLEN, CFLEN AA tables combined)</p></li>
 <li><p>CFDBS.CFSPP (MKTCAT, MKTNM)</p></li>
 </ul>
-<div class="section level2">
-<h2 id="statistical-area">Statistical Area<a class="anchor" aria-label="anchor" href="#statistical-area"></a>
-</h2>
+<div class="section level3">
+<h3 id="statistical-area">Statistical Area<a class="anchor" aria-label="anchor" href="#statistical-area"></a>
+</h3>
 <p>In the database there are:</p>
 <ul>
 <li>35,515,060 records</li>
@@ -153,9 +153,9 @@
 </ul>
 <p>Pop Dy branch will assign these records to areas based on the species of interest. Of course this means that a trip could be assigned to several different areas depending on the species of interest. The algorithm for assigning the area is run “behind the scenes” when a scientist using the web GUI makes a request for data. Methodology by Mike Palmer</p>
 </div>
-<div class="section level2">
-<h2 id="latitude-and-longitude">Latitude and Longitude<a class="anchor" aria-label="anchor" href="#latitude-and-longitude"></a>
-</h2>
+<div class="section level3">
+<h3 id="latitude-and-longitude">Latitude and Longitude<a class="anchor" aria-label="anchor" href="#latitude-and-longitude"></a>
+</h3>
 <ul>
 <li><p>35,515,060 records</p></li>
 <li><p>14,288,139 records (40%) have valid GIS_LAT, GIS_LON</p></li>
@@ -164,9 +164,9 @@
 <li><p>1,482,958 records (4%) where LAT or LON are ‘00’</p></li>
 <li><p>17,791,806 records (50%) where LAT or LON are ‘0000’</p></li>
 </ul>
-<div class="section level3">
-<h3 id="trip-level-records">Trip level records<a class="anchor" aria-label="anchor" href="#trip-level-records"></a>
-</h3>
+<div class="section level4">
+<h4 id="trip-level-records">Trip level records<a class="anchor" aria-label="anchor" href="#trip-level-records"></a>
+</h4>
 <p>Use link field as the unique identifier</p>
 <ul>
 <li>15,774,961 unique trips (15,776,348 in AA tables -&gt; 1387 trips removed)</li>
@@ -183,9 +183,9 @@
 </ol>
 </div>
 </div>
-<div class="section level2">
-<h2 id="market-category">Market Category<a class="anchor" aria-label="anchor" href="#market-category"></a>
-</h2>
+<div class="section level3">
+<h3 id="market-category">Market Category<a class="anchor" aria-label="anchor" href="#market-category"></a>
+</h3>
 <p>Simplified to categories based on the species</p>
 <p>eg Cod -&gt; “UN”, “LG”, “MK”, “SK”</p>
 <p>All market category descriptions are unique to each species. eg. Mackerel (NESPP3=‘212’, ITIS = 172414)</p>
@@ -195,9 +195,9 @@
 <pre><code><span class="va">channel</span> <span class="op">&lt;-</span> <span class="fu">dbutils</span><span class="fu">::</span><span class="fu"><a href="https://andybeet.github.io/dbutils/reference/connect_to_database.html" class="external-link">connect_to_database</a></span><span class="op">(</span><span class="va">server</span>,<span class="va">username</span><span class="op">)</span>
 <span class="va">table</span> <span class="op">&lt;-</span> <span class="fu">comlandr</span><span class="fu">::</span><span class="fu">get_species_itis</span><span class="op">(</span><span class="va">channel</span>,species<span class="op">=</span><span class="fl">164712</span><span class="op">)</span></code></pre>
 </div>
-<div class="section level2 tabset tabset-pills">
-<h2 id="species-species_itis">Species (species_itis)<a class="anchor" aria-label="anchor" href="#species-species_itis"></a>
-</h2>
+<div class="section level3">
+<h3 id="species-species_itis">Species (species_itis)<a class="anchor" aria-label="anchor" href="#species-species_itis"></a>
+</h3>
 <p>Insignificant amount of missing species info (NULL, ‘000’ or, ‘999’) Most assessments start in either 1982 (rec fishing data starts) or 1989 (discard data starts). Often discards are back calculated in some way from 1982-1988 when needed.</p>
 <table class="table">
 <thead><tr class="header">
@@ -348,26 +348,26 @@
 </tbody>
 </table>
 </div>
-<div class="section level2">
-<h2 id="market-code-lookup-table">Market Code Lookup Table<a class="anchor" aria-label="anchor" href="#market-code-lookup-table"></a>
-</h2>
+<div class="section level3">
+<h3 id="market-code-lookup-table">Market Code Lookup Table<a class="anchor" aria-label="anchor" href="#market-code-lookup-table"></a>
+</h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="fu">DT</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/DT/man/datatable.html" class="external-link">datatable</a></span><span class="op">(</span><span class="fu">mscatch</span><span class="fu">::</span><span class="va"><a href="../reference/marketCodeLookupTable.html">marketCodeLookupTable</a></span> <span class="op">%&gt;%</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="op">)</span>,
               rownames<span class="op">=</span><span class="cn">F</span>,
               options<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>pageLength<span class="op">=</span><span class="fl">15</span>,
                            order<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">0</span>,<span class="st">"asc"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<div id="htmlwidget-a70241e912ea72303bff" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-a70241e912ea72303bff">{"x":{"filter":"none","vertical":false,"data":[["DOGFISH,SPINY","DOGFISH,SPINY","DOGFISH,SPINY","DOGFISH,SPINY","DOGFISH,SPINY","DOGFISH,SPINY","DOGFISH,SPINY","DOGFISH,SPINY","DOGFISH,SPINY","DOGFISH,SPINY","DOGFISH,SPINY","HERRING,ATLANTIC,SEA","HERRING,ATLANTIC,SEA","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","HADDOCK","HADDOCK","HADDOCK","HADDOCK","HADDOCK","HADDOCK","HADDOCK","HADDOCK","HADDOCK","HADDOCK","HADDOCK","HADDOCK","HADDOCK","HADDOCK","HADDOCK","HADDOCK","HAKE,SILVER (WHITING)","HAKE,SILVER (WHITING)","HAKE,SILVER (WHITING)","HAKE,SILVER (WHITING)","HAKE,SILVER (WHITING)","HAKE,SILVER (WHITING)","HAKE,SILVER (WHITING)","HAKE,SILVER (WHITING)","MACKEREL,ATLANTIC","MACKEREL,ATLANTIC","MACKEREL,ATLANTIC","MACKEREL,ATLANTIC","MACKEREL,ATLANTIC","MACKEREL,ATLANTIC","MACKEREL,ATLANTIC","MACKEREL,ATLANTIC","MACKEREL,ATLANTIC","FLOUNDER,WINTER","FLOUNDER,WINTER","FLOUNDER,WINTER","FLOUNDER,WINTER","FLOUNDER,WINTER","FLOUNDER,WINTER","FLOUNDER,WINTER","FLOUNDER,WINTER","FLOUNDER,WINTER","FLOUNDER,WINTER","FLOUNDER,WINTER","FLOUNDER,WINTER","FLOUNDER,YELLOWTAIL","FLOUNDER,YELLOWTAIL","FLOUNDER,YELLOWTAIL","FLOUNDER,YELLOWTAIL","FLOUNDER,YELLOWTAIL","FLOUNDER,YELLOWTAIL","FLOUNDER,YELLOWTAIL","FLOUNDER,YELLOWTAIL","FLOUNDER,YELLOWTAIL","SKATE,WINTER","SKATE,WINTER","SKATE,WINTER","SKATE,WINTER","SKATE,WINTER","SKATE,WINTER","SKATE,WINTER","SKATE,WINTER"],["SQUALUS ACANTHIAS","SQUALUS ACANTHIAS","SQUALUS ACANTHIAS","SQUALUS ACANTHIAS","SQUALUS ACANTHIAS","SQUALUS ACANTHIAS","SQUALUS ACANTHIAS","SQUALUS ACANTHIAS","SQUALUS ACANTHIAS","SQUALUS ACANTHIAS","SQUALUS ACANTHIAS","CLUPEA HARENGUS","CLUPEA HARENGUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","MELANOGRAMMUS AEGLEFINUS","MELANOGRAMMUS AEGLEFINUS","MELANOGRAMMUS AEGLEFINUS","MELANOGRAMMUS AEGLEFINUS","MELANOGRAMMUS AEGLEFINUS","MELANOGRAMMUS AEGLEFINUS","MELANOGRAMMUS AEGLEFINUS","MELANOGRAMMUS AEGLEFINUS","MELANOGRAMMUS AEGLEFINUS","MELANOGRAMMUS AEGLEFINUS","MELANOGRAMMUS AEGLEFINUS","MELANOGRAMMUS AEGLEFINUS","MELANOGRAMMUS AEGLEFINUS","MELANOGRAMMUS AEGLEFINUS","MELANOGRAMMUS AEGLEFINUS","MELANOGRAMMUS AEGLEFINUS","MERLUCCIUS BILINEARIS","MERLUCCIUS BILINEARIS","MERLUCCIUS BILINEARIS","MERLUCCIUS BILINEARIS","MERLUCCIUS BILINEARIS","MERLUCCIUS BILINEARIS","MERLUCCIUS BILINEARIS","MERLUCCIUS BILINEARIS","SCOMBER SCOMBRUS","SCOMBER SCOMBRUS","SCOMBER SCOMBRUS","SCOMBER SCOMBRUS","SCOMBER SCOMBRUS","SCOMBER SCOMBRUS","SCOMBER SCOMBRUS","SCOMBER SCOMBRUS","SCOMBER SCOMBRUS","PSEUDOPLEURONECTES AMERICANUS","PSEUDOPLEURONECTES AMERICANUS","PSEUDOPLEURONECTES AMERICANUS","PSEUDOPLEURONECTES AMERICANUS","PSEUDOPLEURONECTES AMERICANUS","PSEUDOPLEURONECTES AMERICANUS","PSEUDOPLEURONECTES AMERICANUS","PSEUDOPLEURONECTES AMERICANUS","PSEUDOPLEURONECTES AMERICANUS","PSEUDOPLEURONECTES AMERICANUS","PSEUDOPLEURONECTES AMERICANUS","PSEUDOPLEURONECTES AMERICANUS","LIMANDA FERRUGINEA","LIMANDA FERRUGINEA","LIMANDA FERRUGINEA","LIMANDA FERRUGINEA","LIMANDA FERRUGINEA","LIMANDA FERRUGINEA","LIMANDA FERRUGINEA","LIMANDA FERRUGINEA","LIMANDA FERRUGINEA","LEUCORAJA OCELLATA","LEUCORAJA OCELLATA","LEUCORAJA OCELLATA","LEUCORAJA OCELLATA","LEUCORAJA OCELLATA","LEUCORAJA OCELLATA","LEUCORAJA OCELLATA","LEUCORAJA OCELLATA"],["160617","160617","160617","160617","160617","160617","160617","160617","160617","160617","160617","161722","161722","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164712","164712","164712","164712","164712","164712","164712","164712","164712","164712","164712","164712","164712","164712","164712","164712","164712","164712","164712","164744","164744","164744","164744","164744","164744","164744","164744","164744","164744","164744","164744","164744","164744","164744","164744","164791","164791","164791","164791","164791","164791","164791","164791","172414","172414","172414","172414","172414","172414","172414","172414","172414","172905","172905","172905","172905","172905","172905","172905","172905","172905","172905","172905","172905","172909","172909","172909","172909","172909","172909","172909","172909","172909","564145","564145","564145","564145","564145","564145","564145","564145"],["3520","3521","3521","3521","3521","3521","3522","3523","3523","3524","3528","1685","1685","0119","0120","0121","0121","0122","0123","0123","0123","0123","0123","0123","0123","0124","0124","0124","0124","0124","0124","0124","0125","0126","0127","0128","0128","0128","0128","0128","0128","0129","0129","0129","0129","0129","0129","0129","0810","0811","0812","0813","0814","0815","0816","0817","0818","0818","0819","0822","0823","0824","0825","0826","0827","0828","0829","1470","1471","1472","1473","1474","1475","1476","1477","1477","1479","1483","1484","1485","1486","1487","1488","5090","5091","5092","5093","5094","5095","5096","5097","2120","2120","2121","2122","2123","2124","2125","2126","2127","1196","1197","1198","1200","1200","1201","1202","1203","1204","1205","1206","1207","1230","1230","1231","1232","1233","1234","1236","1237","1238","3670","3671","3672","3673","3674","3675","3678","3679"],["UNCLASSIFIED","MIXED OR UNSIZED","UNCLASSIFIED","MEDIUM OR SELECT","LARGE","SMALL","UNCLASSIFIED","UNCLASSIFIED","MIXED OR UNSIZED","UNCLASSIFIED","UNCLASSIFIED","UNCLASSIFIED","MIXED OR UNSIZED","UNCLASSIFIED","UNCLASSIFIED","MEDIUM OR SELECT","LARGE","SMALL","LARGE","PEE WEE (RATS)","SMALL","UNCLASSIFIED","MEDIUM OR SELECT","MIXED OR UNSIZED","RATS (0-25 LB) SWORDFISH","SWORDFISH(RATS)","UNCLASSIFIED","LARGE","MIXED OR UNSIZED","PEE WEE (RATS)","MEDIUM OR SELECT","SMALL","UNCLASSIFIED","PEE WEE (RATS)","UNCLASSIFIED","MIXED OR UNSIZED","SMALL","LARGE","UNCLASSIFIED","MEDIUM OR SELECT","PEE WEE (RATS)","MEDIUM OR SELECT","MIXED OR UNSIZED","PEE WEE (RATS)","(RATS)","LARGE","UNCLASSIFIED","SMALL","WHALE","LARGE","UNCLASSIFIED","MARKET","SCROD","UNCLASSIFIED","STEAKER","SNAPPER","UNCLASSIFIED","MIXED OR UNSIZED","UNCLASSIFIED","MAX RETENTION: TERMINAL MKT","MAX RETENTION: UNDERSIZE","MAX RETENTION: TERMINAL MKT/UNDERSIZE MIX","MAX RETENTION: TERMINAL MKT","MAX RETENTION: UNDERSIZE","MAX RETENTION: TERMINAL MKT/UNDERSIZE MIX","UNCLASSIFIED","UNCLASSIFIED","LARGE","EXTRA LARGE","MEDIUM OR SELECT","MARKET","ROE","SCROD","SNAPPER","UNCLASSIFIED","MIXED OR UNSIZED","UNCLASSIFIED","MAX RETENTION: TERMINAL MKT","MAX RETENTION: UNDERSIZE","MAX RETENTION: TERMINAL MKT/UNDERSIZE MIX","MAX RETENTION: TERMINAL MKT","MAX RETENTION: UNDERSIZE","MAX RETENTION: TERMINAL MKT/UNDERSIZE MIX","UNCLASSIFIED","KING","SMALL","UNCLASSIFIED","JUVENILE","LARGE","MEDIUM OR SELECT","UNCLASSIFIED","UNCLASSIFIED","MIXED OR UNSIZED","LARGE","SMALL","MEDIUM OR SELECT","EXTRA LARGE","EXTRA SMALL","SUPER SUPER SMALL","JUMBO","MAX RETENTION: TERMINAL MKT","MAX RETENTION: UNDERSIZE","MAX RETENTION: TERMINAL MKT/UNDERSIZE MIX","UNCLASSIFIED","MIXED OR UNSIZED","LEMONSOLE","LARGE","SMALL","EXTRA LARGE","LARGE/MIX","MEDIUM OR SELECT","PEE WEE (RATS)","UNCLASSIFIED","MIXED OR UNSIZED","LARGE","SMALL","MEDIUM OR SELECT","PEEWEE","MAX RETENTION: TERMINAL MKT","MAX RETENTION: UNDERSIZE","MAX RETENTION: TERMINAL MKT/UNDERSIZE MIX","UNCLASSIFIED","UNCLASSIFIED","SMALL","LARGE","SMALL","LARGE","UNCLASSIFIED","UNCLASSIFIED"],["UN","MX","UN","MD","LG","SQ","UN","UN","MX","UN","UN","UN","MX","UN","UN","MD","LG","SQ","LG","PW","SQ","UN","MD","MX","RA","RA","UN","LG","MX","PW","MD","SQ","UN","PW","UN","MX","SQ","LG","UN","MD","PW","MD","MX","PW","RA","LG","UN","SQ","WH","LG","UN","MK","SK","UN","ST","SR","UN","MX","UN","X1","X2","X3","X1","X2","X3","UN","UN","LG","XG","MD","MK","UN","SK","SR","UN","MX","UN","X1","X2","X3","X1","X2","X3","UN","KN","SQ","UN","JU","LG","MD","UN","UN","MX","LG","SQ","MD","XG","ES","SV","JB","X1","X2","X3","UN","MX","LS","LG","SQ","XG","LM","MD","PW","UN","MX","LG","SQ","MD","PW","X1","X2","X3","UN","UN","SQ","LG","SQ","LG","UN","UN"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>COMMON_NAME<\/th>\n      <th>SCIENTIFIC_NAME<\/th>\n      <th>SPECIES_ITIS<\/th>\n      <th>NESPP4<\/th>\n      <th>MARKET_DESC<\/th>\n      <th>MARKET_CODE<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":15,"order":[[0,"asc"]],"autoWidth":false,"orderClasses":false,"lengthMenu":[10,15,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-4ba8a6b269dd2557b1e1" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4ba8a6b269dd2557b1e1">{"x":{"filter":"none","vertical":false,"data":[["DOGFISH,SPINY","DOGFISH,SPINY","DOGFISH,SPINY","DOGFISH,SPINY","DOGFISH,SPINY","DOGFISH,SPINY","DOGFISH,SPINY","DOGFISH,SPINY","DOGFISH,SPINY","DOGFISH,SPINY","DOGFISH,SPINY","HERRING,ATLANTIC,SEA","HERRING,ATLANTIC,SEA","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","GOOSEFISH","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","COD,ATLANTIC","HADDOCK","HADDOCK","HADDOCK","HADDOCK","HADDOCK","HADDOCK","HADDOCK","HADDOCK","HADDOCK","HADDOCK","HADDOCK","HADDOCK","HADDOCK","HADDOCK","HADDOCK","HADDOCK","HAKE,SILVER (WHITING)","HAKE,SILVER (WHITING)","HAKE,SILVER (WHITING)","HAKE,SILVER (WHITING)","HAKE,SILVER (WHITING)","HAKE,SILVER (WHITING)","HAKE,SILVER (WHITING)","HAKE,SILVER (WHITING)","MACKEREL,ATLANTIC","MACKEREL,ATLANTIC","MACKEREL,ATLANTIC","MACKEREL,ATLANTIC","MACKEREL,ATLANTIC","MACKEREL,ATLANTIC","MACKEREL,ATLANTIC","MACKEREL,ATLANTIC","MACKEREL,ATLANTIC","FLOUNDER,WINTER","FLOUNDER,WINTER","FLOUNDER,WINTER","FLOUNDER,WINTER","FLOUNDER,WINTER","FLOUNDER,WINTER","FLOUNDER,WINTER","FLOUNDER,WINTER","FLOUNDER,WINTER","FLOUNDER,WINTER","FLOUNDER,WINTER","FLOUNDER,WINTER","FLOUNDER,YELLOWTAIL","FLOUNDER,YELLOWTAIL","FLOUNDER,YELLOWTAIL","FLOUNDER,YELLOWTAIL","FLOUNDER,YELLOWTAIL","FLOUNDER,YELLOWTAIL","FLOUNDER,YELLOWTAIL","FLOUNDER,YELLOWTAIL","FLOUNDER,YELLOWTAIL","SKATE,WINTER","SKATE,WINTER","SKATE,WINTER","SKATE,WINTER","SKATE,WINTER","SKATE,WINTER","SKATE,WINTER","SKATE,WINTER"],["SQUALUS ACANTHIAS","SQUALUS ACANTHIAS","SQUALUS ACANTHIAS","SQUALUS ACANTHIAS","SQUALUS ACANTHIAS","SQUALUS ACANTHIAS","SQUALUS ACANTHIAS","SQUALUS ACANTHIAS","SQUALUS ACANTHIAS","SQUALUS ACANTHIAS","SQUALUS ACANTHIAS","CLUPEA HARENGUS","CLUPEA HARENGUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","LOPHIUS AMERICANUS","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","GADUS MORHUA","MELANOGRAMMUS AEGLEFINUS","MELANOGRAMMUS AEGLEFINUS","MELANOGRAMMUS AEGLEFINUS","MELANOGRAMMUS AEGLEFINUS","MELANOGRAMMUS AEGLEFINUS","MELANOGRAMMUS AEGLEFINUS","MELANOGRAMMUS AEGLEFINUS","MELANOGRAMMUS AEGLEFINUS","MELANOGRAMMUS AEGLEFINUS","MELANOGRAMMUS AEGLEFINUS","MELANOGRAMMUS AEGLEFINUS","MELANOGRAMMUS AEGLEFINUS","MELANOGRAMMUS AEGLEFINUS","MELANOGRAMMUS AEGLEFINUS","MELANOGRAMMUS AEGLEFINUS","MELANOGRAMMUS AEGLEFINUS","MERLUCCIUS BILINEARIS","MERLUCCIUS BILINEARIS","MERLUCCIUS BILINEARIS","MERLUCCIUS BILINEARIS","MERLUCCIUS BILINEARIS","MERLUCCIUS BILINEARIS","MERLUCCIUS BILINEARIS","MERLUCCIUS BILINEARIS","SCOMBER SCOMBRUS","SCOMBER SCOMBRUS","SCOMBER SCOMBRUS","SCOMBER SCOMBRUS","SCOMBER SCOMBRUS","SCOMBER SCOMBRUS","SCOMBER SCOMBRUS","SCOMBER SCOMBRUS","SCOMBER SCOMBRUS","PSEUDOPLEURONECTES AMERICANUS","PSEUDOPLEURONECTES AMERICANUS","PSEUDOPLEURONECTES AMERICANUS","PSEUDOPLEURONECTES AMERICANUS","PSEUDOPLEURONECTES AMERICANUS","PSEUDOPLEURONECTES AMERICANUS","PSEUDOPLEURONECTES AMERICANUS","PSEUDOPLEURONECTES AMERICANUS","PSEUDOPLEURONECTES AMERICANUS","PSEUDOPLEURONECTES AMERICANUS","PSEUDOPLEURONECTES AMERICANUS","PSEUDOPLEURONECTES AMERICANUS","LIMANDA FERRUGINEA","LIMANDA FERRUGINEA","LIMANDA FERRUGINEA","LIMANDA FERRUGINEA","LIMANDA FERRUGINEA","LIMANDA FERRUGINEA","LIMANDA FERRUGINEA","LIMANDA FERRUGINEA","LIMANDA FERRUGINEA","LEUCORAJA OCELLATA","LEUCORAJA OCELLATA","LEUCORAJA OCELLATA","LEUCORAJA OCELLATA","LEUCORAJA OCELLATA","LEUCORAJA OCELLATA","LEUCORAJA OCELLATA","LEUCORAJA OCELLATA"],["160617","160617","160617","160617","160617","160617","160617","160617","160617","160617","160617","161722","161722","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164499","164712","164712","164712","164712","164712","164712","164712","164712","164712","164712","164712","164712","164712","164712","164712","164712","164712","164712","164712","164744","164744","164744","164744","164744","164744","164744","164744","164744","164744","164744","164744","164744","164744","164744","164744","164791","164791","164791","164791","164791","164791","164791","164791","172414","172414","172414","172414","172414","172414","172414","172414","172414","172905","172905","172905","172905","172905","172905","172905","172905","172905","172905","172905","172905","172909","172909","172909","172909","172909","172909","172909","172909","172909","564145","564145","564145","564145","564145","564145","564145","564145"],["3520","3521","3521","3521","3521","3521","3522","3523","3523","3524","3528","1685","1685","0119","0120","0121","0121","0122","0123","0123","0123","0123","0123","0123","0123","0124","0124","0124","0124","0124","0124","0124","0125","0126","0127","0128","0128","0128","0128","0128","0128","0129","0129","0129","0129","0129","0129","0129","0810","0811","0812","0813","0814","0815","0816","0817","0818","0818","0819","0822","0823","0824","0825","0826","0827","0828","0829","1470","1471","1472","1473","1474","1475","1476","1477","1477","1479","1483","1484","1485","1486","1487","1488","5090","5091","5092","5093","5094","5095","5096","5097","2120","2120","2121","2122","2123","2124","2125","2126","2127","1196","1197","1198","1200","1200","1201","1202","1203","1204","1205","1206","1207","1230","1230","1231","1232","1233","1234","1236","1237","1238","3670","3671","3672","3673","3674","3675","3678","3679"],["UNCLASSIFIED","MIXED OR UNSIZED","UNCLASSIFIED","MEDIUM OR SELECT","LARGE","SMALL","UNCLASSIFIED","UNCLASSIFIED","MIXED OR UNSIZED","UNCLASSIFIED","UNCLASSIFIED","UNCLASSIFIED","MIXED OR UNSIZED","UNCLASSIFIED","UNCLASSIFIED","MEDIUM OR SELECT","LARGE","SMALL","LARGE","PEE WEE (RATS)","SMALL","UNCLASSIFIED","MEDIUM OR SELECT","MIXED OR UNSIZED","RATS (0-25 LB) SWORDFISH","SWORDFISH(RATS)","UNCLASSIFIED","LARGE","MIXED OR UNSIZED","PEE WEE (RATS)","MEDIUM OR SELECT","SMALL","UNCLASSIFIED","PEE WEE (RATS)","UNCLASSIFIED","MIXED OR UNSIZED","SMALL","LARGE","UNCLASSIFIED","MEDIUM OR SELECT","PEE WEE (RATS)","MEDIUM OR SELECT","MIXED OR UNSIZED","PEE WEE (RATS)","(RATS)","LARGE","UNCLASSIFIED","SMALL","WHALE","LARGE","UNCLASSIFIED","MARKET","SCROD","UNCLASSIFIED","STEAKER","SNAPPER","UNCLASSIFIED","MIXED OR UNSIZED","UNCLASSIFIED","MAX RETENTION: TERMINAL MKT","MAX RETENTION: UNDERSIZE","MAX RETENTION: TERMINAL MKT/UNDERSIZE MIX","MAX RETENTION: TERMINAL MKT","MAX RETENTION: UNDERSIZE","MAX RETENTION: TERMINAL MKT/UNDERSIZE MIX","UNCLASSIFIED","UNCLASSIFIED","LARGE","EXTRA LARGE","MEDIUM OR SELECT","MARKET","ROE","SCROD","SNAPPER","UNCLASSIFIED","MIXED OR UNSIZED","UNCLASSIFIED","MAX RETENTION: TERMINAL MKT","MAX RETENTION: UNDERSIZE","MAX RETENTION: TERMINAL MKT/UNDERSIZE MIX","MAX RETENTION: TERMINAL MKT","MAX RETENTION: UNDERSIZE","MAX RETENTION: TERMINAL MKT/UNDERSIZE MIX","UNCLASSIFIED","KING","SMALL","UNCLASSIFIED","JUVENILE","LARGE","MEDIUM OR SELECT","UNCLASSIFIED","UNCLASSIFIED","MIXED OR UNSIZED","LARGE","SMALL","MEDIUM OR SELECT","EXTRA LARGE","EXTRA SMALL","SUPER SUPER SMALL","JUMBO","MAX RETENTION: TERMINAL MKT","MAX RETENTION: UNDERSIZE","MAX RETENTION: TERMINAL MKT/UNDERSIZE MIX","UNCLASSIFIED","MIXED OR UNSIZED","LEMONSOLE","LARGE","SMALL","EXTRA LARGE","LARGE/MIX","MEDIUM OR SELECT","PEE WEE (RATS)","UNCLASSIFIED","MIXED OR UNSIZED","LARGE","SMALL","MEDIUM OR SELECT","PEEWEE","MAX RETENTION: TERMINAL MKT","MAX RETENTION: UNDERSIZE","MAX RETENTION: TERMINAL MKT/UNDERSIZE MIX","UNCLASSIFIED","UNCLASSIFIED","SMALL","LARGE","SMALL","LARGE","UNCLASSIFIED","UNCLASSIFIED"],["UN","MX","UN","MD","LG","SQ","UN","UN","MX","UN","UN","UN","MX","UN","UN","MD","LG","SQ","LG","PW","SQ","UN","MD","MX","RA","RA","UN","LG","MX","PW","MD","SQ","UN","PW","UN","MX","SQ","LG","UN","MD","PW","MD","MX","PW","RA","LG","UN","SQ","WH","LG","UN","MK","SK","UN","ST","SR","UN","MX","UN","X1","X2","X3","X1","X2","X3","UN","UN","LG","XG","MD","MK","UN","SK","SR","UN","MX","UN","X1","X2","X3","X1","X2","X3","UN","KN","SQ","UN","JU","LG","MD","UN","UN","MX","LG","SQ","MD","XG","ES","SV","JB","X1","X2","X3","UN","MX","LS","LG","SQ","XG","LM","MD","PW","UN","MX","LG","SQ","MD","PW","X1","X2","X3","UN","UN","SQ","LG","SQ","LG","UN","UN"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>COMMON_NAME<\/th>\n      <th>SCIENTIFIC_NAME<\/th>\n      <th>SPECIES_ITIS<\/th>\n      <th>NESPP4<\/th>\n      <th>MARKET_DESC<\/th>\n      <th>MARKET_CODE<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":15,"order":[[0,"asc"]],"columnDefs":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[10,15,25,50,100]}},"evals":[],"jsHooks":[]}</script>
 </div>
-<div class="section level2">
-<h2 id="gear">Gear<a class="anchor" aria-label="anchor" href="#gear"></a>
-</h2>
+<div class="section level3">
+<h3 id="gear">Gear<a class="anchor" aria-label="anchor" href="#gear"></a>
+</h3>
 <p>How deal with missing gear info? How much is there ?</p>
 </div>
-<div class="section level2">
-<h2 id="time">Time<a class="anchor" aria-label="anchor" href="#time"></a>
-</h2>
+<div class="section level3">
+<h3 id="time">Time<a class="anchor" aria-label="anchor" href="#time"></a>
+</h3>
 <p>Some months = 00 but have landings data. what do with them?</p>
 </div>
 </div>
@@ -390,7 +390,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
