@@ -34,21 +34,25 @@ plot_market_code_by_time <- function(data,plotID,outputDir,outputPlots=T,aggrega
 
     dev.off()
 
-    png(paste0(outputDir,"/",plotID+1,"_market_category_",aggregate_to,"_length_distribution_",as.character(gearType),",.png"))
 
     # Take a look at length distribution by QTR and MARKET CODE
     d <- data$lengthData %>% dplyr::filter(NEGEAR == gearType) %>%
       dplyr::group_by(MARKET_CODE,.data[[aggregate_to]],LENGTH) %>%
-      dplyr::summarise(numlens=sum(as.numeric(NUMLEN)))
+      dplyr::summarise(numlens=sum(as.numeric(NUMLEN)),.groups = "drop")
 
-    p <-   ggplot2::ggplot(data = d) +
-      ggplot2::geom_bar(stat="identity",mapping= ggplot2::aes(x=LENGTH,y=numlens),na.rm=T) +
-      ggplot2::facet_grid(rows=ggplot2::vars(.data[[aggregate_to]]),cols=ggplot2::vars(MARKET_CODE)) +
-      ggplot2::ggtitle(paste0("By ",aggregate_to," and MARKET_CODE  (gear type = ",as.character(gearType),")")) +
-      ggplot2::ylab("Distribution of all length samples")
-    print(p)
+    # check to see if any lengths
+    if(nrow(d) > 0) {
+      png(paste0(outputDir,"/",plotID+1,"_market_category_",aggregate_to,"_length_distribution_",as.character(gearType),",.png"))
 
-    dev.off()
+      p <-   ggplot2::ggplot(data = d) +
+        ggplot2::geom_bar(stat="identity",mapping= ggplot2::aes(x=LENGTH,y=numlens),na.rm=T) +
+        ggplot2::facet_grid(rows=ggplot2::vars(.data[[aggregate_to]]),cols=ggplot2::vars(MARKET_CODE)) +
+        ggplot2::ggtitle(paste0("By ",aggregate_to," and MARKET_CODE  (gear type = ",as.character(gearType),")")) +
+        ggplot2::ylab("Distribution of all length samples")
+      print(p)
+
+      dev.off()
+    }
 
     png(paste0(outputDir,"/",plotID+2,"_market_category_",aggregate_to,"_number_samples_",as.character(gearType),",.png"))
 
