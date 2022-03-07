@@ -332,6 +332,13 @@ aggregate_landings <- function(landingsData,
   print(gearList)
 
 
+  #############################################################################
+  #############################################################################
+  #############################################################################
+  ################################# UNCLASSIFIEDS #############################
+  #############################################################################
+  #############################################################################
+  #############################################################################
 
   ## Aggregate UNclassified category for each gear type
   # We aggregate to the same level that the MARKET_CODE was aggregated. Either QTR or annual
@@ -383,7 +390,8 @@ aggregate_landings <- function(landingsData,
   }
 
 
-  # now deal with "other gear" category which should have market categories aggregated annually rather than by QTR.
+  # now deal with UNCLASSIFIEDS in the "other gear" category which should have
+  # market categories aggregated annually rather than by QTR or SEMESTER.
   # By definition other gear category will have few landings and therefore aggregated to annual
   # we need to aggregate UN category to annual so we can expand
   # aggregate QTR/SEMESTER to annual. Code QTR = 0
@@ -406,7 +414,7 @@ aggregate_landings <- function(landingsData,
   #.b. dont have any landings for other market categories. Cant obtain a scaling factor
   # so we need to check for this prior to expanding
 
-  print("1")
+
   # unclassified over NEGEAR and season (QTR)
   # select all cases where we have UNclassified landings but no length samples
   unclass <- data$landings %>%
