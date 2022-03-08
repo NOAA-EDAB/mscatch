@@ -82,21 +82,25 @@ aggregate_landings <- function(landingsData,
   # 1. aggregate the gears based on landings
 
   data <- aggregate_gear(data,otherGear,landingsThresholdGear,speciesName,logfile,outputDir,outputPlots)
+  # compare length distributions across gear types
+  data <- compare_gear_lengths(data,pValue,outputDir,logfile)
 
   # list of gears in ordered by landings
   gearList <- data$landings %>%
     dplyr::group_by(NEGEAR) %>%
     dplyr::summarise(totLand=sum(landings_land),.groups="drop") %>%
+    dplyr::filter(NEGEAR != otherGear) %>%
     dplyr::arrange(desc(totLand)) %>%
     dplyr::select(NEGEAR) %>%
     dplyr::pull()
+
+  gearList <- c(gearList,otherGear)
   mainGearType <- gearList[1]
 
   # look at the summary stats/plots after aggregation
   summary_stats(data$landings,speciesName,outputDir,outputPlots)
   # take a look at length distribution of size categories
   plot_length_histogram(data$lengthData,outputDir,outputPlots)
-
 
   #######################################################
   ####### MARKET CODES ##################################
@@ -220,7 +224,6 @@ aggregate_landings <- function(landingsData,
   # loop through NEGEAR / MARKET_CODE combinations to determine where to borrow length samples from
   # rules
 
-#return(data)
   for (gearType in gearList) { # loop over gear types
     ## Check to see if any gear types have zero length samples
     # If they do then aggregate with otherGear (May need an option to select gear type)
@@ -251,6 +254,11 @@ aggregate_landings <- function(landingsData,
       write_to_logfile(outputDir,logfile,data=paste0("NEGEAR: ",gearType," - MARKET_CODE: ",marketCode," - There are ",sum(aggYEARData$numSamples)," years out of ",length(aggYEARData$numSamples)," (in which there are landings) where no length samples exist - based on # YEARS"),label=NULL,append=T)
 
       numYearsLengthsStarted <-  length(unique(samplesData$YEAR))
+
+      if (nrow(samplesData) == 0) {
+        message(paste0("No landings for NEGEAR = ",gearType,", MARKET_CODE = ",marketCode))
+        next
+      }
 
       # deal with other gear differently since by definition may be sparse. aggregate to year may be preferable
       if (gearType == otherGear) {
@@ -326,8 +334,10 @@ aggregate_landings <- function(landingsData,
 
   # update gear list incase any gears were collapsed into otherGear
   gearList <- data$landings %>%
+    dplyr::filter(NEGEAR != otherGear) %>%
     dplyr::distinct(NEGEAR) %>%
     dplyr::pull()
+  gearList <- c(gearList,otherGear)
 
   print(gearList)
 

@@ -24,7 +24,17 @@ plot_length_histogram <- function(lengthData,outputDir,outputPlots){
   # check to see if any length data
   if (any(!is.na(lengthDataGEARS$LENGTH))) {
 
-    png(paste0(outputDir,"/5_market_category_lengths_by_gear.png"))
+    png(paste0(outputDir,"/5a_lengths_by_gear.png"))
+
+    p <- ggplot(data = lengthDataGEARS) +
+      geom_bar(stat="identity",mapping = aes(x=LENGTH,y=numlens),na.rm=T) +
+      facet_wrap(~NEGEAR,scales="free_y",nrow=length(unique(lengthData$NEGEAR)), ncol = 1) +
+      theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+      scale_x_discrete(name="Length (cm)", breaks=seq(0, max(lengthData$LENGTH),10))
+    print(p)
+    dev.off()
+
+    png(paste0(outputDir,"/5b_market_category_lengths_by_gear.png"))
 
     p <- ggplot(data = lengthDataGEARS) +
       geom_bar(stat="identity",mapping = aes(x=LENGTH,y=numlens),na.rm=T) +
@@ -33,6 +43,9 @@ plot_length_histogram <- function(lengthData,outputDir,outputPlots){
       scale_x_discrete(name="Length (cm)", breaks=seq(0, max(lengthData$LENGTH),10))
     print(p)
     dev.off()
+
+
+
 
     png(paste0(outputDir,"/6_market_category_lengths.png"))
     p <- ggplot(data = lengthDataGEARS) +
