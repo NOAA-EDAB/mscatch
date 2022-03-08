@@ -5,7 +5,7 @@
 #'@param variableToAggreagte Character string. Denote the variable to aggregate based on length distribution
 #'@param pValue Numeric scalar. Threshold pvalue for determining significance of ks test for length samples
 #'@param outputDir Character string. Directory where output is saved
-#'@param logfile Cahracter string. Name of logfile
+#'@param logfile Character string. Name of logfile
 #'
 #'@return Character matrix
 #'
@@ -15,7 +15,7 @@
 
 compare_length_distributions <- function(landings,lengthData,variableToAggregate,groupBy,pValue,outputDir,logfile) {
 
-
+  options(warn=-1)
   mapCodes <- NULL ;  stop <-  F
 
   codes <- unique(landings[[variableToAggregate]])
@@ -24,6 +24,7 @@ compare_length_distributions <- function(landings,lengthData,variableToAggregate
       acode <- codes[icode]
       bcode <- codes[jcode]
       if (acode == bcode) next # dont test against self
+
       if ((acode =="UN") | (bcode == "UN")) next # leave unclassified alone
 
      #`!!` unquotes argument
@@ -51,6 +52,7 @@ compare_length_distributions <- function(landings,lengthData,variableToAggregate
     }
 
   }
+  options(warn = 0)
   # return all pairs that are significantly different
   return(mapCodes)
 }
