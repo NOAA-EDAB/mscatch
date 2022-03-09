@@ -43,7 +43,11 @@ update_length_samples <- function(data,missingRow,gearType,marketCode,numSamples
   }
   # replace the YEAR and QTR with data for the data which was missing
   newLengthData$YEAR <- missingRow$YEAR
-  newLengthData$QTR <- missingRow$QTR
+  if (TIME == "SEMESTER") {
+    newLengthData$SEMESTER <- missingRow$SEMESTER
+  } else {
+    newLengthData$QTR <- missingRow$QTR
+  }
   data$lengthData <- rbind(data$lengthData,newLengthData)
 
   return(data)
