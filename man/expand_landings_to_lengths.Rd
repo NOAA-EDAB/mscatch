@@ -17,7 +17,7 @@ expand_landings_to_lengths(landingsData, lengthData, lengthWeightParams)
 A Tibble of expanded landings to represent weight of landings by length
 \item{YEAR}{Year of landings}
 \item{NEGEAR}{3 digit gear code as defined in cfdbs.gear}
-\item{QTR}{Quarter year of landings (The presence of this field depends on whether it was present in the \code{landingsData}}
+\item{QTR/SEMESTER}{Quarter/Half year of landings (The presence of this field depends on whether it was present in the \code{landingsData}}
 \item{MARKET_CODE}{Market code assigned to landed fish (The presence of this field depends on whether it was present in the \code{landingsData}}
 \item{LENGTH}{Length of sampled fish}
 \item{NUMLEN}{number of sampled for fish stated LENGTH}
