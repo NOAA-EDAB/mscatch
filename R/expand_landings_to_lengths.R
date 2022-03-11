@@ -7,7 +7,7 @@
 #'@return A Tibble of expanded landings to represent weight of landings by length
 #'\item{YEAR}{Year of landings}
 #'\item{NEGEAR}{3 digit gear code as defined in cfdbs.gear}
-#'\item{QTR/SEMESTER}{Quarter/Half year of landings (The presence of this field depends on whether it was present in the \code{landingsData}}
+#'\item{TIME}{Quarter/Half year of landings (The presence of this field depends on whether it was present in the \code{landingsData}}
 #'\item{MARKET_CODE}{Market code assigned to landed fish (The presence of this field depends on whether it was present in the \code{landingsData}}
 #'\item{LENGTH}{Length of sampled fish}
 #'\item{NUMLEN}{number of sampled for fish stated LENGTH}
@@ -22,7 +22,7 @@
 #'
 #'@section Expansion calculations:
 #'
-#' For each unique category (YEAR, QTR, NEGEAR, MARKET_CODE) weights (mean weights, metric tons)
+#' For each unique category (YEAR, TIME, NEGEAR, MARKET_CODE) weights (mean weights, metric tons)
 #' are attributed to the sampled individuals lengths using the weight-length relationship above.
 #' This distribution of weights by length is then scaled such that
 #' the sum of weights (over lengths) = the total landed weight from the landingsData.
@@ -35,7 +35,7 @@ expand_landings_to_lengths <- function(landingsData,lengthData,lengthWeightParam
 
 
   # determine fields to join by. MARKET_CODE & QTR may be missing
-  mainList <- c("YEAR","QTR","SEMESTER","NEGEAR","MARKET_CODE")
+  mainList <- c("YEAR","TIME","NEGEAR","MARKET_CODE")
   varsPresent <- mainList[mainList %in% names(landingsData) ]
 
   # join tables together for length and landings
