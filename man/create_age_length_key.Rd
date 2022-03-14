@@ -4,12 +4,24 @@
 \alias{create_age_length_key}
 \title{Creates Age length key}
 \usage{
-create_age_length_key(ageLengthData, aggregate_to)
+create_age_length_key(
+  expandedLandings,
+  ageLengthData,
+  filterYrs,
+  plusAge,
+  printConvergence = F
+)
 }
 \arguments{
-\item{ageLengthData}{List. Landings data and length data}
+\item{expandedLandings}{Data frame. Landings expanded by length distribution}
 
-\item{aggregate_to}{Character string. Level of aggregation for all MARKET_CODES and gears ("QTR", "YEAR", "SEMESTER", MIX").}
+\item{ageLengthData}{Data frame. Age-length data from databases}
+
+\item{filterYrs}{Numeric scalar. The First year in which age length key is required}
+
+\item{plusAge}{Numeric scalar. Maximum age category. (eg , 10+)}
+
+\item{printConvergence}{Boolean. Should convergence messages from \code{multinom} be printed to console (Default = F)}
 }
 \value{
 Data frame

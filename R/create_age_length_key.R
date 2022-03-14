@@ -3,8 +3,11 @@
 #' Uses Gerritsen et al (2006) method for predicting missing values in
 #' age length key
 #'
-#'@param ageLengthData List. Landings data and length data
-#'@param aggregate_to Character string. Level of aggregation for all MARKET_CODES and gears ("QTR", "YEAR", "SEMESTER", MIX").
+#'@param expandedLandings Data frame. Landings expanded by length distribution
+#'@param ageLengthData Data frame. Age-length data from databases
+#'@param filterYrs Numeric scalar. The First year in which age length key is required
+#'@param plusAge Numeric scalar. Maximum age category. (eg , 10+)
+#'@param printConvergence Boolean. Should convergence messages from \code{multinom} be printed to console (Default = F)
 #'
 #'@return Data frame
 #'
@@ -13,27 +16,47 @@
 #'
 #'@export
 
+# Adapted from K.Curti Maclerel code
+create_age_length_key <- function(expandedLandings,ageLengthData,filterYrs,plusAge, printConvergence=F) {
 
-create_age_length_key <- function(ageLengthData,aggregate_to) {
+  plus.age <- plusAge
 
-  yrs <- ageLengthData %>%
-    dplyr::distinct(YEAR) %>%
-    dplyr::pull()
+  expanded <- expandedLandings %>%
+    dplyr::filter(YEAR >= filterYrs)
 
-  # recode QTR to either YEAR or SEMESTER
-  if (aggregate_to == "SEMESTER") {
-    ageLengthData <- ageLengthData %>%
-      dplyr::mutate(SEMIAN = dplyr::case_when(QTR %in% c(1:2) ~ 1, TRUE~2)) %>%
-      dplyr::select(-QTR)
-  } else {
-    stop("Not coded yet")
-  }
+  yrs <- unique(expanded$YEAR)
 
   semianValues <- ageLengthData %>%
-    dplyr::select(SEMIAN) %>%
+    dplyr::select(TIME) %>%
     dplyr::distinct() %>%
     dplyr::pull()
 
+
+
+  # this needs to be an argument
+  multinom.ref.age <- 3
+
+  ### For each year and semester, fill holes in age data
+
+
+  # List for predicted proportions-at-age from the multinomial
+  ALKey.multinom <- NULL
+  # List for original ALKey
+  ALKey.orig <- NULL
+  # List for filled ALKey
+  ALKey.filled <- NULL
+  # List for ALKey with plus group
+  ALKey.plusgrp <- NULL
+
+
+  # Matrix to log convergence
+  multinom.converg <- data.frame(matrix(NA,nrow=2,ncol=length(yrs)))
+  rownames(multinom.converg) <- as.character(1:2)
+  colnames(multinom.converg) <- yrs
+#
+  # yr <- 2013
+  # semian <- 1
+  # browser()
 
   # Loop over year and semian to calculate predicted ALKey from multinomial, create original ALKey (from observed data), and create filled ALKey (where holes in orig ALK are filled with multinomial predictions)
   for (yr in yrs) {
@@ -42,20 +65,30 @@ create_age_length_key <- function(ageLengthData,aggregate_to) {
       # Combined age data for that semester and year
 #      semian.yr.age.data <- comb.age.semian[[as.character(semian)]][[yr]]
       semian.yr.age.data <- ageLengthData %>%
-        dplyr::filter(SEMIAN == semian, YEAR == yr)
+        dplyr::filter(TIME == semian, YEAR == yr)
 
       # Determine maximum and minimum length of the length data
       # min.exp.len <- min.exp.length.yr[semian,yr]
       # max.exp.len <- max.exp.length.yr[semian,yr]
-      min.exp.len <- min.exp.length.yr[semian,yr]
-      max.exp.len <- max.exp.length.yr[semian,yr]
+
+      # extract expanded landings for YR,SEMESTER
+      expandedSubset <- expanded %>%
+        dplyr::filter(YEAR == yr,TIME == semian)
+
+      min.exp.len <- expandedSubset %>%
+        dplyr::pull(LENGTH) %>%
+        min()
+
+      max.exp.len <- expandedSubset %>%
+        dplyr::pull(LENGTH) %>%
+        max()
 
       # Create vector of lengths (using the length range of the expanded length data) that will become the rownames of the ALKey
       exp.lens <- as.character(min.exp.len:max.exp.len)
 
       # Create vector of lengths actually observed during that year and semester
-      exp.land.len.sub <- subset(expanded.land.length.semian.mat, YEAR==yr & SEMIAN==semian)
-      exp.lens.obs <- sort(as.vector(unique(exp.land.len.sub$LENGTH)))
+      exp.land.len.sub <- expandedSubset %>% dplyr::pull(LENGTH)
+      exp.lens.obs <- sort(unique(exp.land.len.sub))
 
       # Minimum and maximum age
       ### ????? Is max.age the maximum age observed over all years and semesters or just the maximum age in this particular year and semester ?????
@@ -69,17 +102,20 @@ create_age_length_key <- function(ageLengthData,aggregate_to) {
       small.age <- min.age
       big.age <- max.age
       ref.age <- multinom.ref.age
-      # Multinomial call; save outputs to lists
-      fx.output <- get.multinomial.props(agedata, small.len, big.len, small.age, big.age, ref.age)
-      ALKey.multinom[[as.character(semian)]][[yr]] <- fx.output[['pred.p']]
-      multinom.converg[as.character(semian),yr] <- fx.output[['converg']]
+
+      # Multinomial call
+      fx.output <- get_multinomial_props(agedata, small.len,big.len, small.age, big.age, ref.age, printConvergence = printConvergence)
+
+      ALKey.multinom[[as.character(semian)]][[as.character(yr)]] <- fx.output[['pred.p']]
+      multinom.converg[as.character(semian),as.character(yr)] <- fx.output[['converg']]
 
 
       # Create ALKey (obs) from the observed age samples
       tmp.sum <- tapply(semian.yr.age.data$NUMAGE, as.list(semian.yr.age.data[,c('LENGTH','AGE')]), sum, na.rm=TRUE)
       obs <- data.frame(tmp.sum)
       colnames(obs) <- colnames(tmp.sum)
-      rm(tmp.sum)
+
+
 
       # Create original ALKey (orig) that includes all lengths in the expanded length matrix (and all consecutive ages); Therefore, this alk includes holes
       alk.lens <- as.character(min.exp.len:max.exp.len)
@@ -87,6 +123,8 @@ create_age_length_key <- function(ageLengthData,aggregate_to) {
       orig <- data.frame(matrix(NA, length(alk.lens), length(alk.ages)))
       rownames(orig) <- alk.lens
       colnames(orig) <- alk.ages
+      obs <- obs[rownames(obs) %in% rownames(orig),] # pull out only lengths seen in expanded data
+
       orig[rownames(obs),colnames(obs)] <- obs
       orig <- orig/rowSums(orig,na.rm=TRUE)
       orig[is.na(orig)]<-0
@@ -97,7 +135,15 @@ create_age_length_key <- function(ageLengthData,aggregate_to) {
       # Create filled ALKey (filled)
       filled <- orig
       # Fill lengths without age data with predicted proportions from ALKey.multinom
-      if(length(lens.fill)>0) { filled[lens.fill,] <- ALKey.multinom[[semian]][[yr]][lens.fill,] }
+      if(length(lens.fill)>0) {
+        if (length(lens.fill) == 1){
+          filled[lens.fill,] <- as.vector(ALKey.multinom[[as.character(semian)]][[as.character(yr)]][lens.fill,])
+        } else {
+          filled[lens.fill,] <- as.data.frame(ALKey.multinom[[as.character(semian)]][[as.character(yr)]][lens.fill,])
+        }
+
+
+      }
 
       # Create ALKey with plus group
       plusgrp <- filled
@@ -108,19 +154,62 @@ create_age_length_key <- function(ageLengthData,aggregate_to) {
       }
 
       # Save to lists
-      ALKey.orig[[semian]][[yr]]   <- orig
-      ALKey.filled[[semian]][[yr]] <- filled
-      ALKey.plusgrp[[semian]][[yr]] <- plusgrp
+      ALKey.orig[[as.character(semian)]][[(yr)]]   <- orig
+      ALKey.filled[[as.character(semian)]][[as.character(yr)]] <- filled
+      ALKey.plusgrp[[as.character(semian)]][[as.character(yr)]] <- plusgrp
 
     }  # End of semian loop
   } # End of year loop
 
 
 
+  ### Add YEAR, SEMIAN and LENGTH columns and collapse ALKeys to one matrix (ALKey.mat) for export
 
 
+  ALKey.export <- ALKey.plusgrp
+  for (yr in yrs)
+  {
+    # yr <- '2013'
+    for (semian in semianValues)
+    {
+      yr <- as.character(yr)
+      semian <- as.character(semian)
+      # semian <- 1
+      ALKey.export[[semian]][[yr]]$YEAR <- yr
+      ALKey.export[[semian]][[yr]]$TIME <- semian
+      ALKey.export[[semian]][[yr]]$LENGTH <- rownames(ALKey.export[[semian]][[yr]])
+
+    }  # End of semian loop
+  } # End of year loop
+
+  alk.semian <- lapply(ALKey.export, plyr::rbind.fill)
+  ALKey.mat <- plyr::rbind.fill(alk.semian)
+
+  # Order columns
+  all.cols <- colnames(ALKey.mat)
+  age.cols <- all.cols[!all.cols%in%c('YEAR','TIME','LENGTH')]
+  ordered.cols <- c('YEAR','TIME','LENGTH',sort(as.numeric(age.cols)) )
+  ALKey.mat <- ALKey.mat[,ordered.cols]
+
+  # Set NAs to zeros
+  ALKey.mat[is.na(ALKey.mat)] <- 0
+
+  # ### Convert ALKey.mat from wide to long format (need to modify names of age cols to permit use of gather fx)
+  # tmp.mat <- ALKey.mat
+  # cols <- colnames(tmp.mat)
+  # age.cols <- cols[!cols%in%c('YEAR','SEMIAN','LENGTH')]
+  # colnames(tmp.mat)[colnames(tmp.mat)%in%age.cols] <- paste('age',age.cols,sep='.')
+
+  # ALKey.long <- tidyr::gather(data=tmp.mat, key=Age, value=NumAge, age.0:age.10, factor_key=FALSE )
+  # ALKey.long$Age <- do.call(rbind, strsplit(ALKey.long$Age, "\\."))[,2]
+  # ### Round for export
+  #
+  # ALKey.rounded <- ALKey.long
+  # ALKey.rounded$NumAge <- round(ALKey.rounded$NumAge,3)
 
 
+  # return(list(mat = ALKey.mat,rounded=ALKey.rounded,long=ALKey.long))
 
-  return(key)
+  return(list(alKey=tibble::as_tibble(ALKey.mat),converged = multinom.converg))
+
 }
