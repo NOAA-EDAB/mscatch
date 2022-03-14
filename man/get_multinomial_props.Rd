@@ -10,7 +10,8 @@ get_multinomial_props(
   big.len,
   small.age,
   big.age,
-  ref.age
+  ref.age,
+  printConvergence = F
 )
 }
 \arguments{

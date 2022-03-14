@@ -17,13 +17,13 @@
 #' \item{pred.p}{Matrix. Age-length Key. Rows are lengths, columns ages}
 #' @export
 
-get_multinomial_props <- function(agedata, small.len=1, big.len, small.age, big.age, ref.age){
+get_multinomial_props <- function(agedata, small.len=1, big.len, small.age, big.age, ref.age, printConvergence = F){
 
 
   agedata$AGE <- relevel(as.factor(agedata$AGE), ref=ref.age)  # relevel and make categorical
   my.levels <- as.numeric(levels(agedata$AGE))
   n.levels <- length(my.levels)
-  mn <- nnet::multinom(AGE ~ LENGTH, data=agedata,maxit=1000)
+  mn <- nnet::multinom(AGE ~ LENGTH, data=agedata,maxit=1000,trace=printConvergence)
   Parameters <- summary(mn)$coefficients   # Parameters for multinomial key
 
   newdata <- data.frame(cbind(LENGTH = small.len:big.len)) # length values
@@ -46,5 +46,5 @@ get_multinomial_props <- function(agedata, small.len=1, big.len, small.age, big.
     p.colname <- colnames(p.normalized)[i]
     p[,p.colname] <- p.normalized[,i]
   }
-  list(converg=mn$convergence, pred.p=p)
+  return(list(converg=mn$convergence, pred.p=p))
 }
