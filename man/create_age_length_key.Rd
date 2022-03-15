@@ -9,6 +9,7 @@ create_age_length_key(
   ageLengthData,
   filterYrs,
   plusAge,
+  referenceAge,
   printConvergence = F
 )
 }
@@ -21,6 +22,9 @@ create_age_length_key(
 
 \item{plusAge}{Numeric scalar. Maximum age category. (eg , 10+)}
 
+\item{referenceAge}{Numeric scalar.Used in the GLM as the age against which all
+the other ages are estimated. It is typically the most abundant age.}
+
 \item{printConvergence}{Boolean. Should convergence messages from \code{multinom} be printed to console (Default = F)}
 }
 \value{
@@ -31,5 +35,5 @@ Data frame
 }
 \description{
 Uses Gerritsen et al (2006) method for predicting missing values in
-age length key
+age length key. Currently disregards gear type and only uses QTR/SEMESETER/YEAR.
 }
