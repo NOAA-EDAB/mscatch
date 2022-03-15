@@ -84,21 +84,29 @@ aggregate_landings <- function(landingsData,
   # Now deal with Gary's schematic.
   # 1. aggregate the gears based on landings
 
-  data <- aggregate_gear(data,otherGear,landingsThresholdGear,speciesName,logfile,outputDir,outputPlots)
-  # compare length distributions across gear types
-  data <- compare_gear_lengths(data,pValue,outputDir,logfile)
+  if(is.null(speciesRules)) {
+    # Fully automated. Gears are selected based on data.
 
-  # list of gears in ordered by landings
-  gearList <- data$landings %>%
-    dplyr::group_by(NEGEAR) %>%
-    dplyr::summarise(totLand=sum(landings_land),.groups="drop") %>%
-    dplyr::filter(NEGEAR != otherGear) %>%
-    dplyr::arrange(desc(totLand)) %>%
-    dplyr::select(NEGEAR) %>%
-    dplyr::pull()
+    data <- aggregate_gear(data,otherGear,landingsThresholdGear,speciesName,logfile,outputDir,outputPlots)
+    # compare length distributions across gear types
+    data <- compare_gear_lengths(data,pValue,outputDir,logfile)
+    # list of gears in ordered by landings
+    gearList <- data$landings %>%
+      dplyr::group_by(NEGEAR) %>%
+      dplyr::summarise(totLand=sum(landings_land),.groups="drop") %>%
+      dplyr::filter(NEGEAR != otherGear) %>%
+      dplyr::arrange(desc(totLand)) %>%
+      dplyr::select(NEGEAR) %>%
+      dplyr::pull()
+    gearList <- c(gearList,otherGear)
+    mainGearType <- gearList[1]
+  } else {
+    # use user defined gear aggregation
+    data <- aggregate_gear_rules(data,speciesRules,logfile,outputDir,outputPlots)
+    gearList <- c(unique(data$NEGEAR),otherGear)
+    mainGearType <- gearList[1]
+  }
 
-  gearList <- c(gearList,otherGear)
-  mainGearType <- gearList[1]
 
   # look at the summary stats/plots after aggregation
   summary_stats(data$landings,speciesName,outputDir,outputPlots)
