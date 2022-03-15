@@ -495,6 +495,22 @@ aggregate_landings <- function(landingsData,
   message(paste0("Check the logfile = ",outputDir,"/",logfile," for details regarding aggregation choices") )
 
 
+  if (aggregate_to == "SEMESTER") {
+
+    data$landings <- data$landings %>%
+      dplyr::rename(TIME=SEMESTER)
+    data$lengthData <- data$lengthData %>%
+      dplyr::rename(TIME=SEMESTER)
+
+  } else if ((aggregate_to == "QTR") | (aggregate_to == "YEAR")) {
+
+    data$landings <- data$landings %>%
+      dplyr::rename(TIME=QTR)
+    data$lengthData <- data$lengthData %>%
+      dplyr::rename(TIME=QTR)
+  } else {
+    stop(paste0("Not coded for ",aggregate_to))
+  }
 
   return(data)
 

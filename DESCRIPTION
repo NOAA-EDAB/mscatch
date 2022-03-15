@@ -40,7 +40,8 @@ Imports:
     here,
     purrr,
     stringr,
-    dbutils
+    dbutils,
+    nnet
 Remotes:
     andybeet/cfdbs,
     andybeet/dbutils
