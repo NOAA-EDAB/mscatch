@@ -21,6 +21,8 @@
 #'@param outputDir Character string. Path to output directory (png files saved here)
 #'@param outputPlots Boolean. Should plots be created. T or F (Default = F)
 #'@param logfile Character string. Specify the name for the log file generated describing all decisions made.
+#'@param speciesRules List. Containing species specific rules. Default = NULL (Fully automated).
+#'Note:  Predefined \code{speciesRules} will be bundled with the package for select species
 #'
 #'@importFrom dplyr "summarize" "summarise" "group_by" "filter" "select" "arrange" "mutate"
 #'@importFrom magrittr "%>%"
@@ -43,7 +45,8 @@ aggregate_landings <- function(landingsData,
                                otherGear = "998",
                                outputDir=here::here("output"),
                                outputPlots=F,
-                               logfile="logFile.txt") {
+                               logfile="logFile.txt",
+                               speciesRules = NULL) {
 
   if (!(aggregate_to %in% c("YEAR","QTR","MIX","SEMESTER"))) {
     stop(paste0("Aggregation to ",aggretage_to," is not currently implemented. Please create an issue
