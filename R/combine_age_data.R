@@ -35,7 +35,11 @@ combine_age_data <- function(ageSurvey,ageComland,aggregate_to) {
 
   if((aggregate_to == "QTR") | (aggregate_to == "YEAR") ) {
     ageSurvey <- ageSurvey %>%
-      dplyr::rename(TIME = QTR) %>%
+      dplyr::mutate(TIME = dplyr::case_when(SEASON %in% c("SPRING") ~ 1,
+                                            SEASON %in% c("SUMMER") ~ 2,
+                                            SEASON %in% c("FALL") ~ 3,
+                                            SEASON %in% c("WINTER") ~ 4,
+                                            TRUE ~ 0)) %>%
       dplyr::select(YEAR,TIME,SEX,AGE,LENGTH,NUMAGE)
 
     ageComland <- ageComland %>%

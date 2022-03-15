@@ -1,12 +1,14 @@
 #' Creates Age length key
 #'
 #' Uses Gerritsen et al (2006) method for predicting missing values in
-#' age length key
+#' age length key. Currently disregards gear type and only uses QTR/SEMESETER/YEAR.
 #'
 #'@param expandedLandings Data frame. Landings expanded by length distribution
 #'@param ageLengthData Data frame. Age-length data from databases
 #'@param filterYrs Numeric scalar. The First year in which age length key is required
 #'@param plusAge Numeric scalar. Maximum age category. (eg , 10+)
+#'@param referenceAge Numeric scalar.Used in the GLM as the age against which all
+#' the other ages are estimated. It is typically the most abundant age.
 #'@param printConvergence Boolean. Should convergence messages from \code{multinom} be printed to console (Default = F)
 #'
 #'@return Data frame
@@ -17,7 +19,7 @@
 #'@export
 
 # Adapted from K.Curti Maclerel code
-create_age_length_key <- function(expandedLandings,ageLengthData,filterYrs,plusAge, printConvergence=F) {
+create_age_length_key <- function(expandedLandings,ageLengthData,filterYrs,plusAge,referenceAge, printConvergence=F) {
 
   plus.age <- plusAge
 
@@ -29,12 +31,10 @@ create_age_length_key <- function(expandedLandings,ageLengthData,filterYrs,plusA
   semianValues <- ageLengthData %>%
     dplyr::select(TIME) %>%
     dplyr::distinct() %>%
-    dplyr::pull()
+    dplyr::arrange() %>%
+    dplyr::pull() %>%
+    sort()
 
-
-
-  # this needs to be an argument
-  multinom.ref.age <- 3
 
   ### For each year and semester, fill holes in age data
 
@@ -61,11 +61,25 @@ create_age_length_key <- function(expandedLandings,ageLengthData,filterYrs,plusA
   # Loop over year and semian to calculate predicted ALKey from multinomial, create original ALKey (from observed data), and create filled ALKey (where holes in orig ALK are filled with multinomial predictions)
   for (yr in yrs) {
     for (semian in semianValues)  {
-
+#
+      print(yr)
+      print(semian)
       # Combined age data for that semester and year
 #      semian.yr.age.data <- comb.age.semian[[as.character(semian)]][[yr]]
       semian.yr.age.data <- ageLengthData %>%
         dplyr::filter(TIME == semian, YEAR == yr)
+
+      ## NEED TO SORT THIS OUT
+      if ((nrow(semian.yr.age.data) == 0) | (length(unique(semian.yr.age.data$AGE)) <= 1)){
+        # no age data
+        # cant fit multinomial
+        # Save to lists
+        ALKey.orig[[as.character(semian)]][[(yr)]]   <- as.data.frame(NULL)
+        ALKey.filled[[as.character(semian)]][[as.character(yr)]] <- as.data.frame(NULL)
+        ALKey.plusgrp[[as.character(semian)]][[as.character(yr)]] <- as.data.frame(NULL)
+        next
+      }
+
 
       # Determine maximum and minimum length of the length data
       # min.exp.len <- min.exp.length.yr[semian,yr]
@@ -101,10 +115,14 @@ create_age_length_key <- function(expandedLandings,ageLengthData,filterYrs,plusA
       big.len <- max.exp.len
       small.age <- min.age
       big.age <- max.age
-      ref.age <- multinom.ref.age
+      ref.age <- min(referenceAge,max.age)
 
+
+      # if ((yr == 2010) & (semian == 2)) {
+      #   browser()
+      # }
       # Multinomial call
-      fx.output <- get_multinomial_props(agedata, small.len,big.len, small.age, big.age, ref.age, printConvergence = printConvergence)
+      fx.output <- get_multinomial_props(agedata, small.len, big.len, small.age, big.age, ref.age, printConvergence = printConvergence)
 
       ALKey.multinom[[as.character(semian)]][[as.character(yr)]] <- fx.output[['pred.p']]
       multinom.converg[as.character(semian),as.character(yr)] <- fx.output[['converg']]
@@ -165,13 +183,20 @@ create_age_length_key <- function(expandedLandings,ageLengthData,filterYrs,plusA
 
   ### Add YEAR, SEMIAN and LENGTH columns and collapse ALKeys to one matrix (ALKey.mat) for export
 
+  ########################################################
+  ############ NEED TO REWRITE THIS ######################
+  ########################################################
 
   ALKey.export <- ALKey.plusgrp
+
+
   for (yr in yrs)
   {
     # yr <- '2013'
     for (semian in semianValues)
     {
+      print(yr)
+      print(semian)
       yr <- as.character(yr)
       semian <- as.character(semian)
       # semian <- 1
