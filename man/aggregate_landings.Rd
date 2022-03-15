@@ -17,7 +17,8 @@ aggregate_landings(
   otherGear = "998",
   outputDir = here::here("output"),
   outputPlots = F,
-  logfile = "logFile.txt"
+  logfile = "logFile.txt",
+  speciesRules = NULL
 )
 }
 \arguments{
@@ -48,6 +49,9 @@ This is the group of gear types that land the species of interest but in small n
 \item{outputPlots}{Boolean. Should plots be created. T or F (Default = F)}
 
 \item{logfile}{Character string. Specify the name for the log file generated describing all decisions made.}
+
+\item{speciesRules}{List. Containing species specific rules. Default = NULL (Fully automated).
+Note:  Predefined \code{speciesRules} will be bundled with the package for select species}
 }
 \value{
 List of landings and associated length samples
