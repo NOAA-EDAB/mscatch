@@ -4,6 +4,10 @@
 #'
 #'@param data List. Landings data and length data
 #'@param speciesObject List. Defines Rules of aggregation
+#'@param outputDir Character string. Path to output directory (png files saved here)
+#'@param outputPlots Boolean. Should plots be created. T or F (Default = F)
+#'@param logFile character string. Specify the name for the log file generated describing all decisions made.
+#'
 #'
 #'@return List
 #'
@@ -24,12 +28,16 @@ aggregate_gear_rules <- function(data,speciesObject,logfile,outputDir,outputPlot
     dplyr::arrange(desc(totalLandings)) %>%
     dplyr::mutate(cum_sum=cumsum(totalLandings),percent=cum_sum/sum(totalLandings))
 
+  print(aggTopPercent)
+
+  plot_landings_by_gear(speciesObject$speciesName,landings,1,outputPlots,outputDir,"1a")
+
   write_to_logfile(outputDir,logfile,as.data.frame(aggTopPercent),label="Landings by gear type (NEGEAR):",append = T)
 
 
   ## Recode NEGEARs based on user object preferences
   gearCodes <- speciesObject$gearCodes
-  if ((nrow(gearCodes) == 1) | (gearCodes$combine == "all")) {
+  if (nrow(gearCodes) == 1) {
     # rename all NEGEAR codes to a single gear code
     landings$NEGEAR <- gearCodes$use
     lengthData$NEGEAR <- gearCodes$use
@@ -39,23 +47,24 @@ aggregate_gear_rules <- function(data,speciesObject,logfile,outputDir,outputPlot
   } else {
     # find all Gear codes
     allGearCodes <- unique(landings$NEGEAR)
-    codesToAggregate <- setdiff(allGearCodes,gearCodes$use)
-
-    for (igear in nrow(gearCodes)) {
+    codesToAggregate <- setdiff(allGearCodes,gearCodes$combine)
+    # loop over all pairs of codes
+    for (igear in 1:nrow(gearCodes)) {
       use <- gearCodes$use[igear]
       combine <- gearCodes$combine[igear]
+
       if (combine != "all") { # recode specific codes
         landings <- landings %>%
-          dplyr::mutate(NEGEAR = dplyr::case_when(NEGEAR == combine) ~ use, TRUE ~ NEGEAR)
+          dplyr::mutate(NEGEAR = dplyr::case_when(NEGEAR == combine ~ use, TRUE ~ NEGEAR))
         lengthData <- lengthData %>%
-          dplyr::mutate(NEGEAR = dplyr::case_when(NEGEAR == combine) ~ use, TRUE ~ NEGEAR)
+          dplyr::mutate(NEGEAR = dplyr::case_when(NEGEAR == combine ~ use, TRUE ~ NEGEAR))
 
       } else { # assigns the rest
 
         landings <- landings %>%
-          dplyr::mutate(NEGEAR = dplyr::case_when(NEGEAR %in% codesToAggregate) ~ use, TRUE ~ NEGEAR)
+          dplyr::mutate(NEGEAR = dplyr::case_when(NEGEAR %in% codesToAggregate ~ use, TRUE ~ NEGEAR))
         lengthData <- lengthData %>%
-          dplyr::mutate(NEGEAR = dplyr::case_when(NEGEAR %in% codesToAggregate) ~ use, TRUE ~ NEGEAR)
+          dplyr::mutate(NEGEAR = dplyr::case_when(NEGEAR %in% codesToAggregate ~ use, TRUE ~ NEGEAR))
       }
 
       write_to_logfile(outputDir,logfile,"",label=paste0("NEGEAR: ",combine," assigned code = ",use),append = T)

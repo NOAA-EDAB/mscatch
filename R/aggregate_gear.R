@@ -7,6 +7,10 @@
 #'@param recodeOtherGear Numeric scalar. Arbitrary code to use for "other gears" that contribute little to landings
 #'@param landingsThresholdGear Numeric scalar. (Proportion). Determines the proportion of landings that have to be satisfied before all other landings by gear are lumped into "other gear" category.
 #'This is passed via the main function (\code{aggregate_landings})
+#'@param outputDir Character string. Path to output directory (png files saved here)
+#'@param outputPlots Boolean. Should plots be created. T or F (Default = F)
+#'@param logFile character string. Specify the name for the log file generated describing all decisions made.
+#'
 #'
 #'@return List
 #'
