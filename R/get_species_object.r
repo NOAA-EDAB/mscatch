@@ -20,7 +20,7 @@ get_species_object <- function(species_itis) {
       dplyr::filter(SPECIES_ITIS == speciesRules$species_itis) %>%
       dplyr::distinct(SVSPP) %>%
       dplyr::pull()
-    speciesRules$marketCodes <- data.frame(use = c("LG","S","S","S"),combine=c("LG","SQ","MD","PW"))
+    speciesRules$marketCodes <- data.frame(use = c("LG","SM","SM","SM","UN"),combine=c("LG","SQ","MD","PW","all"))
     speciesRules$gearCodes <- data.frame(use = c("050"),combine=c("all"))
   }
 
