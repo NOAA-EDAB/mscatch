@@ -47,7 +47,7 @@ aggregate_to_semester <- function(data,gearType,marketCode,SEMESTERData,missingE
   # determine which SEMESTERs have missing length samples
   missingSEMESTERs <- SEMESTERData %>% dplyr::group_by(YEAR,SEMESTER) %>% dplyr::summarize(numSamples = sum(len_numLengthSamples < nLengthSamples)) %>% dplyr::filter(numSamples >= nLengthSamples)
   #message("The following table shows YEAR/SEMESTER that have missing samples:")
-  message("We will borrow length data from the same SEMESTER in previous YEAR(s).")
+  message(paste0("Gear: ",gearType," Market Code: ",marketCode,". We will borrow length data from the same SEMESTER in previous YEAR(s)."))
 
 
   if (nrow(missingSEMESTERs) != 0) {
