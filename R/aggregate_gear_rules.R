@@ -89,8 +89,19 @@ aggregate_gear_rules <- function(data,speciesObject,logfile,outputDir,outputPlot
                      .groups="drop")
 
 
-
   plot_landings_by_gear(speciesObject$speciesName,landings,1,outputPlots,outputDir,"1b")
+
+  aggTopPercent <- landings %>%
+    dplyr::group_by(NEGEAR) %>%
+    dplyr::summarise(totalLandings = sum(landings_land, na.rm = TRUE)) %>%
+    dplyr::arrange(desc(totalLandings)) %>%
+    dplyr::mutate(cum_sum=cumsum(totalLandings),
+                  percent=cum_sum/sum(totalLandings))
+  print(aggTopPercent)
+
+  write_to_logfile(outputDir,logfile,as.data.frame(aggTopPercent),label="Landings by selected gear type (NEGEAR):",append = T)
+
+
 
   # update sample lengthsData to reflect gear aggregation
   aggregatedData <- list()
