@@ -33,6 +33,8 @@ aggregate_market_codes_rules <- function(data,speciesObject,outputDir,outputPlot
                   cum_percent=cumsum(percent)) %>%
     dplyr::ungroup()
 
+  print(market)
+
   plot_market_codes(market,7,outputDir,outputPlots)
 
   ## Group based on user preference
@@ -89,6 +91,15 @@ aggregate_market_codes_rules <- function(data,speciesObject,outputDir,outputPlot
     dplyr::summarise(NUMLEN = sum(as.numeric(NUMLEN),na.rm=T),
                      .groups="drop")
 
+  newmarket <- landings %>%
+    dplyr::group_by(MARKET_CODE) %>%
+    dplyr::summarise(totalLandings = sum(landings_land, na.rm = TRUE),len_numLengthSamples=sum(len_numLengthSamples,na.rm=T)) %>%
+    dplyr::arrange(desc(totalLandings)) %>%
+    dplyr::mutate(percent = totalLandings/sum(totalLandings) , cumsum=cumsum(totalLandings),cum_percent=cumsum/sum(totalLandings))
+
+  message("New market code aggregation")
+  print(newmarket)
+  plot_market_codes(newmarket,8,outputDir,outputPlots)
 
   # update sample lengthsData to reflect gear aggregation
   aggregatedData <- list()
