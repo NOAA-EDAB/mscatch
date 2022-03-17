@@ -103,7 +103,7 @@ aggregate_landings <- function(landingsData,
   } else {
     # use user defined gear aggregation
     data <- aggregate_gear_rules(data,speciesRules,logfile,outputDir,outputPlots)
-    gearList <- c(unique(data$NEGEAR),otherGear)
+    gearList <- c(unique(data$landings$NEGEAR),otherGear)
     mainGearType <- gearList[1]
   }
 
@@ -239,9 +239,15 @@ aggregate_landings <- function(landingsData,
   write_to_logfile(outputDir,logfile,data="",label=paste0("Length samples by ",aggregate_to,"  YEAR-",aggregate_to," missing: YEAR-",aggregate_to," used"),append=T)
   yrsList <- unique(data$landings$YEAR) # full list of years in landings data
 
+
+  ## Write out table of length Samples by gear type similar to A13, p 78 of mackerel 2017 assessment
+
+
   # loop through NEGEAR / MARKET_CODE combinations to determine where to borrow length samples from
   # rules
   print("Borrowing/Imputation")
+  print(gearList)
+  print(marketCodeList)
   for (gearType in gearList) { # loop over gear types
     ## Check to see if any gear types have zero length samples
     # If they do then aggregate with otherGear (May need an option to select gear type)
@@ -467,14 +473,14 @@ aggregate_landings <- function(landingsData,
     # no length samples for any market codes. Therefore cant obtain a scaling.
     # Have to find nearest neighbor where Unclassifieds have samples.
     if (dim(lengthDist)[1] == 0){
-      message(paste0("Unclassified have no samples and there are no samples for other MARKET_CODES in YEAR = ", missingRow$YEAR ))
-      write_to_logfile(outputDir,logfile,data=paste0("Unclassified have no samples and there are no samples for other MARKET_CODES in YEAR = ", missingRow$YEAR ),label=NULL,append=T)
+      message(paste0("Using nearest neighbor: Unclassified have no samples for YEAR in any MARKET_CODES = ", missingRow$YEAR ))
+      write_to_logfile(outputDir,logfile,data=paste0("Using nearest neighbor: Unclassified have no samples for YEAR in any MARKET_CODES = ", missingRow$YEAR),label=NULL,append=T)
 
       UNData <- data$landings %>% dplyr::filter(NEGEAR == missingRow$NEGEAR,MARKET_CODE=="UN")
       if (aggregate_to == "SEMESTER") {
-        numSamples <- missing_length_by_semester_neighbor(UNData,missingRow$YEAR,missingRow[[variable]],nLengthSamples)
+        numSamples <- missing_length_by_semester_neighbor(UNData,missingRow$YEAR,missingRow[[variable]],nLengthSamples,outputDir,logfile)
       } else {
-        numSamples <- missing_length_by_qtr_neighbor(UNData,missingRow$YEAR,missingRow[[variable]],nLengthSamples)
+        numSamples <- missing_length_by_qtr_neighbor(UNData,missingRow$YEAR,missingRow[[variable]],nLengthSamples,outputDir,logfile)
       }
       if(nrow(numSamples) == 0){ # no samples for this gear Code
         stop(paste0("No samples for UNclassified for gear type = ",missingRow$NEGEAR))
