@@ -24,6 +24,21 @@ get_species_object <- function(species_itis) {
     speciesRules$gearCodes <- data.frame(use = c("050"),combine=c("all"))
   }
 
+  if (species_itis == 172414 ) {
+    speciesRules <- list()
+    speciesRules$species_itis <- 172414
+    speciesRules$speciesName <- mscatch::speciesLookupTable %>%
+      dplyr::filter(SPECIES_ITIS == speciesRules$species_itis) %>%
+      dplyr::distinct(COMMON_NAME.y) %>%
+      dplyr::pull()
+    speciesRules$SVSPP <- mscatch::speciesLookupTable %>%
+      dplyr::filter(SPECIES_ITIS == speciesRules$species_itis) %>%
+      dplyr::distinct(SVSPP) %>%
+      dplyr::pull()
+    speciesRules$marketCodes <- data.frame(use = c("LG","LG","LG","MD","SM","SM","SM","UN"),combine=c("LG","XG","JB","MD","SQ","ES","SV","all"))
+    speciesRules$gearCodes <- data.frame(use = c("050"),combine=c("all"))
+  }
+
 
   return(speciesRules)
 
