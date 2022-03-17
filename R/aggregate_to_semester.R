@@ -62,12 +62,12 @@ aggregate_to_semester <- function(data,gearType,marketCode,SEMESTERData,missingE
         # still zero after going back many years!! This could be a problem.
         write_to_logfile(outputDir,logfile,data=paste0("Gear: ",gearType," - ",missingSEMESTERs$YEAR[iyear],"-",missingSEMESTERs$SEMESTER[iyear],". No samples found. Looking at nearest neighbor. - MARKET_CODE:",marketCode),label=NULL,append=T)
         # select length samples closest in time to target year/SEMESTER
-        numSamples <- missing_length_by_semester_neighbor(SEMESTERData,missingSEMESTERs$YEAR[iyear],missingSEMESTERs$SEMESTER[iyear],nLengthSamples)
+        numSamples <- missing_length_by_semester_neighbor(SEMESTERData,missingSEMESTERs$YEAR[iyear],missingSEMESTERs$SEMESTER[iyear],nLengthSamples,outputDir,logfile)
         if (dim(numSamples)[1]==0) {
           # Still no samples, borrow from main Fleet in closest year. Presumably dealer still categorizes a small as a small
           # regardless of NEGEAR
           SEMESTERDataGear <- data$landings %>% dplyr::filter(MARKET_CODE == marketCode)
-          numSamples <- missing_length_by_semester_neighbor(SEMESTERDataGear,missingSEMESTERs$YEAR[iyear],missingSEMESTERs$SEMESTER[iyear],nLengthSamples)
+          numSamples <- missing_length_by_semester_neighbor(SEMESTERDataGear,missingSEMESTERs$YEAR[iyear],missingSEMESTERs$SEMESTER[iyear],nLengthSamples,outputDir,logfile)
           mainGearType <- numSamples$NEGEAR
           mainGear <- T
         }

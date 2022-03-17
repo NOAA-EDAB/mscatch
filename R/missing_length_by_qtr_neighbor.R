@@ -13,7 +13,7 @@
 #'
 #'@noRd
 
-missing_length_by_qtr_neighbor <- function(QTRData,iyear,iqtr,nLengthSamples) {
+missing_length_by_qtr_neighbor <- function(QTRData,iyear,iqtr,nLengthSamples,outputDir,logfile) {
 
   # select a vector of Years/QTRs with +ve number of length samples
   closestYearQtrs <- QTRData %>%
@@ -30,6 +30,10 @@ missing_length_by_qtr_neighbor <- function(QTRData,iyear,iqtr,nLengthSamples) {
   numSamples <- QTRData %>%
     dplyr::filter(YEAR==useYear$YEAR, QTR==useYear$QTR, len_numLengthSamples >= nLengthSamples ) %>%
     dplyr::select(YEAR,QTR,NEGEAR,len_totalNumLen,len_numLengthSamples)
+
+  message(paste0("Nearest neighbor: ",useYear$YEAR,"-",useYear$QTR))
+  write_to_logfile(outputDir,logfile,data=paste0("Nearest neighbor: ",useYear$YEAR,"-",useYear$QTR),label=NULL,append=T)
+
 
   # incase there are multiple fleets with same number of length samples
   numSamples <- numSamples %>% dplyr::filter(len_numLengthSamples==max(len_numLengthSamples))
