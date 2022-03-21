@@ -47,49 +47,49 @@ aggregate_to_semester <- function(data,gearType,marketCode,SEMESTERData,missingE
   # determine which SEMESTERs have missing length samples
   missingSEMESTERs <- SEMESTERData %>% dplyr::group_by(YEAR,SEMESTER) %>% dplyr::summarize(numSamples = sum(len_numLengthSamples < nLengthSamples)) %>% dplyr::filter(numSamples >= nLengthSamples)
   #message("The following table shows YEAR/SEMESTER that have missing samples:")
-  message("We will borrow length data from the same SEMESTER in previous YEAR(s).")
+  message(paste0("Gear: ",gearType," Market Code: ",marketCode,". We will borrow length data from the same SEMESTER in previous YEAR(s)."))
 
 
-
-  # cycle through the table of YEAR/SEMESTER combos
-  for (iyear in 1:dim(missingSEMESTERs)[1]) {
-    mainGear <- F
-    # select same quarter in the previous year if not zero
-    minYear <- min(data$lengthData$YEAR)
-    numSamples <- missing_length_by_semester(SEMESTERData,missingSEMESTERs$YEAR[iyear],missingSEMESTERs$SEMESTER[iyear],nLengthSamples,minYear)
-    if (dim(numSamples)[1]==0) { # no samples available
-      message(paste0(missingSEMESTERs$YEAR[iyear]," - No lengthData available for SEMESTER = ",missingSEMESTERs$SEMESTER[iyear],". Using nearest neighbor."))
-      # still zero after going back many years!! This could be a problem.
-      write_to_logfile(outputDir,logfile,data=paste0("Gear: ",gearType," - ",missingSEMESTERs$YEAR[iyear],"-",missingSEMESTERs$SEMESTER[iyear],". No samples found. Looking at nearest neighbor. - MARKET_CODE:",marketCode),label=NULL,append=T)
-      # select length samples closest in time to target year/SEMESTER
-      numSamples <- missing_length_by_semester_neighbor(SEMESTERData,missingSEMESTERs$YEAR[iyear],missingSEMESTERs$SEMESTER[iyear],nLengthSamples)
-      if (dim(numSamples)[1]==0) {
-        # Still no samples, borrow from main Fleet in closest year. Presumably dealer still categorizes a small as a small
-        # regardless of NEGEAR
-        SEMESTERDataGear <- data$landings %>% dplyr::filter(MARKET_CODE == marketCode)
-        numSamples <- missing_length_by_semester_neighbor(SEMESTERDataGear,missingSEMESTERs$YEAR[iyear],missingSEMESTERs$SEMESTER[iyear],nLengthSamples)
-        mainGearType <- numSamples$NEGEAR
-        mainGear <- T
+  if (nrow(missingSEMESTERs) != 0) {
+    # cycle through the table of YEAR/SEMESTER combos
+    for (iyear in 1:nrow(missingSEMESTERs)) {
+      mainGear <- F
+      # select same quarter in the previous year if not zero
+      minYear <- min(data$lengthData$YEAR)
+      numSamples <- missing_length_by_semester(SEMESTERData,missingSEMESTERs$YEAR[iyear],missingSEMESTERs$SEMESTER[iyear],nLengthSamples,minYear)
+      if (dim(numSamples)[1]==0) { # no samples available
+        message(paste0(missingSEMESTERs$YEAR[iyear]," - No lengthData available for SEMESTER = ",missingSEMESTERs$SEMESTER[iyear],". Using nearest neighbor."))
+        # still zero after going back many years!! This could be a problem.
+        write_to_logfile(outputDir,logfile,data=paste0("Gear: ",gearType," - ",missingSEMESTERs$YEAR[iyear],"-",missingSEMESTERs$SEMESTER[iyear],". No samples found. Looking at nearest neighbor. - MARKET_CODE:",marketCode),label=NULL,append=T)
+        # select length samples closest in time to target year/SEMESTER
+        numSamples <- missing_length_by_semester_neighbor(SEMESTERData,missingSEMESTERs$YEAR[iyear],missingSEMESTERs$SEMESTER[iyear],nLengthSamples,outputDir,logfile)
+        if (dim(numSamples)[1]==0) {
+          # Still no samples, borrow from main Fleet in closest year. Presumably dealer still categorizes a small as a small
+          # regardless of NEGEAR
+          SEMESTERDataGear <- data$landings %>% dplyr::filter(MARKET_CODE == marketCode)
+          numSamples <- missing_length_by_semester_neighbor(SEMESTERDataGear,missingSEMESTERs$YEAR[iyear],missingSEMESTERs$SEMESTER[iyear],nLengthSamples,outputDir,logfile)
+          mainGearType <- numSamples$NEGEAR
+          mainGear <- T
+        }
+        #stop("PROBLEM!!!. Finding zero length samples in all previous years")
       }
-      #stop("PROBLEM!!!. Finding zero length samples in all previous years")
-    }
 
-    # Update the data with length samples
+      # Update the data with length samples
 
-    if (mainGear == T) {
-      # update year/SEMESTER info with filled in data
-      data <- update_length_samples(data,missingSEMESTERs[iyear,],gearType,marketCode,numSamples,mainGearType,TIME="SEMESTER")
-      # write to logfile
-      write_to_logfile(outputDir,logfile,data=paste0("Gear: ",gearType," - ",missingSEMESTERs$YEAR[iyear],"-",missingSEMESTERs$SEMESTER[iyear]," used length samples from ",numSamples$YEAR,"-",numSamples$SEMESTER,"   - MARKET_CODE:",marketCode,". From NEGEAR = ",mainGearType),label=NULL,append=T)
+      if (mainGear == T) {
+        # update year/SEMESTER info with filled in data
+        data <- update_length_samples(data,missingSEMESTERs[iyear,],gearType,marketCode,numSamples,mainGearType,TIME="SEMESTER")
+        # write to logfile
+        write_to_logfile(outputDir,logfile,data=paste0("Gear: ",gearType," - ",missingSEMESTERs$YEAR[iyear],"-",missingSEMESTERs$SEMESTER[iyear]," used length samples from ",numSamples$YEAR,"-",numSamples$SEMESTER,"   - MARKET_CODE:",marketCode,". From NEGEAR = ",mainGearType),label=NULL,append=T)
 
-    } else {
-      # update year/SEMESTER info with filled in data
-      data <- update_length_samples(data,missingSEMESTERs[iyear,],gearType,marketCode,numSamples,TIME="SEMESTER")
-      # write to logfile
-      write_to_logfile(outputDir,logfile,data=paste0("Gear: ",gearType," - ",missingSEMESTERs$YEAR[iyear],"-",missingSEMESTERs$SEMESTER[iyear]," used length samples from ",numSamples$YEAR,"-",numSamples$SEMESTER,"   - MARKET_CODE:",marketCode),label=NULL,append=T)
+      } else {
+        # update year/SEMESTER info with filled in data
+        data <- update_length_samples(data,missingSEMESTERs[iyear,],gearType,marketCode,numSamples,TIME="SEMESTER")
+        # write to logfile
+        write_to_logfile(outputDir,logfile,data=paste0("Gear: ",gearType," - ",missingSEMESTERs$YEAR[iyear],"-",missingSEMESTERs$SEMESTER[iyear]," used length samples from ",numSamples$YEAR,"-",numSamples$SEMESTER,"   - MARKET_CODE:",marketCode),label=NULL,append=T)
+      }
     }
   }
-
 
   return(data)
 }

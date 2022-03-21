@@ -7,6 +7,10 @@
 #'@param recodeOtherGear Numeric scalar. Arbitrary code to use for "other gears" that contribute little to landings
 #'@param landingsThresholdGear Numeric scalar. (Proportion). Determines the proportion of landings that have to be satisfied before all other landings by gear are lumped into "other gear" category.
 #'This is passed via the main function (\code{aggregate_landings})
+#'@param outputDir Character string. Path to output directory (png files saved here)
+#'@param outputPlots Boolean. Should plots be created. T or F (Default = F)
+#'@param logFile character string. Specify the name for the log file generated describing all decisions made.
+#'
 #'
 #'@return List
 #'
@@ -25,9 +29,9 @@ aggregate_gear <- function(data,recodeOtherGear,landingsThresholdGear,speciesNam
   # find gears that make up "threshold" % of catch overall. Valid assumption?
   # totl landings by group
   aggTopPercent <- landings %>%
-    group_by(NEGEAR) %>%
-    summarise(totalLandings = sum(landings_land, na.rm = TRUE)) %>%
-    arrange(desc(totalLandings))
+    dplyr::group_by(NEGEAR) %>%
+    dplyr::summarise(totalLandings = sum(landings_land, na.rm = TRUE)) %>%
+    dplyr::arrange(desc(totalLandings))
 
   plot_landings_by_gear(speciesName,landings,1,outputPlots,outputDir,"1b")
 
@@ -66,6 +70,17 @@ aggregate_gear <- function(data,recodeOtherGear,landingsThresholdGear,speciesNam
   filteredLandings <- rbind(filteredLandings,as.data.frame(theRestLandings))
 
   plot_landings_by_gear(speciesName,filteredLandings,landingsThresholdGear,outputPlots,outputDir,"1c")
+
+  aggTopPercent <- landings %>%
+    dplyr::group_by(NEGEAR) %>%
+    dplyr::summarise(totalLandings = sum(landings_land, na.rm = TRUE)) %>%
+    dplyr::arrange(desc(totalLandings))%>%
+    dplyr::mutate(cum_sum=cumsum(totalLandings),
+                  percent=cum_sum/sum(totalLandings))
+  print(aggTopPercent)
+
+  write_to_logfile(outputDir,logfile,as.data.frame(aggTopPercent),label="Landings by selected gear type (NEGEAR):",append = T)
+
 
   # update sample lengthsData to reflect gear aggregation
   lengthData$NEGEAR[!(lengthData$NEGEAR  %in% gearsChosen)] <- recodeOtherGear

@@ -58,7 +58,7 @@ summary_stats <- function(data,speciesName,outputDir,outputPlots) {
   png(paste0(outputDir,"/3_length_samples.png"))
   lengthSamples <- data %>% group_by(YEAR,QTR) %>% summarize(nSamples=sum(len_numLengthSamples,na.rm = TRUE))
   g <- ggplot() +
-    geom_col(lengthSamples, mapping=aes(x=YEAR, y = nSamples, fill=QTR)) +
+    geom_col(lengthSamples, mapping=aes(x=YEAR, y = nSamples, fill=as.factor(QTR))) +
     theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
     labs(title = paste0("number of length samples")) +
     ylab("n")

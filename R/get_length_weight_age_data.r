@@ -50,7 +50,8 @@
 #' codPull <- get_length_weight_data(channel,species=73)
 #'}
 #'
-#' @export
+#'@noRd
+
 
 
 get_length_weight_age_data <- function(channel, year=1994, species="all", sex="all"){

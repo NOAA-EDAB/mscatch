@@ -13,7 +13,7 @@
 #'
 #'@noRd
 
-missing_length_by_semester_neighbor <- function(SEMESTERData,iyear,isem,nLengthSamples) {
+missing_length_by_semester_neighbor <- function(SEMESTERData,iyear,isem,nLengthSamples,outputDir,logfile) {
 
   # select a vector of Years/SEMESTERs with +ve number of length samples
   closestYearSEMESTERs <- SEMESTERData %>%
@@ -30,6 +30,10 @@ missing_length_by_semester_neighbor <- function(SEMESTERData,iyear,isem,nLengthS
   numSamples <- SEMESTERData %>%
     dplyr::filter(YEAR==useYear$YEAR, SEMESTER==useYear$SEMESTER, len_numLengthSamples >= nLengthSamples ) %>%
     dplyr::select(YEAR,SEMESTER,NEGEAR,len_totalNumLen,len_numLengthSamples)
+
+  message(paste0("Nearest neighbor: ",useYear$YEAR,"-",useYear$SEMESTER))
+  write_to_logfile(outputDir,logfile,data=paste0("Nearest neighbor: ",useYear$YEAR,"-",useYear$SEMESTER),label=NULL,append=T)
+
 
   # incase there are multiple fleets with same number of length samples
   numSamples <- numSamples %>% dplyr::filter(len_numLengthSamples==max(len_numLengthSamples))

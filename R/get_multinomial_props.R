@@ -3,7 +3,7 @@
 #' Function to compute proportions-at-age for each length using multinomial approach
 #' From Chris Legault (which was based on code from Mike Bednarski)
 #'
-#' @param ageData
+#' @param ageData Data frame
 #' @param small.len Numeric scalar. Smallest length to be estimated (Usually based on observations for the year)
 #' @param big.len Numeric scalar. Largest length to be estimated (Usually based on observations for the year)
 #' @param small.age Numeric scalar.

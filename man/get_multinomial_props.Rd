@@ -25,6 +25,8 @@ get_multinomial_props(
 
 \item{ref.age}{Numeric scalar. Used in the GLM as the age against which all
 the other ages are estimated. It is typically the most abundant age.}
+
+\item{ageData}{Data frame}
 }
 \value{
 List
