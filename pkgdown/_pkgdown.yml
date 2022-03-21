@@ -5,13 +5,21 @@ reference:
   desc: "Main functions to aggregate landings and expand"
 - contents:
   - get_sample_data
+  - get_species_object
   - aggregate_landings
   - fit_length_weight
   - expand_landings_to_lengths
+  - get_multinomial_props
+  - create_age_length_key
 - title: "Lazy Data"
   desc: "Data loaded with the package"
 - contents:
   - marketCodeLookupTable
+  - speciesLookupTable
+- title: "Helper functions"
+  desc: "Aid in manipulation of data"
+- contents:
+  - combine_age_data
   - speciesLookupTable
 - title: "Package info"
   desc: ""
