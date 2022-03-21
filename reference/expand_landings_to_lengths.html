@@ -100,8 +100,8 @@
 <dd><p>Year of landings</p></dd>
 <dt>NEGEAR</dt>
 <dd><p>3 digit gear code as defined in cfdbs.gear</p></dd>
-<dt>QTR</dt>
-<dd><p>Quarter year of landings (The presence of this field depends on whether it was present in the <code>landingsData</code></p></dd>
+<dt>TIME</dt>
+<dd><p>Quarter/Half year of landings (The presence of this field depends on whether it was present in the <code>landingsData</code></p></dd>
 <dt>MARKET_CODE</dt>
 <dd><p>Market code assigned to landed fish (The presence of this field depends on whether it was present in the <code>landingsData</code></p></dd>
 <dt>LENGTH</dt>
@@ -125,7 +125,7 @@ Therefore when exponentiating a correction for the estimate is required:</p>
     
 
 
-<p>For each unique category (YEAR, QTR, NEGEAR, MARKET_CODE) weights (mean weights, metric tons)
+<p>For each unique category (YEAR, TIME, NEGEAR, MARKET_CODE) weights (mean weights, metric tons)
 are attributed to the sampled individuals lengths using the weight-length relationship above.
 This distribution of weights by length is then scaled such that
 the sum of weights (over lengths) = the total landed weight from the landingsData.

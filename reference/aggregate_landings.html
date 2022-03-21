@@ -96,7 +96,8 @@ length sample availability. Output document created and a logfile to inform the 
   otherGear <span class="op">=</span> <span class="st">"998"</span>,
   outputDir <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"output"</span><span class="op">)</span>,
   outputPlots <span class="op">=</span> <span class="cn">F</span>,
-  logfile <span class="op">=</span> <span class="st">"logFile.txt"</span>
+  logfile <span class="op">=</span> <span class="st">"logFile.txt"</span>,
+  speciesRules <span class="op">=</span> <span class="cn">NULL</span>
 <span class="op">)</span></code></pre></div>
     </div>
 
@@ -130,6 +131,9 @@ This is the group of gear types that land the species of interest but in small n
 <dd><p>Boolean. Should plots be created. T or F (Default = F)</p></dd>
 <dt>logfile</dt>
 <dd><p>Character string. Specify the name for the log file generated describing all decisions made.</p></dd>
+<dt>speciesRules</dt>
+<dd><p>List. Containing species specific rules. Default = NULL (Fully automated).
+Note:  Predefined <code>speciesRules</code> will be bundled with the package for select species</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>

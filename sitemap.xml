@@ -43,13 +43,25 @@
     <loc>https://noaa-edab.github.io/mscatch/reference/aggregate_landings.html</loc>
   </url>
   <url>
+    <loc>https://noaa-edab.github.io/mscatch/reference/combine_age_data.html</loc>
+  </url>
+  <url>
+    <loc>https://noaa-edab.github.io/mscatch/reference/create_age_length_key.html</loc>
+  </url>
+  <url>
     <loc>https://noaa-edab.github.io/mscatch/reference/expand_landings_to_lengths.html</loc>
   </url>
   <url>
     <loc>https://noaa-edab.github.io/mscatch/reference/fit_length_weight.html</loc>
   </url>
   <url>
+    <loc>https://noaa-edab.github.io/mscatch/reference/get_multinomial_props.html</loc>
+  </url>
+  <url>
     <loc>https://noaa-edab.github.io/mscatch/reference/get_sample_data.html</loc>
+  </url>
+  <url>
+    <loc>https://noaa-edab.github.io/mscatch/reference/get_species_object.html</loc>
   </url>
   <url>
     <loc>https://noaa-edab.github.io/mscatch/reference/index.html</loc>
