@@ -7,6 +7,10 @@
 combine_age_data(ageSurvey, ageComland, aggregate_to)
 }
 \arguments{
+\item{ageSurvey}{Data frame}
+
+\item{ageComland}{Data frame}
+
 \item{aggregate_to}{Character string. Level of aggregation for all MARKET_CODES and gears ("QTR", "YEAR", "SEMESTER", MIX").
 Default = YEAR.}
 }
@@ -17,5 +21,5 @@ Data frame of combined length and ages across time
 \item{}{}
 }
 \description{
-Combine age data from svdbs and cfdbs
+Combines the age data from the survey and commercial samples
 }

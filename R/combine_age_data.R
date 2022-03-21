@@ -1,8 +1,9 @@
 #' Combine age data from svdbs and cfdbs
 #'
+#' Combines the age data from the survey and commercial samples
 #'
-#'@param ageSurvey
-#'@param ageComland
+#'@param ageSurvey Data frame
+#'@param ageComland Data frame
 #'@param aggregate_to Character string. Level of aggregation for all MARKET_CODES and gears ("QTR", "YEAR", "SEMESTER", MIX").
 #'Default = YEAR.
 #'

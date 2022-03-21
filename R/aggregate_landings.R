@@ -103,6 +103,7 @@ aggregate_landings <- function(landingsData,
   } else {
     # use user defined gear aggregation
     data <- aggregate_gear_rules(data,speciesRules,logfile,outputDir,outputPlots)
+    #data2 <- compare_gear_lengths(data,pValue,outputDir,logfile)
     gearList <- c(unique(data$landings$NEGEAR),otherGear)
     mainGearType <- gearList[1]
   }
@@ -473,8 +474,8 @@ aggregate_landings <- function(landingsData,
     # no length samples for any market codes. Therefore cant obtain a scaling.
     # Have to find nearest neighbor where Unclassifieds have samples.
     if (dim(lengthDist)[1] == 0){
-      message(paste0("Using nearest neighbor: Unclassified have no samples for YEAR in any MARKET_CODES = ", missingRow$YEAR ))
-      write_to_logfile(outputDir,logfile,data=paste0("Using nearest neighbor: Unclassified have no samples for YEAR in any MARKET_CODES = ", missingRow$YEAR),label=NULL,append=T)
+      message(paste0("Using nearest neighbor: Unclassified have no samples in ",missingRow$YEAR," by NEGEAR ",missingRow$NEGEAR," for any MARKET_CODE "  ))
+      write_to_logfile(outputDir,logfile,data=paste0("Using nearest neighbor: Unclassified have no samples in ",missingRow$YEAR," by NEGEAR ",missingRow$NEGEAR," for any MARKET_CODE "),label=NULL,append=T)
 
       UNData <- data$landings %>% dplyr::filter(NEGEAR == missingRow$NEGEAR,MARKET_CODE=="UN")
       if (aggregate_to == "SEMESTER") {
