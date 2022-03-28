@@ -24,24 +24,38 @@ plot_length_histogram <- function(lengthData,outputDir,outputPlots){
   # check to see if any length data
   if (any(!is.na(lengthDataGEARS$LENGTH))) {
 
+
     png(paste0(outputDir,"/5a_lengths_by_gear.png"))
 
     p <- ggplot(data = lengthDataGEARS) +
       geom_bar(stat="identity",mapping = aes(x=LENGTH,y=numlens),na.rm=T) +
       facet_wrap(~NEGEAR,scales="free_y",nrow=length(unique(lengthData$NEGEAR)), ncol = 1) +
-      theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-      scale_x_discrete(name="Length (cm)", breaks=seq(0, max(lengthData$LENGTH),10))
+      # scale_x_discrete(name="Length (cm)",
+      #                  breaks=seq(0,max(lengthData$LENGTH),10)) +
+      ggplot2::ylab("Number at length") +
+      ggplot2::xlab("Length (cm)") +
+      theme(axis.text.x = element_text(angle = 90, hjust = 1))
     print(p)
     dev.off()
 
-    png(paste0(outputDir,"/5b_market_category_lengths_by_gear.png"))
 
+    png(paste0(outputDir,"/5b_market_category_lengths_by_gear.png"))
     p <- ggplot(data = lengthDataGEARS) +
       geom_bar(stat="identity",mapping = aes(x=LENGTH,y=numlens),na.rm=T) +
-      facet_wrap(~NEGEAR+MARKET_CODE,scales="free_y",nrow=length(unique(lengthData$NEGEAR)), ncol = length(unique(lengthData$MARKET_CODE))) +
+      ggplot2::facet_grid(NEGEAR~MARKET_CODE,
+                          scales="free_y") +
       theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-      scale_x_discrete(name="Length (cm)", breaks=seq(0, max(lengthData$LENGTH),10))
+      #scale_x_discrete(name="Length (cm)", breaks=seq(0, max(lengthData$LENGTH),10))+
+      ggplot2::xlab("Length (cm)") +
+      ggplot2::ylab("Number at length")
     print(p)
+
+    # p <- ggplot(data = lengthDataGEARS) +
+    #   geom_bar(stat="identity",mapping = aes(x=LENGTH,y=numlens),na.rm=T) +
+    #   facet_wrap(~NEGEAR+MARKET_CODE,scales="free_y",nrow=length(unique(lengthData$NEGEAR)), ncol = length(unique(lengthData$MARKET_CODE))) +
+    #   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    #   scale_x_discrete(name="Length (cm)", breaks=seq(0, max(lengthData$LENGTH),10))
+    # print(p)
     dev.off()
 
 
@@ -52,7 +66,9 @@ plot_length_histogram <- function(lengthData,outputDir,outputPlots){
       geom_bar(stat="identity",mapping = aes(x=LENGTH,y=numlens),na.rm=T) +
       facet_wrap(~MARKET_CODE,scales="free_y",nrow = length(unique(lengthData$MARKET_CODE)),ncol=1) +
       theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-      scale_x_discrete(name="Length (cm)", breaks=seq(0, max(lengthData$LENGTH),10))
+      #scale_x_discrete(name="Length (cm)", breaks=seq(0, max(lengthData$LENGTH),10)) +
+      ggplot2::xlab("Length (cm)") +
+      ggplot2::ylab("Number at length")
     print(p)
 
     dev.off()

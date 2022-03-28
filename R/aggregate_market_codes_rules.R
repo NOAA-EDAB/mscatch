@@ -91,6 +91,19 @@ aggregate_market_codes_rules <- function(data,speciesObject,outputDir,outputPlot
     dplyr::summarise(NUMLEN = sum(as.numeric(NUMLEN),na.rm=T),
                      .groups="drop")
 
+  png(paste0(outputDir,"/6a_market_category_lengths.png"))
+  lengthDataGEARS <- lengthData %>%
+    dplyr::group_by(NEGEAR,MARKET_CODE,LENGTH) %>%
+    dplyr::summarise(numlens=sum(as.numeric(NUMLEN)))
+  p <- ggplot(data = lengthDataGEARS) +
+    geom_bar(stat="identity",mapping = aes(x=LENGTH,y=numlens),na.rm=T) +
+    facet_wrap(~MARKET_CODE,scales="free_y",nrow = length(unique(lengthData$MARKET_CODE)),ncol=1) +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+    scale_x_discrete(name="Length (cm)", breaks=seq(0, max(lengthData$LENGTH),10))
+  print(p)
+
+  dev.off()
+
   newmarket <- landings %>%
     dplyr::group_by(MARKET_CODE) %>%
     dplyr::summarise(totalLandings = sum(landings_land, na.rm = TRUE),len_numLengthSamples=sum(len_numLengthSamples,na.rm=T)) %>%
