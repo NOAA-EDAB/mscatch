@@ -71,7 +71,7 @@ aggregate_gear <- function(data,recodeOtherGear,landingsThresholdGear,speciesNam
 
   plot_landings_by_gear(speciesName,filteredLandings,landingsThresholdGear,outputPlots,outputDir,"1c")
 
-  aggTopPercent <- landings %>%
+  aggTopPercent <- filteredLandings %>%
     dplyr::group_by(NEGEAR) %>%
     dplyr::summarise(totalLandings = sum(landings_land, na.rm = TRUE)) %>%
     dplyr::arrange(desc(totalLandings))%>%
