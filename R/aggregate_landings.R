@@ -6,6 +6,8 @@
 #'All plotting functions will need to be finined/generalized
 #'rmd file needs to be created to report all decisions
 #'
+#' @param channel an Object inherited from \link[DBI]{DBIConnection-class}.
+#' This object is used to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})
 #'@param landingsData Tidy data frame. Landings by YEAR,QTR,NEGEAR,MARKET_CODE,landings_land,landings_nn,len_totalNumLen,len_numLengthSampls
 #'@param lengthData Tidy data frame. Length data by YEAR,QTR,NEGEAR,MARKET_CODE, LENGTH, NUMLEN
 #'@param speciesName Character string. speciesName for data used. (This is used in plotting only)
@@ -33,7 +35,8 @@
 #'
 #'@export
 
-aggregate_landings <- function(landingsData,
+aggregate_landings <- function(channel,
+                               landingsData,
                                lengthData,
                                speciesName,
                                landingsThresholdGear = .90,
@@ -107,6 +110,13 @@ aggregate_landings <- function(landingsData,
     gearList <- c(unique(data$landings$NEGEAR),otherGear)
     mainGearType <- gearList[1]
   }
+  # obtain names of gear types and write to log file
+  gearNames <- comlandr::get_gears(channel,substr(head(gearList,-1),start=1,stop=2))$data %>%
+    dplyr::select(NEGEAR,GEARNM) %>%
+    dplyr::filter(NEGEAR %in% gearList) %>%
+    dplyr::distinct()
+
+  write_to_logfile(outputDir,logfile,data= gearNames,label="Gear Codes and description:",append=T)
 
 
   # look at the summary stats/plots after aggregation
@@ -131,6 +141,13 @@ aggregate_landings <- function(landingsData,
   #############################################################################
   #############################################################################
   #############################################################################
+  # obtain names of gear types and write to log file
+  marketCodeNames <- comlandr::get_species_itis(channel,speciesName)$data %>%
+    dplyr::select(MARKET_CODE,MARKET_DESC) %>%
+    dplyr::distinct()
+
+  write_to_logfile(outputDir,logfile,data= marketCodeNames,label="Market Codes and description:",append=T)
+
 
   message("Aggregating by market code ...")
 
@@ -143,6 +160,8 @@ aggregate_landings <- function(landingsData,
   }
 
   marketCodeList <- unique(data$landings$MARKET_CODE)
+
+
 
   # aggregate over QTRs based on semester designation
   if (aggregate_to == "SEMESTER") {
@@ -162,6 +181,9 @@ aggregate_landings <- function(landingsData,
       dplyr::summarise(NUMLEN = sum(NUMLEN),
                     .groups="drop")
   }
+
+  plot_market_code_by_time(data,9,outputDir,outputPlots,aggregate_to = aggregate_to)
+
 
   ## Return data without any length borrowing
   #  This terminates the algorithm without any length borrowing.
@@ -226,8 +248,6 @@ aggregate_landings <- function(landingsData,
   # 3. look at QTR to see if need to lump quarters or borrow from other years
   # plot all diagnostics again with current aggregated data
 
-
-  plot_market_code_by_time(data,9,outputDir,outputPlots,aggregate_to = aggregate_to)
   write_to_logfile(outputDir,logfile,paste0("Length samples started in ",as.character(sampleStartYear),". All landings prior to this year will use this years data"),label=NULL,append = T)
   #write_to_logfile(outputDir,logfile,"Other gear (code 998) will be aggregated similarly to other gears",label="market code by qrt",append = T)
 
