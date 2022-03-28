@@ -36,6 +36,8 @@ This is the database that the population dynamics (Pop Dy) branch use for their 
 
 * The DOCUMENTATION is also on the network drive
 
+* Confluence page for [Stock Efficiency](https://www.st.nmfs.noaa.gov/confluence/display/STOCKEFFDOC/StockEff+Documentation)
+
 The landing portion are stored in the Stockeff.MV_cf_Landings materialized view. (This is equivalent to AA Trip and AA Species tables joined). Each record represents trip and species data for a specific landed species. A trip will appear as many times as there are landed species in that trip
 
 * STOCKEFF.MV_CF_LANDINGS  - (WOLANDT/S,WODET/S, CFDETT/S tables combined)
