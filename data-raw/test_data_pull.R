@@ -37,8 +37,8 @@ test_data_pull <- function(channel,species=164744,species_itis = T,area="all", f
   # this needs to be checked.
   # filter all entries labelled quarter = 0
   sampleLandings <- sampleLandings %>%
-    dplyr::select_all() %>%
-    dplyr::filter(QTR != "0")
+   dplyr::select_all() %>%
+   dplyr::filter(QTR != "0")
 
   #############################################################################################################
   # pull sample length data and massage it

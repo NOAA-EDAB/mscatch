@@ -5,6 +5,7 @@
 \title{Landings data aggregated based on length sample availability}
 \usage{
 aggregate_landings(
+  channel,
   landingsData,
   lengthData,
   speciesName,
@@ -22,6 +23,9 @@ aggregate_landings(
 )
 }
 \arguments{
+\item{channel}{an Object inherited from \link[DBI]{DBIConnection-class}.
+This object is used to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})}
+
 \item{landingsData}{Tidy data frame. Landings by YEAR,QTR,NEGEAR,MARKET_CODE,landings_land,landings_nn,len_totalNumLen,len_numLengthSampls}
 
 \item{lengthData}{Tidy data frame. Length data by YEAR,QTR,NEGEAR,MARKET_CODE, LENGTH, NUMLEN}

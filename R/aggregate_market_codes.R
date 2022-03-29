@@ -59,7 +59,10 @@ aggregate_market_codes <- function(data,pValue,outputDir,outputPlots,logfile) {
       dplyr::group_by(MARKET_CODE) %>%
       dplyr::summarise(totalLandings = sum(landings_land, na.rm = TRUE),len_numLengthSamples=sum(len_numLengthSamples,na.rm=T)) %>%
       dplyr::arrange(desc(totalLandings)) %>%
-      dplyr::mutate(percent = totalLandings/sum(totalLandings) , cumsum=cumsum(totalLandings),cum_percent=cumsum/sum(totalLandings))
+      dplyr::mutate(percent = totalLandings/sum(totalLandings) ,
+                    cumsum=cumsum(totalLandings),
+                    cum_percent=cumsum/sum(totalLandings)) %>%
+      dplyr::select(-cumsum)
 
     plot_market_codes(newmarket,8,outputDir,outputPlots)
   }

@@ -30,16 +30,16 @@ summary_stats <- function(data,speciesName,outputDir,outputPlots) {
   # print(g)
 
   # total landings by gear over time
-  png(paste0(outputDir,"/1_landings_by_gear.png"))
-  gears <- data %>% group_by(YEAR,NEGEAR)%>%summarize(totLand=sum(landings_land,na.rm = TRUE))
-  g <- ggplot() +
-    geom_col(gears, mapping = aes(x=YEAR, y=totLand, fill = NEGEAR)) +
-    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-    labs(title = paste0("landings of ",speciesName," by NEGEAR")) +
-    ylab("Total Landings (lbs)")
-
-  print(g)
-  dev.off()
+  # png(paste0(outputDir,"/1_landings_by_gear.png"))
+  # gears <- data %>% group_by(YEAR,NEGEAR)%>%summarize(totLand=sum(landings_land,na.rm = TRUE))
+  # g <- ggplot() +
+  #   geom_col(gears, mapping = aes(x=YEAR, y=totLand, fill = NEGEAR)) +
+  #   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  #   labs(title = paste0("landings of ",speciesName," by NEGEAR")) +
+  #   ylab("Total Landings (lbs)")
+  #
+  # print(g)
+  # dev.off()
 
   # total landings by market category over time
   png(paste0(outputDir,"/2_landings_by_market_cat.png"))
@@ -60,7 +60,7 @@ summary_stats <- function(data,speciesName,outputDir,outputPlots) {
   g <- ggplot() +
     geom_col(lengthSamples, mapping=aes(x=YEAR, y = nSamples, fill=as.factor(QTR))) +
     theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-    labs(title = paste0("number of length samples")) +
+    labs(title = paste0("number of length samples"),fill="QTR") +
     ylab("n")
 
   print(g)
