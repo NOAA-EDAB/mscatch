@@ -84,6 +84,7 @@ length sample availability. Output document created and a logfile to inform the 
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">aggregate_landings</span><span class="op">(</span>
+  <span class="va">channel</span>,
   <span class="va">landingsData</span>,
   <span class="va">lengthData</span>,
   <span class="va">speciesName</span>,
@@ -103,7 +104,10 @@ length sample availability. Output document created and a logfile to inform the 
 
     <div id="arguments">
     <h2>Arguments</h2>
-    <dl><dt>landingsData</dt>
+    <dl><dt>channel</dt>
+<dd><p>an Object inherited from <a href="https://dbi.r-dbi.org/reference/DBIConnection-class.html" class="external-link">DBIConnection-class</a>.
+This object is used to communicate with the database engine. (see <code><a href="https://andybeet.github.io/dbutils/reference/connect_to_database.html" class="external-link">connect_to_database</a></code>)</p></dd>
+<dt>landingsData</dt>
 <dd><p>Tidy data frame. Landings by YEAR,QTR,NEGEAR,MARKET_CODE,landings_land,landings_nn,len_totalNumLen,len_numLengthSampls</p></dd>
 <dt>lengthData</dt>
 <dd><p>Tidy data frame. Length data by YEAR,QTR,NEGEAR,MARKET_CODE, LENGTH, NUMLEN</p></dd>
