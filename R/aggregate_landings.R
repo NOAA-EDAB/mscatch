@@ -6,7 +6,7 @@
 #'All plotting functions will need to be finined/generalized
 #'rmd file needs to be created to report all decisions
 #'
-#' @param channel an Object inherited from \link[DBI]{DBIConnection-class}.
+#'@param channel an Object inherited from \link[DBI]{DBIConnection-class}.
 #' This object is used to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})
 #'@param landingsData Tidy data frame. Landings by YEAR,QTR,NEGEAR,MARKET_CODE,landings_land,landings_nn,len_totalNumLen,len_numLengthSampls
 #'@param lengthData Tidy data frame. Length data by YEAR,QTR,NEGEAR,MARKET_CODE, LENGTH, NUMLEN
@@ -50,41 +50,17 @@ aggregate_landings <- function(channel,
                                outputPlots=F,
                                logfile="logFile.txt",
                                speciesRules = NULL) {
+  ## CHECKS QA/QC #################################################
 
-  if (!(aggregate_to %in% c("YEAR","QTR","MIX","SEMESTER"))) {
-    stop(paste0("Aggregation to ",aggretage_to," is not currently implemented. Please create an issue
-                at https://github.com/NOAA-EDAB/mscatch/issues"))
+  # Perform data checks, qa/qc and return summarized data as a list
+  data <- checks_qa_qc(landingsData,lengthData,aggregate_to)
 
-  }
-
-  write_to_logfile(outputDir,logfile,"",label="DECISIONS MADE DURING AGGREGATION OF DATA")
-  write_to_logfile(outputDir,logfile,data=as.character(speciesName),label="Species Name:",append=T)
-  # write function call to log file
-  write_to_logfile(outputDir,logfile,data=deparse(dbutils::capture_function_call()),label="Arguments passed to aggregate_landings:",append=T)
-
-  # cleans landings data and length data of NAs
-  landingsData <- landingsData %>%
-    dplyr::group_by(YEAR,QTR,NEGEAR,MARKET_CODE) %>%
-    dplyr::summarise(landings_land=sum(landings_land, na.rm=T),landings_nn=sum(landings_nn, na.rm=T),len_totalNumLen=sum(len_totalNumLen,na.rm=T),
-                     len_numLengthSamples=sum(len_numLengthSamples, na.rm=T),
-                     .groups="drop")
-  lengthData <- lengthData %>%
-    dplyr::group_by(YEAR,QTR,NEGEAR,MARKET_CODE,LENGTH) %>%
-    dplyr::summarise(NUMLEN = sum(as.numeric(NUMLEN),na.rm=T),.groups="drop")
-
-  # create list for data.
-  # landing and lengths will from this point on be parts of a list.
-  data <- list()
-  data$landings <- landingsData
-  data$lengthData <- lengthData
+  # First year in which length samples were taken
   sampleStartYear <- min(as.numeric(unique(data$lengthData$YEAR)))
   numYears <- length(unique(data$landings$YEAR))
 
-  #######################################################
-  ####### GEARs #########################################
-  #######################################################
+  ## GEARs #####################################################
   message("Aggregating by gear type ...")
-  # Now deal with Gary's schematic.
   # 1. aggregate the gears based on landings
 
   if(is.null(speciesRules)) {
@@ -106,11 +82,11 @@ aggregate_landings <- function(channel,
   } else {
     # use user defined gear aggregation
     data <- aggregate_gear_rules(data,speciesRules,logfile,outputDir,outputPlots)
-    #data2 <- compare_gear_lengths(data,pValue,outputDir,logfile)
     gearList <- c(unique(data$landings$NEGEAR),otherGear)
     mainGearType <- gearList[1]
   }
-  # obtain names of gear types and write to log file
+  # obtain names of gear types and write to log file.
+  # Requires access to Databases
   gearNames <- comlandr::get_gears(channel,substr(head(gearList,-1),start=1,stop=2))$data %>%
     dplyr::select(NEGEAR,GEARNM) %>%
     dplyr::filter(NEGEAR %in% gearList) %>%
@@ -124,30 +100,21 @@ aggregate_landings <- function(channel,
   # take a look at length distribution of size categories
   plot_length_histogram(data$lengthData,outputDir,outputPlots)
 
-  #######################################################
-  ####### MARKET CODES ##################################
-  #######################################################
+  ## MARKET CODES ##################################
 
-  # 2 . combine market category (This will be difficult) market category description are unique to species and not ordinal.
-  # Use distributions to aggregate instead of Market category
+  # Combine market category
+  # Use user defined aggregation or length distributions to aggregate instead of Market category
   # Need to keep Unclassified and Unknown categories separate from known market categories
   # if market category has landings but no length data at all. Then the landings need to be lumped into a
-  # neighboring size class. Very subjective but dont lump into unclassified/ unknown
+  # neighboring size class. Very subjective but don't lump into unclassified/ unknown
 
-  #############################################################################
-  #############################################################################
-  #############################################################################
-  ##### WE NEED TO HAVE A BETTER METHOD OF AGGREGATING MARKET CODES HERE #####
-  #############################################################################
-  #############################################################################
-  #############################################################################
-  # obtain names of gear types and write to log file
+  # obtain market code descriptions and write to log file
+  # Requires database access
   marketCodeNames <- comlandr::get_species_itis(channel,speciesName)$data %>%
     dplyr::select(MARKET_CODE,MARKET_DESC) %>%
     dplyr::distinct()
 
   write_to_logfile(outputDir,logfile,data= marketCodeNames,label="Market Codes and description:",append=T)
-
 
   message("Aggregating by market code ...")
 
@@ -160,8 +127,6 @@ aggregate_landings <- function(channel,
   }
 
   marketCodeList <- unique(data$landings$MARKET_CODE)
-
-
 
   # aggregate over QTRs based on semester designation
   if (aggregate_to == "SEMESTER") {
@@ -185,72 +150,22 @@ aggregate_landings <- function(channel,
   plot_market_code_by_time(data,9,outputDir,outputPlots,aggregate_to = aggregate_to)
 
 
-  ## Return data without any length borrowing
+  # Return data without any length borrowing
   #  This terminates the algorithm without any length borrowing.
   if (!(borrowLengths)) {
-    # aggregate data over time
-    if (aggregate_to == "YEAR") {
-      data$landings <- data$landings %>%
-        dplyr::group_by(YEAR, NEGEAR) %>%
-        dplyr::summarise(landings_land = sum(landings_land),
-                         len_totalNumLen = sum(len_totalNumLen),
-                         len_numLengthSamples = sum(len_numLengthSamples),
-                         landings_nn = sum(landings_nn),
-                         .groups="drop")
-
-      data$lengthData <- data$lengthData %>%
-        dplyr::group_by(YEAR, NEGEAR,LENGTH) %>%
-        dplyr::summarise(NUMLEN = sum(NUMLEN),.groups="drop")
-
-    } else if (aggregate_to == "QTR") {
-      data$landings <- data$landings %>%
-        dplyr::group_by(YEAR, QTR, NEGEAR) %>%
-        dplyr::summarise(landings_land = sum(landings_land),
-                         len_totalNumLen = sum(len_totalNumLen),
-                         len_numLengthSamples = sum(len_numLengthSamples),
-                         landings_nn = sum(landings_nn),
-                         .groups="drop")
-
-      data$lengthData <- data$lengthData %>%
-        dplyr::group_by(YEAR,QTR, NEGEAR,LENGTH) %>%
-        dplyr::summarise(NUMLEN = sum(NUMLEN),.groups="drop")
-
-    } else if (aggregate_to == "SEMESTER") {
-      ## Assumes 1st SEMESTER = QTR 1 + 2
-      ## Assumes 2nd SEMESTER = QTR 3 + 4
-      data$landings <- data$landings %>%
-        dplyr::group_by(YEAR, SEMESTER, NEGEAR) %>%
-        dplyr::summarise(landings_land = sum(landings_land),
-                         len_totalNumLen = sum(len_totalNumLen),
-                         len_numLengthSamples = sum(len_numLengthSamples),
-                         landings_nn = sum(landings_nn),
-                         .groups="drop")
-
-      data$lengthData <- data$lengthData %>%
-        dplyr::group_by(YEAR,SEMESTER, NEGEAR,LENGTH) %>%
-        dplyr::summarise(NUMLEN = sum(NUMLEN),.groups="drop")
-    } else {# do nothing
-      stop("This isn't currently supported, please select a level of aggregation (\"QTR\", \"SEMESTER\", \"YEAR\")")
-
-    }
-
+    data <- output_data(data,aggregate_to)
+    write_to_logfile(outputDir,logfile,"",label="landings and length data returned without imputation")
     return(data)
-
   }
 
 
   ## Interpolation/imputation starts here
-
-  #######################################################
-  ####### QTR, SEMESTER, ANNUAL #########################
-  #######################################################
+  # QTR, SEMESTER, ANNUAL #############################################
 
   # 3. look at QTR to see if need to lump quarters or borrow from other years
   # plot all diagnostics again with current aggregated data
 
   write_to_logfile(outputDir,logfile,paste0("Length samples started in ",as.character(sampleStartYear),". All landings prior to this year will use this years data"),label=NULL,append = T)
-  #write_to_logfile(outputDir,logfile,"Other gear (code 998) will be aggregated similarly to other gears",label="market code by qrt",append = T)
-
 
   # find set of years where samples were not taken but landings were. Early years
   landYrs <- unique(data$landings$YEAR)
@@ -261,16 +176,15 @@ aggregate_landings <- function(channel,
   yrsList <- unique(data$landings$YEAR) # full list of years in landings data
 
 
-  ## Write out table of length Samples by gear type similar to A13, p 78 of mackerel 2017 assessment
-
+  # Write out table of length Samples by gear type similar to A13, p 78 of mackerel 2017 assessment
 
   # loop through NEGEAR / MARKET_CODE combinations to determine where to borrow length samples from
   # rules
-  print("Borrowing/Imputation")
+  message("Borrowing/Imputation")
   print(gearList)
   print(marketCodeList)
   for (gearType in gearList) { # loop over gear types
-    ## Check to see if any gear types have zero length samples
+    # Check to see if any gear types have zero length samples
     # If they do then aggregate with otherGear (May need an option to select gear type)
     zeroSamples <- data$landings %>% dplyr::filter(NEGEAR == gearType,len_numLengthSamples > 0)
     if ((nrow(zeroSamples) == 0) & (is.null(speciesRules))) {
@@ -377,7 +291,7 @@ aggregate_landings <- function(channel,
 
         }
 
-      ###################################################################################################
+
 
     } # marketCode
   } # gearType
@@ -391,13 +305,13 @@ aggregate_landings <- function(channel,
   gearList <- c(gearList,otherGear)
 
 
-  #############################################################################
-  #############################################################################
-  #############################################################################
-  ################################# UNCLASSIFIEDS #############################
-  #############################################################################
-  #############################################################################
-  #############################################################################
+  # ############################################################################
+  # ############################################################################
+  # ############################################################################
+  ## ############################### UNCLASSIFIEDS ##############################
+  # ############################################################################
+  # ############################################################################
+  # ############################################################################
 
   ## Aggregate UNclassified category for each gear type
   # We aggregate to the same level that the MARKET_CODE was aggregated. Either QTR or annual
