@@ -53,7 +53,7 @@ output_data <- function(data,aggregate_to) {
                        .groups="drop")
 
     data$lengthData <- data$lengthData %>%
-      dplyr::group_by(vYEAR,.data$SEMESTER, .data$NEGEAR,.data$LENGTH) %>%
+      dplyr::group_by(.data$YEAR,.data$SEMESTER, .data$NEGEAR,.data$LENGTH) %>%
       dplyr::summarise(NUMLEN = sum(.data$NUMLEN),.groups="drop")
   } else {# do nothing
     stop("This isn't currently supported, please select a level of aggregation (\"QTR\", \"SEMESTER\", \"YEAR\")")

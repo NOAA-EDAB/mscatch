@@ -2,9 +2,12 @@
 #'
 #' groups the data by time and summarizes, landings and length sample data after removing NA's
 #'
-#'@param data List. Landings data and length data
+#'@param landingsData Tidy data frame. Landings by YEAR,QTR,NEGEAR,MARKET_CODE,landings_land,landings_nn,len_totalNumLen,len_numLengthSampls
+#'@param lengthData Tidy data frame. Length data by YEAR,QTR,NEGEAR,MARKET_CODE, LENGTH, NUMLEN
 #'@param aggregate_to Character string. Level of aggregation for all MARKET_CODES and gears ("QTR", "YEAR", "SEMESTER", MIX").
-#'
+#'@param outputDir Character string. Path to output directory (png files saved here)
+#'@param logfile Character string. Specify the name for the log file generated describing all decisions made.
+
 #'@return List
 #'
 #'\item{landings}{same as input}
@@ -12,7 +15,7 @@
 #'
 #'@noRd
 
-checks_qa_qc <- function(landingsData, lengthData, aggregate_to) {
+checks_qa_qc <- function(landingsData, lengthData, aggregate_to,outputDir,logfile) {
 
   if (!(aggregate_to %in% c("YEAR","QTR","MIX","SEMESTER"))) {
     stop(paste0("Aggregation to ",aggregate_to," is not currently implemented. Please create an issue
