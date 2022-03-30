@@ -4,7 +4,7 @@
 \alias{get_species_object}
 \title{Get species object}
 \usage{
-get_species_object(species_itis)
+get_species_object(species_itis = NULL)
 }
 \arguments{
 \item{species_itis}{Numeric. Itis code for species}

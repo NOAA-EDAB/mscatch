@@ -53,7 +53,7 @@ aggregate_landings <- function(channel,
   ## CHECKS QA/QC #################################################
 
   # Perform data checks, qa/qc and return summarized data as a list
-  data <- checks_qa_qc(landingsData,lengthData,aggregate_to)
+  data <- checks_qa_qc(landingsData,lengthData,aggregate_to,outputDir,logfile)
 
   # First year in which length samples were taken
   sampleStartYear <- min(as.numeric(unique(data$lengthData$YEAR)))
