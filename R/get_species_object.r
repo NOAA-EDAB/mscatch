@@ -6,7 +6,24 @@
 #'
 #'@export
 
-get_species_object <- function(species_itis) {
+get_species_object <- function(species_itis = NULL) {
+
+  if (is.num(species_itis)) {
+    speciesRules <- list()
+    speciesRules$species_itis <- NULL
+    speciesRules$speciesName <- NULL
+    speciesRules$SVSPP <- NULL
+    speciesRules$temporalAggregation <- NULL
+    speciesRules$marketCodes <- NULL
+    speciesRules$gearCodes <- NULL
+    speciesRules$area <- NULL
+    speciesRules$LengthWeightData <- NULL
+    speciesRules$LengthWeightRelationships <- NULL
+    speciesRules$LengthWeightTimeBlocks <- NULL
+    speciesRules$AgeData <- NULL
+    speciesRules$AgeLengthKey <- NULL
+    speciesRules$startDate <- NULL
+  }
 
 
   if (species_itis == 172909) { # Yellowtail
@@ -144,6 +161,29 @@ get_species_object <- function(species_itis) {
     speciesRules$gearCodes <- data.frame()
     speciesRules$area <- c()
   }
+
+  if (species_itis == 167687 ) { # black seabass
+    speciesRules <- list()
+    speciesRules$species_itis <- 167687
+    speciesRules$speciesName <- "BLACK SEA BASS"
+    speciesRules$SVSPP <- 141
+    speciesRules$temporalAggregation <- "semester"
+    speciesRules$marketCodes <- data.frame(use = c("UN"),
+                                           combine=c("all"))
+    speciesRules$gearCodes <- data.frame(use="050",
+                                         combine="all")
+    speciesRules$area <- paste(c(340,465,467,468,510:515,520:526,530,533,534,
+                                 537:539,541:543,551,552,560:562,611:616,621:629,
+                                 631:640))
+    speciesRules$LengthWeightData <- "survey"
+    speciesRules$LengthWeightRelationships <- "semester"
+    speciesRules$LengthWeightTimeBlocks <- data.frame(start = c(),
+                                                      end = c())
+    speciesRules$AgeData <- c("commerical")
+    speciesRules$AgeLengthKey <- c("year","semester")
+    speciesRules$startDate <- NULL
+  }
+
 
   return(speciesRules)
 
