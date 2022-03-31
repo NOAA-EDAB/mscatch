@@ -55,6 +55,12 @@ aggregate_landings <- function(channel,
   # Perform data checks, qa/qc and return summarized data as a list
   data <- checks_qa_qc(landingsData,lengthData,aggregate_to,outputDir,logfile)
 
+  speciesRules <- expand_species_rules(speciesRules,outputDir,logfile)
+
+  plot_landings_by_type(speciesRules$speciesName,data$landings,1,outputPlots,outputDir,"3a",type="QTR")
+  plot_lengths_by_type(speciesRules$speciesName,data$landings,1,outputPlots,outputDir,"3c",type="QTR")
+
+
   # First year in which length samples were taken
   sampleStartYear <- min(as.numeric(unique(data$lengthData$YEAR)))
   numYears <- length(unique(data$landings$YEAR))
@@ -147,6 +153,9 @@ aggregate_landings <- function(channel,
                     .groups="drop")
   }
 
+  plot_landings_by_type(speciesRules$speciesName,data$landings,1,outputPlots,outputDir,"3b",type="SEMESTER")
+  plot_lengths_by_type(speciesRules$speciesName,data$landings,1,outputPlots,outputDir,"3d",type="SEMESTER")
+
   plot_market_code_by_time(data,9,outputDir,outputPlots,aggregate_to = aggregate_to)
 
 
@@ -154,7 +163,7 @@ aggregate_landings <- function(channel,
   #  This terminates the algorithm without any length borrowing.
   if (!(borrowLengths)) {
     data <- output_data(data,aggregate_to)
-    write_to_logfile(outputDir,logfile,"",label="landings and length data returned without imputation")
+    write_to_logfile(outputDir,logfile,"",label="landings and length data returned without imputation",append=T)
     return(data)
   }
 
