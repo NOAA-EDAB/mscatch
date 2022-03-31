@@ -35,6 +35,9 @@ aggregate_market_codes_rules <- function(data,speciesObject,outputDir,outputPlot
 
   print(market)
 
+  plot_landings_by_type(speciesObject$speciesName,landings,1,outputPlots,outputDir,"2a",type="market")
+  plot_lengths_by_type(speciesObject$speciesName,landings,1,outputPlots,outputDir,"2c",type="market")
+
   plot_market_codes(market,7,outputDir,outputPlots)
 
   ## Group based on user preference
@@ -90,6 +93,9 @@ aggregate_market_codes_rules <- function(data,speciesObject,outputDir,outputPlot
     dplyr::group_by(YEAR,QTR,NEGEAR,MARKET_CODE,LENGTH) %>%
     dplyr::summarise(NUMLEN = sum(as.numeric(NUMLEN),na.rm=T),
                      .groups="drop")
+
+  plot_landings_by_type(speciesObject$speciesName,landings,1,outputPlots,outputDir,"2b",type="market")
+  plot_lengths_by_type(speciesObject$speciesName,landings,1,outputPlots,outputDir,"2d",type="market")
 
   png(paste0(outputDir,"/6a_market_category_lengths.png"))
   lengthDataGEARS <- lengthData %>%

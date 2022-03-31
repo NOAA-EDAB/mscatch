@@ -26,6 +26,10 @@ aggregate_market_codes <- function(data,pValue,outputDir,outputPlots,logfile) {
     dplyr::arrange(desc(totalLandings))
   market <- market %>% dplyr::mutate(percent = totalLandings/sum(totalLandings), cum_percent=cumsum(percent))
 
+  plot_landings_by_type(speciesObject$speciesName,data$landings,1,outputPlots,outputDir,"2a",type="market")
+  plot_lengths_by_type(speciesObject$speciesName,data$landings,1,outputPlots,outputDir,"2c",type="market")
+
+
   plot_market_codes(market,7,outputDir,outputPlots)
 
 
@@ -63,6 +67,11 @@ aggregate_market_codes <- function(data,pValue,outputDir,outputPlots,logfile) {
                     cumsum=cumsum(totalLandings),
                     cum_percent=cumsum/sum(totalLandings)) %>%
       dplyr::select(-cumsum)
+
+
+    plot_landings_by_type(speciesObject$speciesName,data$landings,1,outputPlots,outputDir,"2b",type="market")
+    plot_lengths_by_type(speciesObject$speciesName,data$landings,1,outputPlots,outputDir,"2d",type="market")
+
 
     plot_market_codes(newmarket,8,outputDir,outputPlots)
   }

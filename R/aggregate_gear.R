@@ -33,7 +33,8 @@ aggregate_gear <- function(data,recodeOtherGear,landingsThresholdGear,speciesNam
     dplyr::summarise(totalLandings = sum(landings_land, na.rm = TRUE)) %>%
     dplyr::arrange(desc(totalLandings))
 
-  plot_landings_by_gear(speciesName,landings,1,outputPlots,outputDir,"1b")
+  plot_landings_by_type(speciesObject$speciesName,data$landings,1,outputPlots,outputDir,"1a",type="gear")
+  plot_lengths_by_type(speciesObject$speciesName,data$landings,1,outputPlots,outputDir,"1c",type="gear")
 
   # convert to % of total and reorder
   aggTopPercent <- mutate(aggTopPercent,cum_sum=cumsum(totalLandings),percent=cum_sum/sum(totalLandings))
@@ -58,8 +59,6 @@ aggregate_gear <- function(data,recodeOtherGear,landingsThresholdGear,speciesNam
   # concatenate 2 data frames
   filteredLandings <- rbind(filteredLandings,as.data.frame(theRestLandings))
 
-  plot_landings_by_gear(speciesName,filteredLandings,landingsThresholdGear,outputPlots,outputDir,"1c")
-
   aggTopPercent <- filteredLandings %>%
     dplyr::group_by(NEGEAR) %>%
     dplyr::summarise(totalLandings = sum(landings_land, na.rm = TRUE)) %>%
@@ -77,6 +76,11 @@ aggregate_gear <- function(data,recodeOtherGear,landingsThresholdGear,speciesNam
   aggregatedData <- list()
   aggregatedData$landings <- filteredLandings
   aggregatedData$lengthData <- lengthData
+
+  plot_landings_by_type(speciesObject$speciesName,aggregatedData$landings,landingsThresholdGear,outputPlots,outputDir,"1b",type="gear")
+  plot_lengths_by_type(speciesObject$speciesName,aggregatedData$landings,landingsThresholdGear,outputPlots,outputDir,"1d",type="gear")
+
+
 
   return(aggregatedData)
 }
