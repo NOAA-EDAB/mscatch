@@ -131,7 +131,7 @@ get_species_object <- function(species_itis = NULL, stock = NULL) {
 
 
 
-  } else if (species_itis == 172905 ) { #Winter flounder GB
+  } else if (species_itis == 172905 & stock == "GB") { #Winter flounder GB
     speciesRules <- list()
     speciesRules$species_itis <- 172905
     speciesRules$speciesName <- mscatch::speciesLookupTable %>%
@@ -155,7 +155,7 @@ get_species_object <- function(species_itis = NULL, stock = NULL) {
     speciesRules$AgeData <- c("commerical")
     speciesRules$AgeLengthKey <- c("year","semester")
     speciesRules$startDate <- 1964
-  } else if (species_itis == 172905 ) { #Winter flounder SNEMA
+  } else if (species_itis == 172905 & stock == "SNEMA" ) { #Winter flounder SNEMA
     speciesRules <- list()
     speciesRules$species_itis <- 172905
     speciesRules$speciesName <- mscatch::speciesLookupTable %>%
@@ -341,7 +341,7 @@ get_species_object <- function(species_itis = NULL, stock = NULL) {
     speciesRules$AgeLengthKey <- c("year","semester")
     speciesRules$startDate <- NA
   } else {
-    stop(paste0("Not coded for species itis code =  ",species_itis))
+    stop(paste0("Not coded for species itis code =  ",species_itis, " with stock = ",stock))
   }
 
 

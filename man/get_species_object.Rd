@@ -4,10 +4,12 @@
 \alias{get_species_object}
 \title{Get species object}
 \usage{
-get_species_object(species_itis = NULL)
+get_species_object(species_itis = NULL, stock = NULL)
 }
 \arguments{
-\item{species_itis}{Numeric. Itis code for species}
+\item{species_itis}{Numeric. Itis code for species (Default = NA, Returns a NA object for user to define)}
+
+\item{stock}{Character string. Define stock region for species_itis}
 }
 \description{
 Lists set of rules required for catch at length aggregation
