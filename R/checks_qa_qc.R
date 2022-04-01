@@ -15,7 +15,7 @@
 #'
 #'@noRd
 
-checks_qa_qc <- function(landingsData, lengthData, aggregate_to,outputDir,logfile) {
+checks_qa_qc <- function(landingsData, lengthData, aggregate_to, outputDir,logfile) {
 
   if (!(aggregate_to %in% c("YEAR","QTR","MIX","SEMESTER"))) {
     stop(paste0("Aggregation to ",aggregate_to," is not currently implemented. Please create an issue
@@ -25,8 +25,6 @@ checks_qa_qc <- function(landingsData, lengthData, aggregate_to,outputDir,logfil
 
   write_to_logfile(outputDir,logfile,"",label="DECISIONS MADE DURING AGGREGATION OF DATA")
   write_to_logfile(outputDir,logfile,data=as.character(speciesName),label="Species Name:",append=T)
-  # write function call to log file
-  write_to_logfile(outputDir,logfile,data=deparse(dbutils::capture_function_call()),label="Arguments passed to aggregate_landings:",append=T)
 
   # cleans landings data and length data of NAs
   landingsData <- landingsData %>%

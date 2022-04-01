@@ -50,8 +50,11 @@ aggregate_landings <- function(channel,
                                outputPlots=F,
                                logfile="logFile.txt",
                                speciesRules = NULL) {
-  ## CHECKS QA/QC #################################################
 
+  # write function call to log file
+  write_to_logfile(outputDir,logfile,data=deparse(dbutils::capture_function_call()),label="Arguments passed to aggregate_landings:",append=F)
+
+  ## CHECKS QA/QC #################################################
   # Perform data checks, qa/qc and return summarized data as a list
   data <- checks_qa_qc(landingsData,lengthData,aggregate_to,outputDir,logfile)
 
@@ -126,7 +129,7 @@ aggregate_landings <- function(channel,
 
   if(is.null(speciesRules)) {
     # Fully automated. Market Codes selected based on data
-    data <- aggregate_market_codes(data,pValue,outputDir,outputPlots,logfile)
+    data <- aggregate_market_codes(data,speciesName,pValue,outputDir,outputPlots,logfile)
   } else {
     # use user defined gear aggregation
     data <- aggregate_market_codes_rules(data,speciesRules,outputDir,outputPlots,logfile)

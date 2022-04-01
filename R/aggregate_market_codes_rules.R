@@ -120,6 +120,8 @@ aggregate_market_codes_rules <- function(data,speciesObject,outputDir,outputPlot
   print(newmarket)
   plot_market_codes(newmarket,8,outputDir,outputPlots)
 
+  write_to_logfile(outputDir,logfile,as.data.frame(newmarket),label="Relabelled andings and length samples by MARKET_CODE:",append = T)
+
   # update sample lengthsData to reflect gear aggregation
   aggregatedData <- list()
   aggregatedData$landings <- landings
