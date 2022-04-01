@@ -17,7 +17,7 @@
 #'@noRd
 
 
-aggregate_market_codes <- function(data,pValue,outputDir,outputPlots,logfile) {
+aggregate_market_codes <- function(data,speciesName,pValue,outputDir,outputPlots,logfile) {
 
   # group by code to look at total landings by market code
   market <- data$landings %>%
@@ -26,8 +26,8 @@ aggregate_market_codes <- function(data,pValue,outputDir,outputPlots,logfile) {
     dplyr::arrange(desc(totalLandings))
   market <- market %>% dplyr::mutate(percent = totalLandings/sum(totalLandings), cum_percent=cumsum(percent))
 
-  plot_landings_by_type(speciesObject$speciesName,data$landings,1,outputPlots,outputDir,"2a",type="market")
-  plot_lengths_by_type(speciesObject$speciesName,data$landings,1,outputPlots,outputDir,"2c",type="market")
+  plot_landings_by_type(speciesName,data$landings,1,outputPlots,outputDir,"2a",type="market")
+  plot_lengths_by_type(speciesName,data$landings,1,outputPlots,outputDir,"2c",type="market")
 
 
   plot_market_codes(market,7,outputDir,outputPlots)
@@ -69,9 +69,10 @@ aggregate_market_codes <- function(data,pValue,outputDir,outputPlots,logfile) {
       dplyr::select(-cumsum)
 
 
-    plot_landings_by_type(speciesObject$speciesName,data$landings,1,outputPlots,outputDir,"2b",type="market")
-    plot_lengths_by_type(speciesObject$speciesName,data$landings,1,outputPlots,outputDir,"2d",type="market")
+    plot_landings_by_type(speciesName,data$landings,1,outputPlots,outputDir,"2b",type="market")
+    plot_lengths_by_type(speciesName,data$landings,1,outputPlots,outputDir,"2d",type="market")
 
+    write_to_logfile(outputDir,logfile,as.data.frame(newmarket),label="Relabelled landings and length samples by MARKET_CODE:",append = T)
 
     plot_market_codes(newmarket,8,outputDir,outputPlots)
   }
