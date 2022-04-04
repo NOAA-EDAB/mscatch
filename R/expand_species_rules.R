@@ -52,7 +52,10 @@ expand_species_rules <- function(speciesRules, outputDir,logfile) {
     }
 
     speciesRules$gearCodes <- data.frame(use = c(gearNames,"Other"),
-                     combine = c(gearCodes,"all"))
+                                           combine = c(gearCodes,"all"))
+
+
+
 
 
     write_to_logfile(outputDir,logfile,"",label="All NEGEAR2 codes have been expanded to NEGEAR codes")
