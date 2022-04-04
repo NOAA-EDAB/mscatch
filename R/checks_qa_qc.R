@@ -4,6 +4,7 @@
 #'
 #'@param landingsData Tidy data frame. Landings by YEAR,QTR,NEGEAR,MARKET_CODE,landings_land,landings_nn,len_totalNumLen,len_numLengthSampls
 #'@param lengthData Tidy data frame. Length data by YEAR,QTR,NEGEAR,MARKET_CODE, LENGTH, NUMLEN
+#'@param speciesName Character string. speciesName for data used. (This is used in plotting only)
 #'@param aggregate_to Character string. Level of aggregation for all MARKET_CODES and gears ("QTR", "YEAR", "SEMESTER", MIX").
 #'@param outputDir Character string. Path to output directory (png files saved here)
 #'@param logfile Character string. Specify the name for the log file generated describing all decisions made.
@@ -15,7 +16,7 @@
 #'
 #'@noRd
 
-checks_qa_qc <- function(landingsData, lengthData, aggregate_to, outputDir,logfile) {
+checks_qa_qc <- function(landingsData, lengthData, speciesName, aggregate_to, outputDir,logfile) {
 
   if (!(aggregate_to %in% c("YEAR","QTR","MIX","SEMESTER"))) {
     stop(paste0("Aggregation to ",aggregate_to," is not currently implemented. Please create an issue
@@ -37,6 +38,14 @@ checks_qa_qc <- function(landingsData, lengthData, aggregate_to, outputDir,logfi
   lengthData <- lengthData %>%
     dplyr::group_by(.data$YEAR,.data$QTR,.data$NEGEAR,.data$MARKET_CODE,.data$LENGTH) %>%
     dplyr::summarise(NUMLEN = sum(as.numeric(.data$NUMLEN),na.rm=T),.groups="drop")
+
+
+  # Check for QTRs labelled anythign other that 1:4
+  # Check for NEGEARs that are not 3 character digits
+  # Check for unusually large lengths
+
+
+
 
   # create list for data.
   # landing and lengths will from this point on be parts of a list.
