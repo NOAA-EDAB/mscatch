@@ -38,7 +38,7 @@ aggregate_unclassifieds <- function(data,variable,nLengthSamples,outputDir,logfi
       dplyr::filter(YEAR == missingRow$YEAR & get(variable) == missingRow[[variable]] & NEGEAR == missingRow$NEGEAR & MARKET_CODE != "UN")
     # no length samples for any market codes. Therefore cant obtain a scaling.
     # Have to find nearest neighbor where Unclassifieds have samples.
-    if (dim(lengthDist)[1] == 0){
+    if (nrow(lengthDist) == 0){
       message(paste0("Using nearest neighbor: Unclassified have no samples in ",missingRow$YEAR," by NEGEAR ",missingRow$NEGEAR," for any MARKET_CODE "  ))
       write_to_logfile(outputDir,logfile,data=paste0("Using nearest neighbor: Unclassified have no samples in ",missingRow$YEAR," by NEGEAR ",missingRow$NEGEAR," for any MARKET_CODE "),label=NULL,append=T)
 

@@ -107,9 +107,6 @@ aggregate_landings <- function(channel,
   #
   #
 
-
-  # look at the summary stats/plots after aggregation
-  summary_stats(data$landings,speciesName,outputDir,outputPlots)
   # take a look at length distribution of size categories
   plot_length_histogram(data$lengthData,outputDir,outputPlots)
 
@@ -161,9 +158,10 @@ aggregate_landings <- function(channel,
 
 
   }
-
-  plot_landings_by_type(speciesRules$speciesName,data$landings,1,outputPlots,outputDir,"3b",type="SEMESTER")
-  plot_lengths_by_type(speciesRules$speciesName,data$landings,1,outputPlots,outputDir,"3d",type="SEMESTER")
+  if (aggregate_to != "QTR") {
+    plot_landings_by_type(speciesRules$speciesName,data$landings,1,outputPlots,outputDir,"3b",type=aggregate_to)
+    plot_lengths_by_type(speciesRules$speciesName,data$landings,1,outputPlots,outputDir,"3d",type=aggregate_to)
+  }
 
   plot_market_code_by_time(data,9,outputDir,outputPlots,aggregate_to = aggregate_to)
 
@@ -272,7 +270,7 @@ aggregate_landings <- function(channel,
         QTRData <- samplesData
 
         #data <- aggregate_to_qtr(data,gearType,marketCode,QTRData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile)
-        data <- aggregate_to_qtr2(data,gearType,marketCode,QTRData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile)
+        data <- aggregate_to_qtr2(data,speciesRules$howAggregate,gearType,marketCode,QTRData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile)
 
       } else if (aggregate_to == "SEMESTER") {
 
