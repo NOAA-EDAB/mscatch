@@ -40,7 +40,12 @@ checks_qa_qc <- function(landingsData, lengthData, speciesName, aggregate_to, ou
     dplyr::summarise(NUMLEN = sum(as.numeric(.data$NUMLEN),na.rm=T),.groups="drop")
 
 
-  # Check for QTRs labelled anythign other that 1:4
+  # Check for QTRs labelled anything other that 1:4
+  # convert to double
+  landingsData <- landingsData %>%
+    dplyr::mutate(QTR = as.double(QTR))
+  lengthData <- lengthData %>%
+    dplyr::mutate(QTR = as.double(QTR))
   # Check for NEGEARs that are not 3 character digits
   # Check for unusually large lengths
 

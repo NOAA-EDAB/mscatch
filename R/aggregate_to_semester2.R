@@ -90,9 +90,11 @@ aggregate_to_semester2 <- function(data,howAggregate,gearType,marketCode,SEMESTE
         print(targetYr)
 
         data <- missing_length_by_semester_combine(data,targetYr,gearType,marketCode,outputDir,logfile)
+
+        # Could have case where still have zero length samples.
+
       }
 
-      #write_to_logfile(outputDir,logfile,data=paste0("Gear: ",gearType," - ",missingSEMESTERs$YEAR[iyear],"-",missingSEMESTERs$SEMESTER[iyear]," used length samples from ",numSamples$YEAR,"-",numSamples$SEMESTER,"   - MARKET_CODE:",marketCode),label=NULL,append=T)
     }
   }
 
