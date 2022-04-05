@@ -101,11 +101,12 @@ aggregate_market_codes_rules <- function(data,speciesObject,outputDir,outputPlot
   lengthDataGEARS <- lengthData %>%
     dplyr::group_by(NEGEAR,MARKET_CODE,LENGTH) %>%
     dplyr::summarise(numlens=sum(as.numeric(NUMLEN)))
-  p <- ggplot(data = lengthDataGEARS) +
-    geom_bar(stat="identity",mapping = aes(x=LENGTH,y=numlens),na.rm=T) +
-    facet_wrap(~MARKET_CODE,scales="free_y",nrow = length(unique(lengthData$MARKET_CODE)),ncol=1) +
-    theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-    scale_x_discrete(name="Length (cm)", breaks=seq(0, max(lengthData$LENGTH),10))
+
+  p <- ggplot2::ggplot(data = lengthDataGEARS) +
+    ggplot2::geom_bar(stat="identity",mapping = ggplot2::aes(x=LENGTH,y=numlens),na.rm=T) +
+    ggplot2::facet_wrap(~MARKET_CODE,scales="free_y",nrow = length(unique(lengthData$MARKET_CODE)),ncol=1) +
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 90, hjust = 1)) +
+    ggplot2::scale_x_discrete(name="Length (cm)", breaks=seq(0, max(lengthData$LENGTH),10))
   print(p)
 
   dev.off()
