@@ -33,17 +33,14 @@ aggregate_gear <- function(data,recodeOtherGear,landingsThresholdGear,speciesNam
     dplyr::summarise(totalLandings = sum(landings_land, na.rm = TRUE)) %>%
     dplyr::arrange(desc(totalLandings))
 
-  plot_landings_by_gear(speciesName,landings,1,outputPlots,outputDir,"1b")
+  plot_landings_by_type(speciesName,data$landings,1,outputPlots,outputDir,"1a",type="gear")
+  plot_lengths_by_type(speciesName,data$landings,1,outputPlots,outputDir,"1c",type="gear")
 
   # convert to % of total and reorder
   aggTopPercent <- mutate(aggTopPercent,cum_sum=cumsum(totalLandings),percent=cum_sum/sum(totalLandings))
   print(aggTopPercent)
 
   write_to_logfile(outputDir,logfile,as.data.frame(aggTopPercent),label="Landings by gear type (NEGEAR):",append = T)
-
-  # png("test.png",height = 1000*nrow(aggTopPercent), width = 800*ncol(aggTopPercent))
-  # gridExtra::grid.table(aggTopPercent)
-  # dev.off()
 
   # select the gear that make up at least threshold %
   nGearsChosen <- dim(aggTopPercent %>% filter(percent<= landingsThresholdGear) %>% select(NEGEAR))[1]
@@ -54,13 +51,6 @@ aggregate_gear <- function(data,recodeOtherGear,landingsThresholdGear,speciesNam
   print(nGearsChosen)
   print(gearsChosen)
 
-  # print(aggTopPercent[1:(nGearsChosen+2),])
-  # png("test2.png",height = 800, width = 800)
-  # gridExtra::grid.table(aggTopPercent[1:(nGearsChosen+2),])
-  # dev.off()
-  #########################################################################################################################
-  # At this point may need to examine lengths distribution to determine further grouping (plots of length distributions)
-  #########################################################################################################################
   # aggregate all the other fleets to one fleet
   theRestLandings$NEGEAR <- recodeOtherGear # need to make sure we pick an unused code
   theRestLandings <- theRestLandings %>% group_by(YEAR,QTR,NEGEAR,MARKET_CODE) %>%
@@ -68,8 +58,6 @@ aggregate_gear <- function(data,recodeOtherGear,landingsThresholdGear,speciesNam
 
   # concatenate 2 data frames
   filteredLandings <- rbind(filteredLandings,as.data.frame(theRestLandings))
-
-  plot_landings_by_gear(speciesName,filteredLandings,landingsThresholdGear,outputPlots,outputDir,"1c")
 
   aggTopPercent <- filteredLandings %>%
     dplyr::group_by(NEGEAR) %>%
@@ -88,6 +76,11 @@ aggregate_gear <- function(data,recodeOtherGear,landingsThresholdGear,speciesNam
   aggregatedData <- list()
   aggregatedData$landings <- filteredLandings
   aggregatedData$lengthData <- lengthData
+
+  plot_landings_by_type(speciesName,aggregatedData$landings,landingsThresholdGear,outputPlots,outputDir,"1b",type="gear")
+  plot_lengths_by_type(speciesName,aggregatedData$landings,landingsThresholdGear,outputPlots,outputDir,"1d",type="gear")
+
+
 
   return(aggregatedData)
 }

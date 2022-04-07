@@ -30,7 +30,8 @@ aggregate_gear_rules <- function(data,speciesObject,logfile,outputDir,outputPlot
 
   print(aggTopPercent)
 
-  plot_landings_by_gear(speciesObject$speciesName,landings,1,outputPlots,outputDir,"1a")
+  plot_landings_by_type(speciesObject$speciesName,landings,1,outputPlots,outputDir,"1a",type="gear")
+  plot_lengths_by_type(speciesObject$speciesName,landings,1,outputPlots,outputDir,"1c",type="gear")
 
   write_to_logfile(outputDir,logfile,as.data.frame(aggTopPercent),label="Landings by gear type (NEGEAR):",append = T)
 
@@ -88,8 +89,9 @@ aggregate_gear_rules <- function(data,speciesObject,logfile,outputDir,outputPlot
     dplyr::summarise(NUMLEN = sum(as.numeric(NUMLEN),na.rm=T),
                      .groups="drop")
 
+  plot_landings_by_type(speciesObject$speciesName,landings,1,outputPlots,outputDir,"1b",type="gear")
+  plot_lengths_by_type(speciesObject$speciesName,landings,1,outputPlots,outputDir,"1d",type="gear")
 
-  plot_landings_by_gear(speciesObject$speciesName,landings,1,outputPlots,outputDir,"1b")
 
   aggTopPercent <- landings %>%
     dplyr::group_by(NEGEAR) %>%

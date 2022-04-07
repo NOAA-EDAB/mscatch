@@ -25,9 +25,12 @@ update_length_samples <- function(data,missingRow,gearType,marketCode,numSamples
     (data$landings$NEGEAR == gearType) &
     (data$landings$MARKET_CODE == marketCode)
 
+  # current values
+  currentlen_totalNumLen <- data$landings[ind,]$len_totalNumLen
+  currentlen_numLengthSamples <- data$landings[ind,]$len_numLengthSamples
   # fill in missing data
-  data$landings[ind,]$len_totalNumLen <- numSamples$len_totalNumLen
-  data$landings[ind,]$len_numLengthSamples <- numSamples$len_numLengthSamples
+  data$landings[ind,]$len_totalNumLen <- numSamples$len_totalNumLen + currentlen_totalNumLen
+  data$landings[ind,]$len_numLengthSamples <- numSamples$len_numLengthSamples + currentlen_numLengthSamples
 
 
   # since no lengths exist for this YEAR/QTR/NEGEAR/MARKET_CODE duplicate rows from year to use

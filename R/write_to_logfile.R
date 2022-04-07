@@ -12,7 +12,7 @@
 
 
 
-write_to_logfile <- function(outputDir,logfile,data,label,append = F) {
+write_to_logfile <- function(outputDir,logfile,data,label,append = T) {
 
   if (append == F){ # open file
     fileConn<-file(paste0(outputDir,"/",logfile),open="w")
