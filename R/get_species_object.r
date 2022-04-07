@@ -102,7 +102,10 @@ get_species_object <- function(species_itis = NULL, stock = NULL) {
                                            combine=c("all"))
     speciesRules$gearCodes <- data.frame(use = c("050","050","050","050","050","050","050","050","998"),
                                          combine=c("050","051","056","058","121","132","170","370","all"))
-    speciesRules$statStockArea <- "all"
+    speciesRules$statStockArea <- c(430, 456, 464, 465, 467, 511:515, 521, 522,
+                                    525, 526, 533, 534, 537:539, 542, 551, 552,
+                                    561, 562, 611:616, 621:623, 625:628, 631,
+                                    632, 635, 636, 640, 641, 642, 701,999)
     speciesRules$howAggregate <- "combine"
     speciesRules$LengthWeightData <- "commercial"
     speciesRules$LengthWeightRelationships <- "same" # as aggregation
@@ -161,7 +164,7 @@ get_species_object <- function(species_itis = NULL, stock = NULL) {
                                            combine=c("LS","XG","LG","LM","SQ","MD","PW","all"))
     speciesRules$gearCodes <- data.frame(use="050",
                                          combine="all")
-    speciesRules$statStockArea <- paste(c(522:525,542,453,551,552,561,562))
+    speciesRules$statStockArea <- paste(c(522:525,542,543,551,552,561,562))
     speciesRules$howAggregate <- NA
     speciesRules$LengthWeightData <- "survey"
     speciesRules$LengthWeightRelationships <- "semester"
@@ -300,8 +303,23 @@ get_species_object <- function(species_itis = NULL, stock = NULL) {
                                            combine=c())
     speciesRules$gearCodes <- data.frame(use = c(),
                                          combine = c())
-    speciesRules$statStockArea <- "all" #???
-    speciesRules$howAggregate <- NA
+    if(is.null(stock)) {
+      stop(paste0("Please enter a valid stock definition for ",speciesRules$speciesName,". Either North or South"))
+    }
+
+    if(stock == "North") {
+      speciesRules$statStockArea <- c(511:515,521,522,551, 561)
+      speciesRules$howAggregate <- NA
+      speciesRules$stock <- "North"
+    } else if (stock == "South") {
+      speciesRules$statStockArea <- c(525,526,533:539,541:543,
+                                      552,562,611:639)
+      speciesRules$howAggregate <- NA
+      speciesRules$stock <- "South"
+    }  else {
+      stop(paste0("Please enter a valid stock definition for ",speciesRules$speciesName,". Either North or South"))
+    }
+
     speciesRules$LengthWeightData <- "survey"
     speciesRules$LengthWeightRelationships <- c("year","semester")
     speciesRules$LengthWeightTimeBlocks <- data.frame(start = c(1973),
@@ -309,7 +327,6 @@ get_species_object <- function(species_itis = NULL, stock = NULL) {
     speciesRules$AgeData <- "survey"
     speciesRules$AgeLengthKey <- c("year","semester")
     speciesRules$startDate <- 1955
-    speciesRules$stock <- NA
 
 
   } else if (species_itis == 164499) { # monkfish
