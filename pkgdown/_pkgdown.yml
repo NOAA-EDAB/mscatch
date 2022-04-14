@@ -5,6 +5,7 @@ reference:
   desc: "Main functions to aggregate landings and expand"
 - contents:
   - get_sample_data
+  - get_species_data
   - get_species_object
   - aggregate_landings
   - fit_length_weight
