@@ -91,6 +91,40 @@
 <dt>stock</dt>
 <dd><p>Character string. Define stock region for species_itis</p></dd>
 </dl></div>
+    <div id="value">
+    <h2>Value</h2>
+    <p>A List</p>
+<dl><dt>species_itis</dt>
+<dd><p>6 digit species ITIS code</p></dd>
+<dt>speciesName</dt>
+<dd><p>Species Name</p></dd>
+<dt>SVSPP</dt>
+<dd><p>Species survey SVSPP code</p></dd>
+<dt>temporalAggregation</dt>
+<dd><p>Level of temporal aggregation: "QTR","SEMESTER","YEAR"</p></dd>
+<dt>marketCodes</dt>
+<dd><p>Data frame: mapping Market codes to use with market codes to combine</p></dd>
+<dt>gearCodes</dt>
+<dd><p>Data frame: mapping gear codes to use with gear codes to combine</p></dd>
+<dt>statStockArea</dt>
+<dd><p>Character array of statistical areas (3 characters)</p></dd>
+<dt>howAggregate</dt>
+<dd><p>How to aggregate the landings data in absense of length samples: "borrow","combine"</p></dd>
+<dt>LengthWeightData</dt>
+<dd><p>Where length-weight data comes from: "survey","commercial","both"</p></dd>
+<dt>LengthWeightRelationships</dt>
+<dd><p>How to fit length-weight relationships. By: "semester","qtr"</p></dd>
+<dt>LengthWeightTimeBlocks</dt>
+<dd><p>Time block over which to use for length weight data: "all", c(years)</p></dd>
+<dt>AgeData</dt>
+<dd><p>Where Age data from from: "survey","commercial"</p></dd>
+<dt>AgeLengthKey</dt>
+<dd><p>Variables over which to calculate age length key: "semester","qtr","gear"</p></dd>
+<dt>startDate</dt>
+<dd><p>First year of assessment</p></dd>
+<dt>stock</dt>
+<dd><p>Defines the stock, if more than one stock for a species:"GB","GOM","North","South</p></dd>
+</dl></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
