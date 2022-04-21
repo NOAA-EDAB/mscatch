@@ -41,7 +41,7 @@ This object is used to communicate with the database engine. (see \code{\link[db
 \item{aggregate_to}{Character string. Level of aggregation for all MARKET_CODES and gears ("QTR", "YEAR", "SEMESTER", MIX").
 Default = YEAR.}
 
-\item{borrowLengths}{Boolean. Return data as is or use allgorithm to borrow lengths from neighboring cells (Time and/or space)}
+\item{borrowLengths}{Boolean. Return data as is or use algorithm to borrow lengths from neighboring cells (Time and/or space)}
 
 \item{proportionMissing}{Numeric scalar. Proportion of missing samples allowed per YEAR for each MARKET_CODE/GEAR combination). Default = 0.2}
 

@@ -43,6 +43,7 @@ aggregate_unclassifieds <- function(data,variable,nLengthSamples,outputDir,logfi
       write_to_logfile(outputDir,logfile,data=paste0("Using nearest neighbor: Unclassified have no samples in ",missingRow$YEAR," by NEGEAR ",missingRow$NEGEAR," for any MARKET_CODE "),label=NULL,append=T)
 
       UNData <- data$landings %>% dplyr::filter(NEGEAR == missingRow$NEGEAR,MARKET_CODE=="UN")
+
       if (aggregate_to == "SEMESTER") {
         numSamples <- missing_length_by_semester_neighbor(UNData,missingRow$YEAR,missingRow[[variable]],nLengthSamples,outputDir,logfile)
       } else {

@@ -5,6 +5,25 @@
 #'@param species_itis Numeric. Itis code for species (Default = NA, Returns a NA object for user to define)
 #'@param stock Character string. Define stock region for species_itis
 #'
+#'
+#'@return A List
+#'\item{species_itis}{6 digit species ITIS code}
+#'\item{speciesName}{Species Name}
+#'\item{SVSPP}{Species survey SVSPP code}
+#'\item{temporalAggregation}{Level of temporal aggregation: "QTR","SEMESTER","YEAR"}
+#'\item{marketCodes}{Data frame: mapping Market codes to use with market codes to combine}
+#'\item{gearCodes}{Data frame: mapping gear codes to use with gear codes to combine}
+#'\item{statStockArea}{Character array of statistical areas (3 characters)}
+#'\item{howAggregate}{How to aggregate the landings data in absense of length samples: "borrow","combine"}
+#'\item{LengthWeightData}{Where length-weight data comes from: "survey","commercial","both"}
+#'\item{LengthWeightRelationships}{How to fit length-weight relationships. By: "semester","qtr"}
+#'\item{LengthWeightTimeBlocks}{Time block over which to use for length weight data: "all", c(years)}
+#'\item{AgeData}{Where Age data from from: "survey","commercial"}
+#'\item{AgeLengthKey}{Variables over which to calculate age length key: "semester","qtr","gear"}
+#'\item{startDate}{First year of assessment}
+#'\item{stock}{Defines the stock, if more than one stock for a species:"GB","GOM","North","South}
+#'
+#'
 #'@export
 
 get_species_object <- function(species_itis = NULL, stock = NULL) {

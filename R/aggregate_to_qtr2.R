@@ -1,7 +1,7 @@
-#' Missing QTR length samples are filled using previous years QTR
+#' Missing QTR length samples are either borrowed or QTRs are combined.
 #'
-#' Fills in missing length samples for YEAR/QTR combinations by using the previous YEARs value for the same QTR.
-#' If this is also missing, then the previous YEARs value for the same QTR is used and so on.
+#' Fills in missing length samples by borrowing or no borrowing occures by QTRs are collapsed
+#' (in most cases this will amount to the same thing)
 #' For YEARs where there are landings before any length samples were taken all YEAR/QTRs are assigned the length samples
 #' from the most recent YEAR where length samples were taken (from the same QTR)
 #'
