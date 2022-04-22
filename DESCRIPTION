@@ -30,7 +30,8 @@ Suggests:
     DBI,
     cfdbs,
     kableExtra,
-    readr
+    readr,
+    NEFSCspatial
 VignetteBuilder: knitr
 Imports: 
     dplyr,
@@ -44,6 +45,7 @@ Imports:
     nnet
 Remotes:
     andybeet/cfdbs,
-    andybeet/dbutils
+    andybeet/dbutils,
+    andybeet/NEFSCspatial
 Depends: 
     R (>= 3.60)
