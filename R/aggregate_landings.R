@@ -52,6 +52,9 @@ aggregate_landings <- function(channel,
                                speciesRules = NULL) {
 
   aggregate_to <- toupper(aggregate_to)
+  if(aggregate_to == "QUARTER"){
+    aggregate_to <- "QTR"
+  }
 
   # write function call to log file
   write_to_logfile(outputDir,logfile,data=deparse(dbutils::capture_function_call()),label="Arguments passed to aggregate_landings:",append=F)
@@ -69,6 +72,7 @@ aggregate_landings <- function(channel,
   # First year in which length samples were taken
   sampleStartYear <- min(as.numeric(unique(data$lengthData$YEAR)))
   numYears <- length(unique(data$landings$YEAR))
+
 
   ## GEARs #####################################################
   message("Aggregating by gear type ...")

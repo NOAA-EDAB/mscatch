@@ -73,10 +73,10 @@ print(missingQTRs)
           data <- update_length_samples(data,missingQTRs[iyear,],gearType,marketCode,numSamples,TIME="QTR")
           # write to logfile
           write_to_logfile(outputDir,logfile,data=paste0("Gear: ",gearType," - ",missingQTRs$YEAR[iyear],"-",missingQTRs$QTR[iyear]," used length samples from ",numSamples$YEAR,"-",numSamples$QTR,"   - MARKET_CODE:",marketCode),label=NULL,append=T)
+        }  else {
+          stop("missing samples after using nearest neighbor. Probably should combine MARKET CODE")
         }
 
-      } else{
-        stop("missing samples after using nearest neighbor. Probably should combine MARKET CODE")
       }
 
 
