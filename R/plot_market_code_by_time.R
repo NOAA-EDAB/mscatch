@@ -20,13 +20,13 @@ plot_market_code_by_time <- function(data,plotID,outputDir,outputPlots=T,aggrega
   if (aggregate_to == "YEAR") {
     # join landings and lengths to plot length distribution over time
     #aggegate over QTRs
-    data <- output_data(data,aggregate_to)
+    dataAgg <- output_data(data,aggregate_to)
 
-    ddjoin <- data$landings %>%
-      dplyr::left_join(.,data$lengthData,by = c("YEAR","NEGEAR","MARKET_CODE"))
+    ddjoin <- dataAgg$landings %>%
+      dplyr::left_join(.,dataAgg$lengthData,by = c("YEAR","NEGEAR","MARKET_CODE"))
 
     # for each geartype
-    for (gearType in unique(data$landings$NEGEAR)) {
+    for (gearType in unique(dataAgg$landings$NEGEAR)) {
 
       png(paste0(outputDir,"/",plotID+2,"_market_category_",aggregate_to,"_lengths_",as.character(gearType),".png"))
 
@@ -41,7 +41,7 @@ plot_market_code_by_time <- function(data,plotID,outputDir,outputPlots=T,aggrega
       dev.off()
 
       # Take a look at length distribution by QTR and MARKET CODE
-      d <- data$lengthData %>% dplyr::filter(NEGEAR == gearType) %>%
+      d <- dataAgg$lengthData %>% dplyr::filter(NEGEAR == gearType) %>%
         dplyr::group_by(MARKET_CODE,.data[[aggregate_to]],LENGTH) %>%
         dplyr::summarise(numlens=sum(as.numeric(NUMLEN)),.groups = "drop")
 

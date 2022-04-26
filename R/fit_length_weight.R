@@ -4,6 +4,7 @@
 #'
 #'@param lengthWeightData Data frame. length-weight pairs. Each row represents an individual fish
 #'@param speciesName Character string. Common name for species
+#'@param speciesRules List. Obtained from \code{get_species_object}
 #'@param outputDir Character string. Path to output directory (Default = NULL, no output written)
 #'@param logfile Character string. Specify the name for the log file generated describing all decisions made.
 #'(Default = NULL, no output written)
@@ -51,7 +52,7 @@
 #'
 #' @export
 
-fit_length_weight <- function(lengthWeightData,speciesName,outputDir=NULL,logfile=NULL){
+fit_length_weight <- function(lengthWeightData,speciesName,speciesRules,outputDir=NULL,logfile=NULL){
 
   # filter for null values
   lwd <- lengthWeightData %>% dplyr::filter(INDWT > 0) %>% dplyr::select(INDWT,LENGTH,SEX,SEASON)
