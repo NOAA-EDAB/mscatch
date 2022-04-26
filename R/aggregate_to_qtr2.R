@@ -66,16 +66,20 @@ print(missingQTRs)
 
         # select length samples closest in time to target year/qtr
         numSamples <- missing_length_by_qtr_neighbor(QTRData,missingQTRs$YEAR[iyear],missingQTRs$QTR[iyear],nLengthSamples,outputDir,logfile)
+        if (nrow(numSamples) > 0) {
+
+          # Update the data with length samples
+          # update year/QRT info with filled in data
+          data <- update_length_samples(data,missingQTRs[iyear,],gearType,marketCode,numSamples,TIME="QTR")
+          # write to logfile
+          write_to_logfile(outputDir,logfile,data=paste0("Gear: ",gearType," - ",missingQTRs$YEAR[iyear],"-",missingQTRs$QTR[iyear]," used length samples from ",numSamples$YEAR,"-",numSamples$QTR,"   - MARKET_CODE:",marketCode),label=NULL,append=T)
+        }
+
+      } else{
+        stop("missing samples after using nearest neighbor. Probably should combine MARKET CODE")
       }
 
-      if (nrow(numSamples) > 0) {
 
-        # Update the data with length samples
-        # update year/QRT info with filled in data
-        data <- update_length_samples(data,missingQTRs[iyear,],gearType,marketCode,numSamples,TIME="QTR")
-        # write to logfile
-        write_to_logfile(outputDir,logfile,data=paste0("Gear: ",gearType," - ",missingQTRs$YEAR[iyear],"-",missingQTRs$QTR[iyear]," used length samples from ",numSamples$YEAR,"-",numSamples$QTR,"   - MARKET_CODE:",marketCode),label=NULL,append=T)
-      }
     }
   } else if (howAggregate == "combine") {
     # combine into year
