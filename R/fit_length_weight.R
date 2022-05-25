@@ -186,9 +186,9 @@ fit_length_weight <- function(lengthWeightData,speciesName,speciesRules,outputDi
   lengthWeightParams$logAlpha <- fit$coefficients[1]
   lengthWeightParams$betas <- fit$coefficients[2:nParams]
   lengthWeightParams$var <- sum(fit$residuals^2)/fit$df.residual
+  lengthWeightParams$varType <- types
 
 
-
-  return(list(slope=fit,params=lengthWeightParams))
+  return(list(fit=fit,params=lengthWeightParams))
 
 }
