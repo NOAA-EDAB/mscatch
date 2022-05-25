@@ -4,12 +4,12 @@
 \alias{get_species_object}
 \title{Get species object}
 \usage{
-get_species_object(species_itis = NULL, stock = NULL)
+get_species_object(species_itis = NULL, stock = NA)
 }
 \arguments{
 \item{species_itis}{Numeric. Itis code for species (Default = NA, Returns a NA object for user to define)}
 
-\item{stock}{Character string. Define stock region for species_itis}
+\item{stock}{Character string. Define stock region for species_itis (Default = NA)}
 }
 \value{
 A List
