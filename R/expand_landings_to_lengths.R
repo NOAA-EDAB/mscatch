@@ -34,30 +34,85 @@
 expand_landings_to_lengths <- function(landingsData,lengthData,lengthWeightParams){
 
 
-  # determine fields to join by. MARKET_CODE & QTR may be missing
-  mainList <- c("YEAR","TIME","NEGEAR","MARKET_CODE")
+  varType <- lengthWeightParams$varType
+
+  # determine fields to join by. MARKET_CODE  may be missing
+  mainList <- c("YEAR","TIME","NEGEAR","MARKET_CODE","SEX")
   varsPresent <- mainList[mainList %in% names(landingsData) ]
+  # how the lengthWeight relationship was fit. This determines how many slope parameters and over which variable
+
 
   # join tables together for length and landings
   #joined <- dplyr::left_join(lengthData,landingsData,by=c("YEAR","QTR","NEGEAR","MARKET_CODE"))
   joined <- dplyr::left_join(landingsData,lengthData,by=varsPresent)
-  # atribute weight to each fish in group and scale up by "expansion factor
-  landingsExpanded <- joined %>%
-    dplyr::group_by(dplyr::across(varsPresent)) %>%
-    dplyr::mutate(weight = expand_to_weight(LENGTH,NUMLEN,landings_land,lengthWeightParams)) %>%
-    dplyr::select(!!varsPresent,LENGTH,NUMLEN,weight) %>%
-    dplyr::ungroup()
+
+  landingsExpanded <- NULL
 
 
-  # join tables together for length and landings
-  #joined <- dplyr::left_join(lengthData,landingsData,by=c("YEAR","QTR","NEGEAR","MARKET_CODE"))
-  # joined <- dplyr::left_join(landingsData,lengthData,by=varsPresent)
-  # # attribute weight to each fish in group and scale up by "expansion factor
-  # master <- joined %>%
-  #   dplyr::group_by(YEAR,QTR,NEGEAR,MARKET_CODE) %>%
-  #   dplyr::mutate(weight = expand_to_weight(LENGTH,NUMLEN,landings_land,lengthWeightParams)) %>%
-  #   dplyr::select(YEAR,QTR,NEGEAR,MARKET_CODE,LENGTH,NUMLEN,weight) %>%
-  #   dplyr::ungroup()
+  if (toupper(varType) == "SINGLE") {
+    landingsExpanded <- joined %>%
+      dplyr::group_by(dplyr::across(varsPresent)) %>%
+      dplyr::mutate(weight = expand_to_weight(LENGTH,NUMLEN,landings_land,lengthWeightParams)) %>%
+      dplyr::select(!!varsPresent,LENGTH,NUMLEN,weight) %>%
+      dplyr::ungroup()
+
+  } else if (toupper(varType) %in% c("QUARTER","SEMESTER")) {
+    # loop over TIME
+    timeVals <- unique(joined$TIME)
+    for (it in 1:length(timeVals)) {
+      lengthWeightPs <- lengthWeightParams
+      lengthWeightPs$betas <- lengthWeightParams$betas[it]
+
+      landingsExp <- joined %>%
+        dplyr::filter(TIME == timeVals[it]) %>%
+        dplyr::group_by(dplyr::across(varsPresent)) %>%
+        dplyr::mutate(weight = expand_to_weight(LENGTH,NUMLEN,landings_land,lengthWeightPs)) %>%
+        dplyr::select(!!varsPresent,LENGTH,NUMLEN,weight) %>%
+        dplyr::ungroup()
+
+      landingsExpanded <- rbind(landingsExpanded,landingsExp)
+    }
+
+  } else if (toupper(varType) == "YEAR") {
+    # Loop over year
+    timeVals <- unique(joined$YEAR)
+    for (it in 1:length(timeVals)) {
+      lengthWeightPs <- lengthWeightParams
+      lengthWeightPs$beta <- lengthWeightParams$beta[it]
+
+      landingsExp <- joined %>%
+        dplyr::filter(YEAR == timeVals[it]) %>%
+        dplyr::group_by(dplyr::across(varsPresent)) %>%
+        dplyr::mutate(weight = expand_to_weight(LENGTH,NUMLEN,landings_land,lengthWeightPs)) %>%
+        dplyr::select(!!varsPresent,LENGTH,NUMLEN,weight) %>%
+        dplyr::ungroup()
+
+
+      landingsExpanded <- rbind(landingsExpanded,landingsExp)
+    }
+
+  } else if (toupper(varType) == "SEX") {
+    # Loop over sex
+    timeVals <- unique(joined$SEX)
+    for (it in 1:length(timeVals)) {
+      lengthWeightPs <- lengthWeightParams
+      lengthWeightPs$beta <- lengthWeightParams$beta[it]
+
+      landingsExp <- joined %>%
+        dplyr::filter(SEX == timeVals[it]) %>%
+        dplyr::group_by(dplyr::across(varsPresent)) %>%
+        dplyr::mutate(weight = expand_to_weight(LENGTH,NUMLEN,landings_land,lengthWeightPs)) %>%
+        dplyr::select(!!varsPresent,LENGTH,NUMLEN,weight) %>%
+        dplyr::ungroup()
+
+
+      landingsExpanded <- rbind(landingsExpanded,landingsExp)
+    }
+
+  } else {
+    stop(paste0("Not coded for variable type = ",varType))
+  }
+
 
   return(landingsExpanded)
 }
