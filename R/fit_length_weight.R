@@ -60,8 +60,8 @@ fit_length_weight <- function(lengthWeightData,speciesName,speciesRules,outputDi
   types <- speciesRules$LengthWeightRelationships
   lengthWeightParams <- list()
   fits <- list()
+  modelData <- list()
 
-  isSingle <- F
   # set of models to fit
   models <- c("SEMESTER","QUARTER","YEAR","SINGLE","SEX")
   if (!is.null(logfile)) {
@@ -123,10 +123,7 @@ fit_length_weight <- function(lengthWeightData,speciesName,speciesRules,outputDi
       write_to_logfile(outputDir,logfile,"",label=paste0("Fitted by: ",mod),append=T)
     }
 
-
-
-
-
+    # write output to a list
     nParams <- length(fit$coefficients)
     fits[[mod]] <- fit
     lengthWeightParams[[mod]]$logAlpha <- fit$coefficients[1]
@@ -134,83 +131,68 @@ fit_length_weight <- function(lengthWeightData,speciesName,speciesRules,outputDi
     lengthWeightParams[[mod]]$var <- sum(fit$residuals^2)/fit$df.residual
     lengthWeightParams[[mod]]$varType <- types
 
-
+    modelData[[mod]] <- lwd
 
   }
 
 
+  # create plots for length-weight relationships
+  # plot common slope on all plots.
+  #models <- c("SEMESTER","QUARTER","YEAR","SINGLE","SEX")
+  for (mod in models) {
+    if (mod == "SINGLE") {next}
+
+    ncoefs <- length(fits[[mod]]$coefficients)
+    textFit  <-  c(paste0(mod," slope (blue): W = ",signif(exp(fit$coefficients[1]),6),"L^",signif(fit$coefficients[2:(1+nAlt)],6)))
+    textFitH0 <- c(paste0("Common slope (red): W = ",signif(exp(fits$SINGLE$coefficients[1]),6),"L^",signif(fits$SINGLE$coefficients[2],6)))
+    # xlim, ylim
+    xmin = min(modelData[[mod]]$LENGTH)
+    ymax = max(modelData[[mod]]$INDWT)
+
+    # plots common slope fit and separate seasonal fits on facet plot
+    figText <- data.frame(ALT = sort(ncoefs-1),
+                          x = c(rep(xmin,ncoefs-1)),
+                          y = c(rep(ymax,ncoefs-1)),
+                          label = paste(textFit,sep="\n"),
+                          labelH0 = paste(textFitH0,sep="\n") )
 
 
-  #
-  #
-  #   if (nAlt == 1) {
-  #     textFit = paste0(toupper(types)," slope (blue): W = ",signif(exp(fit$coefficients[1]),6),"L^",signif(fit$coefficients[2],6))
-  #   } else {
-  #     textFit = c(paste0(toupper(types)," slope (blue): W = ",signif(exp(fit$coefficients[1]),6),"L^",signif(fit$coefficients[2:(1+nAlt)],6)))
-  #   }
-  #
-  #   # plots common slope fit and separate seasonal fits on facet plot
-  #   figText <- data.frame(ALT = sort(uniqueVals),
-  #                         x = c(rep(min(lwd$LENGTH),nAlt)),
-  #                         y = c(rep(max(lwd$INDWT),nAlt)),
-  #                         label = paste(textFit,sep="\n"))
   #
   #   figText <- figText %>% dplyr::mutate_if(is.factor, as.character)
   #   figText$ALT <- as.factor(figText$ALT)
   #
   #
-  #   if (!is.null(outputDir)) {
-  #     png(paste0(outputDir,"/length_weight_relationship_",speciesName,"-",types,".png"),width = 1000,height = 1000,units="px")
-  #
-  #     if (toupper(types) == "SINGLE") {
-  #       p <- ggplot2::ggplot(data = lwd, ggplot2::aes(x=LENGTH, y = INDWT, color=as.factor(SEX))) +
-  #         ggplot2::geom_point(shape = 1) +
-  #         ggplot2::geom_line(ggplot2::aes(y = predWt),color = "blue") +
-  #         ggplot2::labs(title = paste0("Length-weight (SVDBS) relationship for ",speciesName),color="SEX") +
-  #         ggplot2::xlab("Length (cm)") +
-  #         ggplot2::ylab("Weight (kg)") +
-  #         ggplot2::geom_text(data = figText,ggplot2::aes(x=x,y=y,label = label ),show.legend = F,size=3,color="black",hjust="inward")
-  #       #ggplot2::geom_text(data = figText,ggplot2::aes(x=x,y=.9*y,label = textAlt, color=NA ),show.legend = F,size=3,color="black",hjust="inward")
-  #
-  #       print(p)
-  #     } else {
-  #       # plots by factor
-  #       if(toupper(types) == "SEX") {
-  #         p <- ggplot2::ggplot(data = lwd, ggplot2::aes(x=LENGTH, y = INDWT, color = as.factor(VAR))) +
-  #           ggplot2::geom_point(shape = 1) +
-  #           ggplot2::facet_wrap(facets="VAR") +
-  #           ggplot2::geom_line(ggplot2::aes(y = predWt),color = "red") +
-  #           ggplot2::xlab("Length (cm)") +
-  #           ggplot2::ylab("Weight (kg)") +
-  #           ggplot2::geom_text(data = figText,ggplot2::aes(x=x,y=y,label = label ),show.legend = F,size=3,color="black",hjust="inward") +
-  #           ggplot2::labs(title = paste0("Length-weight (SVDBS) relationship for ",speciesName, " by ",toupper(types)),color="VAR")
-  #
-  #       }else {
-  #         p <- ggplot2::ggplot(data = lwd, ggplot2::aes(x=LENGTH, y = INDWT, color = as.factor(SEX))) +
-  #           ggplot2::geom_point(shape = 1) +
-  #           ggplot2::facet_wrap(facets="VAR") +
-  #           ggplot2::geom_line(ggplot2::aes(y = predWt),color = "red") +
-  #           ggplot2::xlab("Length (cm)") +
-  #           ggplot2::ylab("Weight (kg)") +
-  #           ggplot2::geom_text(data = figText,ggplot2::aes(x=x,y=y,label = label ),show.legend = F,size=3,color="black",hjust="inward") +
-  #           ggplot2::labs(title = paste0("Length-weight (SVDBS) relationship for ",speciesName, " by ",toupper(types)),color="SEX")
-  #
-  #       }
-  #
-  #       print(p)
-  #     }
-  #     dev.off()
-  #   }
-  #
-  #   # output parameter estimates
-  #   nParams <- length(fit$coefficients)
-  #   lengthWeightParams <- list()
-  #   lengthWeightParams$logAlpha <- fit$coefficients[1]
-  #   lengthWeightParams$betas <- fit$coefficients[2:nParams]
-  #   lengthWeightParams$var <- sum(fit$residuals^2)/fit$df.residual
-  #   lengthWeightParams$varType <- types
+    if (!is.null(outputDir)) {
+      png(paste0(outputDir,"/length_weight_relationship_",speciesName,"-",mod,".png"),width = 1000,height = 1000,units="px")
+    }
+      # plots by factor
+    if((mod) == "SEX") {
+      p <- ggplot2::ggplot(data = modelData[[mod]], ggplot2::aes(x=LENGTH, y = INDWT, color = as.factor(VAR))) +
+        ggplot2::geom_point(shape = 1) +
+        ggplot2::facet_wrap(facets="VAR") +
+        ggplot2::geom_line(ggplot2::aes(y = predWt),color = "red") +
+        ggplot2::geom_line(data = modelData[["SINGLE"]], ggplot2::aes(y = predWt), color = "blue") +
+        ggplot2::xlab("Length (cm)") +
+        ggplot2::ylab("Weight (kg)") +
+        ggplot2::geom_text(data = figText,ggplot2::aes(x=x,y=y,label = label),show.legend = F,size=3,color="black",hjust="inward") +
+        ggplot2::labs(title = paste0("Length-weight (SVDBS) relationship for ",speciesName, " by ",mod),color="VAR") +
+        ggplot2::geom_text(data = figText,ggplot2::aes(x=x,y=.9*y,label = labelH0),show.legend = F,size=3,color="black",hjust="inward")
 
-
+    } else {
+      p <- ggplot2::ggplot(data = modelData[[mod]], ggplot2::aes(x=LENGTH, y = INDWT, color = as.factor(SEX))) +
+        ggplot2::geom_point(shape = 1) +
+        ggplot2::facet_wrap(facets="VAR") +
+        ggplot2::geom_line(ggplot2::aes(y = predWt),color = "red") +
+        ggplot2::geom_line(data = modelData[["SINGLE"]], ggplot2::aes(y = predWt), color = "blue") +
+        ggplot2::xlab("Length (cm)") +
+        ggplot2::ylab("Weight (kg)") +
+        ggplot2::geom_text(data = figText,ggplot2::aes(x=x,y=y,label = label ),show.legend = F,size=3,color="black",hjust="inward") +
+        ggplot2::labs(title = paste0("Length-weight (SVDBS) relationship for ",speciesName, " by ",mod),color="SEX") +
+        ggplot2::geom_text(data = figText,ggplot2::aes(x=x,y=.9*y,label = labelH0),show.legend = F,size=3,color="black",hjust="inward")
+    }
+      print(p)
+      dev.off()
+    }
 
   return(list(fit=fit,params=lengthWeightParams))
 
