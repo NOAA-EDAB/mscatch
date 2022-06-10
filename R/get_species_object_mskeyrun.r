@@ -117,8 +117,8 @@ get_species_object_mskeyrun <- function(species_itis = NULL, stock = NA) {
     speciesRules$temporalAggregation <- "quarter"
     speciesRules$marketCodes <- data.frame(use = c("UN"),
                                            combine=c("all"))
-    speciesRules$gearCodes <- data.frame(use = c("pelagic","pelagic","pelagic","pelagic","pelagic","pelagic","pelagic","pelagic","fixedGear"),
-                                         combine=c("050","051","056","058","121","132","170","370","all"))
+    speciesRules$gearCodes <- data.frame(use = c("pelagic"),
+                                         combine=c("all"))
     speciesRules$statStockArea <- c(521,522,523,524,525,526,538,551,552,561,562,537)
     speciesRules$howAggregate <- "combine"
     speciesRules$LengthWeightData <- "commercial"
