@@ -69,8 +69,9 @@ fit_length_weight <- function(lengthWeightData,speciesName,speciesRules,outputDi
     write_to_logfile(outputDir,logfile,"",label="-------------------------------------",append=T)
   }
 
+  message("Fitting models ...")
+
   for (mod in models) {
-    print(mod)
 
     if (mod == "SEMESTER") {
       lwd <- lwdMain %>%
@@ -129,11 +130,11 @@ fit_length_weight <- function(lengthWeightData,speciesName,speciesRules,outputDi
     lengthWeightParams[[mod]]$logAlpha <- fit$coefficients[1]
     lengthWeightParams[[mod]]$betas <- fit$coefficients[2:nParams]
     lengthWeightParams[[mod]]$var <- sum(fit$residuals^2)/fit$df.residual
-    lengthWeightParams[[mod]]$varType <- types
 
     modelData[[mod]] <- lwd
 
   }
+
 
 
   # create plots for length-weight relationships
@@ -141,9 +142,11 @@ fit_length_weight <- function(lengthWeightData,speciesName,speciesRules,outputDi
   #models <- c("SEMESTER","QUARTER","YEAR","SINGLE","SEX")
   for (mod in models) {
     if (mod == "SINGLE") {next}
+    message(paste0("Creating plots for ",mod, " in output folder ..."))
 
     ncoefs <- length(fits[[mod]]$coefficients)
-    textFit  <-  c(paste0(mod," slope (blue): W = ",signif(exp(fit$coefficients[1]),6),"L^",signif(fit$coefficients[2:(1+nAlt)],6)))
+    coeffs <- fits[[mod]]$coefficients
+    textFit  <-  c(paste0(mod," slope (blue): W = ",signif(exp(coeffs[1]),6),"L^",signif(coeffs[2:ncoefs],6)))
     textFitH0 <- c(paste0("Common slope (red): W = ",signif(exp(fits$SINGLE$coefficients[1]),6),"L^",signif(fits$SINGLE$coefficients[2],6)))
     # xlim, ylim
     xmin = min(modelData[[mod]]$LENGTH)
@@ -194,6 +197,7 @@ fit_length_weight <- function(lengthWeightData,speciesName,speciesRules,outputDi
       dev.off()
     }
 
+  lengthWeightParams$varType <- types
   return(list(fit=fit,params=lengthWeightParams))
 
 }
