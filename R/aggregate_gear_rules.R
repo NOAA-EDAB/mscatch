@@ -38,6 +38,7 @@ aggregate_gear_rules <- function(data,speciesObject,logfile,outputDir,outputPlot
 
   ## Recode NEGEARs based on user object preferences
   gearCodes <- speciesObject$gearCodes
+
   if (nrow(gearCodes) == 1) {
     # rename all NEGEAR codes to a single gear code
     landings$NEGEAR <- gearCodes$use

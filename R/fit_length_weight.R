@@ -4,6 +4,7 @@
 #'
 #'@param lengthWeightData Data frame. length-weight pairs. Each row represents an individual fish
 #'@param speciesName Character string. Common name for species
+#'@param speciesRules List. Obtained from \code{get_species_object}
 #'@param outputDir Character string. Path to output directory (Default = NULL, no output written)
 #'@param logfile Character string. Specify the name for the log file generated describing all decisions made.
 #'(Default = NULL, no output written)
@@ -51,77 +52,152 @@
 #'
 #' @export
 
-fit_length_weight <- function(lengthWeightData,speciesName,outputDir=NULL,logfile=NULL){
+fit_length_weight <- function(lengthWeightData,speciesName,speciesRules,outputDir=NULL,logfile=NULL){
 
   # filter for null values
-  lwd <- lengthWeightData %>% dplyr::filter(INDWT > 0) %>% dplyr::select(INDWT,LENGTH,SEX,SEASON)
+  lwdMain <- lengthWeightData %>% dplyr::filter(INDWT > 0) %>% dplyr::select(INDWT,LENGTH,SEX,SEASON,YEAR)
 
-  # fit Weight = a.Length^b.exp(E)  where E ~ N(0,sig^2)
-  # fit  no seasonal effect
-  nullFit <- lm(log(INDWT) ~ log(LENGTH) , data=lwd)
-  evar <- sum(nullFit$residuals^2)/nullFit$df.residual
-  lwd$predWt <- exp(nullFit$fitted.values + evar/2)
-  # fit seasonal effect
-  altFit <- lm(log(INDWT) ~ log(LENGTH):SEASON, data=lwd )
-  evar <- sum(altFit$residuals^2)/altFit$df.residual
-  lwd$predSeasWt <- exp(altFit$fitted.values + evar/2)
+  types <- speciesRules$LengthWeightRelationships
+  lengthWeightParams <- list()
+  fits <- list()
+  modelData <- list()
 
-  # test the null H0: bi=b vs alternative H1: bi != b
-  reductionSS <- sum(nullFit$residuals^2) - sum(altFit$residuals^2)
-  dfModel <- nullFit$df.residual- altFit$df.residual
-  SSR <- sum(altFit$residuals^2)
-  df <- altFit$df.residual
-  Fstat <- (reductionSS/dfModel)/(SSR/df)
-  pVal <- 1-pf(Fstat,dfModel,df)
-
+  # set of models to fit
+  models <- c("SEMESTER","QUARTER","YEAR","SINGLE","SEX")
   if (!is.null(logfile)) {
-    write_to_logfile(outputDir,logfile,"",label=paste0(speciesName,": LENGTH-WEIGHT RELATIONSHIPS from SVDBS"),append=T)
-    write_to_logfile(outputDir,logfile,data=pVal,label="pvalue: H0: single slope (beta) vs H1:seasonal (beta)",append=T)
+    write_to_logfile(outputDir,logfile,"",label=paste0(speciesName,": LENGTH-WEIGHT RELATIONSHIPS"),append=T)
+    write_to_logfile(outputDir,logfile,"",label="-------------------------------------",append=T)
   }
 
-  # plots common slope fit and separate seasonal fits on facet plot
-  nSeasons <- length(unique(lwd$SEASON))
-  figText <- data.frame(SEASON = sort(unique(lwd$SEASON)),
-                        x = c(rep(min(lwd$LENGTH),nSeasons)),
-                        y = c(rep(max(lwd$INDWT),nSeasons)),
-                        text = c(rep(paste0("Common slope (red): W = ",signif(exp(nullFit$coefficients[1]),6),"L^",signif(nullFit$coefficients[2],6)),nSeasons)),
-                        textSeas = c(paste0("Seasonal slope (blue): W = ",signif(exp(altFit$coefficients[1]),6),"L^",signif(altFit$coefficients[2:(1+nSeasons)],6))))
+  message("Fitting models ...")
 
-  figText <- figText %>% dplyr::mutate_if(is.factor, as.character)
-  figText$SEASON <- as.factor(figText$SEASON)
+  for (mod in models) {
 
+    if (mod == "SEMESTER") {
+      lwd <- lwdMain %>%
+        dplyr::mutate(VAR = dplyr::case_when(SEASON %in% c("SPRING","SUMMER") ~ 1, TRUE ~ 2))
+    } else if (mod == "QUARTER") {
+      lwd <- lwdMain %>%
+        dplyr::rename(VAR = "SEASON")
 
-  if (!is.null(outputDir)) {
-    png(paste0(outputDir,"/length_weight_relationship_",speciesName,".png"),width = 1000,height = 1000,units="px")
+    } else if (mod == "YEAR") {
+      lwd <- lwdMain %>%
+        dplyr::rename(VAR = "YEAR")
 
-    p <- ggplot2::ggplot(data = lwd, ggplot2::aes(x=LENGTH, y = INDWT, color = as.factor(SEX))) +
-      ggplot2::geom_point(shape = 1) +
-      ggplot2::facet_wrap(facets="SEASON") +
-      ggplot2::geom_line(ggplot2::aes(y = predWt),color = "red") +
-      ggplot2::geom_line(ggplot2::aes(y = predSeasWt), color = "blue") +
-      ggplot2::labs(title = paste0("Length-weight (SVDBS) relationship for ",speciesName),color="SEX") +
-      ggplot2::xlab("Length (cm)") +
-      ggplot2::ylab("Weight (kg)") +
-      ggplot2::geom_text(data = figText,ggplot2::aes(x=x,y=y,label = text ),show.legend = F,size=3,color="black",hjust="inward") +
-      ggplot2::geom_text(data = figText,ggplot2::aes(x=x,y=.9*y,label = textSeas ),show.legend = F,size=3,color="black",hjust="inward")
+    } else if (mod == "SEX") {
+      # filter out SEX == 0 and fit both sexes
+      lwd <- lwdMain %>%
+        dplyr::filter(SEX %in% c(1,2)) %>%
+        dplyr::rename(VAR = "SEX")
+    } else if (mod == "SINGLE") {
+      # filter out SEX == 0 and fit both sexes
+      lwd <- lwdMain
 
-    print(p)
-    dev.off()
+    } else {
+      stop(paste0("Fitting length-weight by ",types," has not been coded. Please select either:
+                    QUARTER, SEMESTER, YEAR, SINGLE, SEX"))
+    }
+
+    ## fit model
+    # fit Weight = a.Length^b.exp(E)  where E ~ N(0,sig^2)
+    # fit common/single slope
+    if (mod == "SINGLE"){
+      fit <- lm(log(INDWT) ~ log(LENGTH) , data=lwdMain)
+      evar <- sum(fit$residuals^2)/fit$df.residual
+      lwd$predWt <- exp(fit$fitted.values + evar/2)
+      uniqueVals <- 1
+      nAlt <- 1
+    } else {
+
+      # cast to logical
+      lwd <- lwd %>%
+        dplyr::mutate(VAR = as.factor(VAR))
+      # fit effect
+      fit <- lm(log(INDWT) ~ log(LENGTH):VAR, data=lwd )
+      evar <- sum(fit$residuals^2)/fit$df.residual
+      lwd$predWt <- exp(fit$fitted.values + evar/2)
+      uniqueVals <- unique(lwd$VAR)
+      nAlt <- length(uniqueVals)
+    }
+
+    if (!is.null(logfile)) {
+      write_to_logfile(outputDir,logfile,"",label=paste0("Fitted by: ",mod),append=T)
+    }
+
+    # write output to a list
+    nParams <- length(fit$coefficients)
+    fits[[mod]] <- fit
+    lengthWeightParams[[mod]]$logAlpha <- fit$coefficients[1]
+    lengthWeightParams[[mod]]$betas <- fit$coefficients[2:nParams]
+    lengthWeightParams[[mod]]$var <- sum(fit$residuals^2)/fit$df.residual
+
+    modelData[[mod]] <- lwd
+
   }
 
-  nParams <- length(nullFit$coefficients)
-  lengthWeightParamsH0 <- list()
-  lengthWeightParamsH0$logAlpha <- nullFit$coefficients[1]
-  lengthWeightParamsH0$betas <- nullFit$coefficients[2:nParams]
-  lengthWeightParamsH0$var <- sum(nullFit$residuals^2)/nullFit$df.residual
-
-  nParams <- length(altFit$coefficients)
-  lengthWeightParamsH1 <- list()
-  lengthWeightParamsH1$logAlpha <- altFit$coefficients[1]
-  lengthWeightParamsH1$betas <- altFit$coefficients[2:nParams]
-  lengthWeightParamsH1$var <- sum(altFit$residuals^2)/altFit$df.residual
 
 
-  return(list(commonSlope=nullFit,SeasonSlope=altFit, pValue = pVal,paramsH0=lengthWeightParamsH0,paramsH1=lengthWeightParamsH1))
+  # create plots for length-weight relationships
+  # plot common slope on all plots.
+  #models <- c("SEMESTER","QUARTER","YEAR","SINGLE","SEX")
+  for (mod in models) {
+    if (mod == "SINGLE") {next}
+    message(paste0("Creating plots for ",mod, " in output folder ..."))
+
+    ncoefs <- length(fits[[mod]]$coefficients)
+    coeffs <- fits[[mod]]$coefficients
+    textFit  <-  c(paste0(mod," slope (blue): W = ",signif(exp(coeffs[1]),6),"L^",signif(coeffs[2:ncoefs],6)))
+    textFitH0 <- c(paste0("Common slope (red): W = ",signif(exp(fits$SINGLE$coefficients[1]),6),"L^",signif(fits$SINGLE$coefficients[2],6)))
+    # xlim, ylim
+    xmin = min(modelData[[mod]]$LENGTH)
+    ymax = max(modelData[[mod]]$INDWT)
+
+    # plots common slope fit and separate seasonal fits on facet plot
+    figText <- data.frame(ALT = sort(ncoefs-1),
+                          x = c(rep(xmin,ncoefs-1)),
+                          y = c(rep(ymax,ncoefs-1)),
+                          label = paste(textFit,sep="\n"),
+                          labelH0 = paste(textFitH0,sep="\n") )
+
+
+  #
+  #   figText <- figText %>% dplyr::mutate_if(is.factor, as.character)
+  #   figText$ALT <- as.factor(figText$ALT)
+  #
+  #
+    if (!is.null(outputDir)) {
+      png(paste0(outputDir,"/length_weight_relationship_",speciesName,"-",mod,".png"),width = 1000,height = 1000,units="px")
+    }
+      # plots by factor
+    if((mod) == "SEX") {
+      p <- ggplot2::ggplot(data = modelData[[mod]], ggplot2::aes(x=LENGTH, y = INDWT, color = as.factor(VAR))) +
+        ggplot2::geom_point(shape = 1) +
+        ggplot2::facet_wrap(facets="VAR") +
+        ggplot2::geom_line(ggplot2::aes(y = predWt),color = "red") +
+        ggplot2::geom_line(data = modelData[["SINGLE"]], ggplot2::aes(y = predWt), color = "blue") +
+        ggplot2::xlab("Length (cm)") +
+        ggplot2::ylab("Weight (kg)") +
+        ggplot2::geom_text(data = figText,ggplot2::aes(x=x,y=y,label = label),show.legend = F,size=3,color="black",hjust="inward") +
+        ggplot2::labs(title = paste0("Length-weight (SVDBS) relationship for ",speciesName, " by ",mod),color="VAR") +
+        ggplot2::geom_text(data = figText,ggplot2::aes(x=x,y=.9*y,label = labelH0),show.legend = F,size=3,color="black",hjust="inward")
+
+    } else {
+      p <- ggplot2::ggplot(data = modelData[[mod]], ggplot2::aes(x=LENGTH, y = INDWT, color = as.factor(SEX))) +
+        ggplot2::geom_point(shape = 1) +
+        ggplot2::facet_wrap(facets="VAR") +
+        ggplot2::geom_line(ggplot2::aes(y = predWt),color = "red") +
+        ggplot2::geom_line(data = modelData[["SINGLE"]], ggplot2::aes(y = predWt), color = "blue") +
+        ggplot2::xlab("Length (cm)") +
+        ggplot2::ylab("Weight (kg)") +
+        ggplot2::geom_text(data = figText,ggplot2::aes(x=x,y=y,label = label ),show.legend = F,size=3,color="black",hjust="inward") +
+        ggplot2::labs(title = paste0("Length-weight (SVDBS) relationship for ",speciesName, " by ",mod),color="SEX") +
+        ggplot2::geom_text(data = figText,ggplot2::aes(x=x,y=.9*y,label = labelH0),show.legend = F,size=3,color="black",hjust="inward")
+    }
+      print(p)
+      dev.off()
+    }
+
+  lengthWeightParams$varType <- types
+  return(list(fit=fit,params=lengthWeightParams))
 
 }

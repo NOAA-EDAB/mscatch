@@ -50,7 +50,6 @@ aggregate_to_semester2 <- function(data,howAggregate,gearType,marketCode,SEMESTE
 
 
   ###################### Either borrow or combine ################################
-
   # Borrow length samples
   if (howAggregate == "borrow") {
     # step through each semester in turn
@@ -61,19 +60,24 @@ aggregate_to_semester2 <- function(data,howAggregate,gearType,marketCode,SEMESTE
       # cycle through the table of YEAR/SEMESTER combos
       for (iyear in 1:nrow(missingSEMESTERs)) {
         row <- missingSEMESTERs[iyear,]
+        #if(marketCode == "SR" & missingSEMESTERs$YEAR[iyear] == 1969) browser()
 
         # select length samples closest in time to target year/SEMESTER
         numSamples <- missing_length_by_semester_neighbor(SEMESTERData,missingSEMESTERs$YEAR[iyear],missingSEMESTERs$SEMESTER[iyear],nLengthSamples,outputDir,logfile)
+        ## now update
+        if (nrow(numSamples) > 0) {
+
+          # Update the data with length samples
+          # update year/SEMESTER info with filled in data
+          data <- update_length_samples(data,missingSEMESTERs[iyear,],gearType,marketCode,numSamples,TIME="SEMESTER")
+          # write to logfile
+          write_to_logfile(outputDir,logfile,data=paste0("Gear: ",gearType," - ",missingSEMESTERs$YEAR[iyear],"-",missingSEMESTERs$SEMESTER[iyear]," used length samples from ",numSamples$YEAR,"-",numSamples$SEMESTER,"   - MARKET_CODE:",marketCode),label=NULL,append=T)
+        } else {
+          stop("missing samples after using nearest neighbor. Probably should combine MARKET CODE")
+        }
       }
 
-      if (nrow(numSamples) > 0) {
 
-        # Update the data with length samples
-        # update year/SEMESTER info with filled in data
-        data <- update_length_samples(data,missingSEMESTERs[iyear,],gearType,marketCode,numSamples,TIME="SEMESTER")
-        # write to logfile
-        write_to_logfile(outputDir,logfile,data=paste0("Gear: ",gearType," - ",missingSEMESTERs$YEAR[iyear],"-",missingSEMESTERs$SEMESTER[iyear]," used length samples from ",numSamples$YEAR,"-",numSamples$SEMESTER,"   - MARKET_CODE:",marketCode),label=NULL,append=T)
-      }
     }
 
   } else if (howAggregate == "combine"){

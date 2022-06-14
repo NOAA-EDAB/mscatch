@@ -21,7 +21,6 @@ reference:
   desc: "Aid in manipulation of data"
 - contents:
   - combine_age_data
-  - speciesLookupTable
 - title: "Package info"
   desc: ""
 - contents:

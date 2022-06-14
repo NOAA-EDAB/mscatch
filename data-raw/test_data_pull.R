@@ -16,7 +16,7 @@
 #'
 
 library(magrittr)
-test_data_pull <- function(channel,species=164744,species_itis = T,area="all", fileName=NULL){ # species = 147
+test_data_pull <- function(channel,species=164744,species_itis = T,area="all",areaLengths="all", stock=NULL){ # species = 147
 
 
   ################ pull sample landings data and massage it
@@ -36,14 +36,15 @@ test_data_pull <- function(channel,species=164744,species_itis = T,area="all", f
     dplyr::summarize(landings_land = sum(landings),landings_nn=sum(n),.groups="drop")
   # this needs to be checked.
   # filter all entries labelled quarter = 0
-  sampleLandings <- sampleLandings %>%
-   dplyr::select_all() %>%
-   dplyr::filter(QTR != "0")
+   sampleLandings <- sampleLandings %>%
+    dplyr::select_all() %>%
+    dplyr::filter(QTR != "0")
 
   #############################################################################################################
   # pull sample length data and massage it
-  message("Puling length data ...")
-  testDataPullLength <- cfdbs::get_landings_length(channel,year="all",area=area,species=species,species_itis=species_itis)
+   # option to pull lengths for a different spatial area
+  message("Pulling length data ...")
+  testDataPullLength <- cfdbs::get_landings_length(channel,year="all",area=areaLengths,species=species,species_itis=species_itis)
   # create unique tripid since NUMSAMP is replicated for each species reported within a trip
   lengths <- testDataPullLength$data %>%
     dplyr::mutate(tripid = paste0(PERMIT,YEAR,MONTH,DAY))
@@ -68,8 +69,10 @@ test_data_pull <- function(channel,species=164744,species_itis = T,area="all", f
   # save data
 
 
-  if (is.null(fileName)) {
+  if (is.null(stock)) {
     fileName <- species
+  } else {
+    fileName <- paste0(species,"_",stock)
   }
 
   vName <- paste0("sampleData_",fileName)

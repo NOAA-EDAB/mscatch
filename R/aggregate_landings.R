@@ -52,6 +52,9 @@ aggregate_landings <- function(channel,
                                speciesRules = NULL) {
 
   aggregate_to <- toupper(aggregate_to)
+  if(aggregate_to == "QUARTER"){
+    aggregate_to <- "QTR"
+  }
 
   # write function call to log file
   write_to_logfile(outputDir,logfile,data=deparse(dbutils::capture_function_call()),label="Arguments passed to aggregate_landings:",append=F)
@@ -69,6 +72,7 @@ aggregate_landings <- function(channel,
   # First year in which length samples were taken
   sampleStartYear <- min(as.numeric(unique(data$lengthData$YEAR)))
   numYears <- length(unique(data$landings$YEAR))
+
 
   ## GEARs #####################################################
   message("Aggregating by gear type ...")
@@ -278,6 +282,29 @@ aggregate_landings <- function(channel,
 
         SEMESTERData <- data$landings %>%
           dplyr::filter(YEAR >= sampleStartYear & NEGEAR == gearType & MARKET_CODE == marketCode)
+
+        # check if any length samples
+        lengthSamplesPresent <- SEMESTERData %>% dplyr::filter(len_numLengthSamples>0)
+print(nrow(lengthSamplesPresent))
+        if (nrow(lengthSamplesPresent) == 0) {
+          #recode to "UN"
+          ll <- data$landings %>%
+            dplyr::mutate(MARKET_CODE = dplyr::case_when(((NEGEAR == gearType) & (MARKET_CODE == marketCode)) ~ "UN", TRUE ~ MARKET_CODE))
+
+          ## update landings (no need to update )
+          data$landings <- ll %>%
+            group_by(YEAR,SEMESTER,NEGEAR,MARKET_CODE) %>%
+            summarize(landings_land=sum(landings_land,na.rm=T),
+                      landings_nn=sum(landings_nn,na.rm=T),
+                      len_totalNumLen= sum(len_totalNumLen,na.rm=T),
+                      len_numLengthSamples=sum(len_numLengthSamples,na.rm=T),
+                      .groups = "drop")
+
+          write_to_logfile(outputDir,logfile,data=paste0("No length samples for market code = ",marketCode,". Renamed to UN"),label=NULL,append=T)
+
+          next
+
+        }
 
         #data <- aggregate_to_semester(data,gearType,marketCode,SEMESTERData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile)
         data <- aggregate_to_semester2(data,speciesRules$howAggregate,gearType,marketCode,SEMESTERData,missingEarlyYears,nLengthSamples,pValue,outputDir,logfile)
