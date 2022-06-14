@@ -22,6 +22,7 @@ reference:
 - contents:
   - combine_age_data
   - speciesLookupTable
+  - get_species_object_mskeyrun
 - title: "Package info"
   desc: ""
 - contents:
