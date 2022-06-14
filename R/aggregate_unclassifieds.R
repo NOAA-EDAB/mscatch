@@ -23,11 +23,11 @@ aggregate_unclassifieds <- function(data,variable,nLengthSamples,outputDir,logfi
   unclass <- data$landings %>%
     dplyr::filter(MARKET_CODE == "UN" & len_totalNumLen < nLengthSamples )  %>%
     dplyr::distinct(YEAR,.data[[variable]],NEGEAR)
-  nUnclass <- dim(unclass)[1] # number of cases
+  nUnclass <- nrow(unclass) # number of cases
 
-
+  if (!(nUnclass == 0)) {
   # for each row, select length distribution from master and expand
-  for(irow in 1:nUnclass) {
+    for(irow in 1:nUnclass) {
     missingRow <- unclass[irow,]
 
     # pull all lengths for YEAR, QTR/SEMESTER, NEGEAR where MARKET CODE != "UN"
@@ -83,7 +83,7 @@ aggregate_unclassifieds <- function(data,variable,nLengthSamples,outputDir,logfi
 
     }
   }
-
+  }
 
   return(data)
 

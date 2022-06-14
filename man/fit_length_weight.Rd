@@ -7,6 +7,7 @@
 fit_length_weight(
   lengthWeightData,
   speciesName,
+  speciesRules,
   outputDir = NULL,
   logfile = NULL
 )
@@ -15,6 +16,8 @@ fit_length_weight(
 \item{lengthWeightData}{Data frame. length-weight pairs. Each row represents an individual fish}
 
 \item{speciesName}{Character string. Common name for species}
+
+\item{speciesRules}{List. Obtained from \code{get_species_object}}
 
 \item{outputDir}{Character string. Path to output directory (Default = NULL, no output written)}
 
