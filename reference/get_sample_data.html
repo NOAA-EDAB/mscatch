@@ -95,20 +95,31 @@ Landings are pulled from STOCKEFF database using the tables:
     <dl><dt>channel</dt>
 <dd><p>an Object inherited from <a href="https://dbi.r-dbi.org/reference/DBIConnection-class.html" class="external-link">DBIConnection-class</a>.
 This object is used to communicate with the database engine. (see <code><a href="https://andybeet.github.io/dbutils/reference/connect_to_database.html" class="external-link">connect_to_database</a></code>)</p></dd>
+
+
 <dt>species</dt>
 <dd><p>Numeric scalar. Species_itis or NESPP3 code. Default = 164744 (147, Haddock)</p></dd>
+
+
 <dt>area</dt>
 <dd><p>Numeric vector. Statistical areas for which to pull data from. Default = "all"</p></dd>
+
+
 <dt>species_itis.</dt>
 <dd><p>Boolean . TRUE indicates species code is species_itis, FALSE = nespp3</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A list of two objects</p>
+    
+
+<p>A list of two objects</p>
 <dl><dt>landingsData</dt>
 <dd><p>Tibble containing landing data in format required for processing</p></dd>
+
 <dt>lengthData</dt>
 <dd><p>Tibble containing landing data in format required for processing</p></dd>
+
 </dl></div>
     <div id="details">
     <h2>Details</h2>
@@ -141,7 +152,7 @@ This object is used to communicate with the database engine. (see <code><a href=
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>

@@ -84,6 +84,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">fit_length_weight</span><span class="op">(</span>
   <span class="va">lengthWeightData</span>,
   <span class="va">speciesName</span>,
+  <span class="va">speciesRules</span>,
   outputDir <span class="op">=</span> <span class="cn">NULL</span>,
   logfile <span class="op">=</span> <span class="cn">NULL</span>
 <span class="op">)</span></code></pre></div>
@@ -93,21 +94,36 @@
     <h2>Arguments</h2>
     <dl><dt>lengthWeightData</dt>
 <dd><p>Data frame. length-weight pairs. Each row represents an individual fish</p></dd>
+
+
 <dt>speciesName</dt>
 <dd><p>Character string. Common name for species</p></dd>
+
+
+<dt>speciesRules</dt>
+<dd><p>List. Obtained from <code>get_species_object</code></p></dd>
+
+
 <dt>outputDir</dt>
 <dd><p>Character string. Path to output directory (Default = NULL, no output written)</p></dd>
+
+
 <dt>logfile</dt>
 <dd><p>Character string. Specify the name for the log file generated describing all decisions made.
 (Default = NULL, no output written)</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>List of model fit objects</p>
+    
+
+<p>List of model fit objects</p>
 <dl><dt>commonSlope</dt>
 <dd><p><code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></code> object. Fit for single slope (beta)</p></dd>
+
 <dt>seasonalSlope</dt>
 <dd><p><code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></code> object. Fit for seasonal slopes</p></dd>
+
 </dl></div>
     <div id="notes-on-model-fitting">
     <h2>Notes on model fitting</h2>
@@ -145,7 +161,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
 </div>
 
       </footer></div>
