@@ -50,18 +50,20 @@ expand_landings_to_lengths <- function(landingsData,lengthData,lengthWeightParam
 
 
   if (toupper(varType) == "SINGLE") {
+    lengthWeightPs <- lengthWeightParams[[toupper(varType)]]
     landingsExpanded <- joined %>%
       dplyr::group_by(dplyr::across(varsPresent)) %>%
-      dplyr::mutate(weight = expand_to_weight(LENGTH,NUMLEN,landings_land,lengthWeightParams)) %>%
+      dplyr::mutate(weight = expand_to_weight(LENGTH,NUMLEN,landings_land,lengthWeightPs)) %>%
       dplyr::select(!!varsPresent,LENGTH,NUMLEN,weight) %>%
       dplyr::ungroup()
 
   } else if (toupper(varType) %in% c("QUARTER","SEMESTER")) {
     # loop over TIME
     timeVals <- unique(joined$TIME)
+
     for (it in 1:length(timeVals)) {
-      lengthWeightPs <- lengthWeightParams
-      lengthWeightPs$betas <- lengthWeightParams$betas[it]
+      lengthWeightPs <- lengthWeightParams[[toupper(varType)]]
+      lengthWeightPs$betas <- lengthWeightPs$betas[it]
 
       landingsExp <- joined %>%
         dplyr::filter(TIME == timeVals[it]) %>%
@@ -77,8 +79,8 @@ expand_landings_to_lengths <- function(landingsData,lengthData,lengthWeightParam
     # Loop over year
     timeVals <- unique(joined$YEAR)
     for (it in 1:length(timeVals)) {
-      lengthWeightPs <- lengthWeightParams
-      lengthWeightPs$beta <- lengthWeightParams$beta[it]
+      lengthWeightPs <- lengthWeightParams[[toupper(varType)]]
+      lengthWeightPs$beta <- lengthWeightPs$beta[it]
 
       landingsExp <- joined %>%
         dplyr::filter(YEAR == timeVals[it]) %>%
@@ -95,8 +97,8 @@ expand_landings_to_lengths <- function(landingsData,lengthData,lengthWeightParam
     # Loop over sex
     timeVals <- unique(joined$SEX)
     for (it in 1:length(timeVals)) {
-      lengthWeightPs <- lengthWeightParams
-      lengthWeightPs$beta <- lengthWeightParams$beta[it]
+      lengthWeightPs <- lengthWeightParams[[toupper(varType)]]
+      lengthWeightPs$beta <- lengthWeightPs$beta[it]
 
       landingsExp <- joined %>%
         dplyr::filter(SEX == timeVals[it]) %>%
