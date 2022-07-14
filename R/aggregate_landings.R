@@ -411,7 +411,7 @@ print(nrow(lengthSamplesPresent))
   #.b. dont have any landings for other market categories. Cant obtain a scaling factor
   # so we need to check for this prior to expanding
 
-  data <- aggregate_unclassifieds(data,variable,nLengthSamples,outputDir,logfile)
+  data <- aggregate_unclassifieds(data,variable,nLengthSamples,aggregate_to,outputDir,logfile)
 
   # produce report on decisions made and include figures
 
