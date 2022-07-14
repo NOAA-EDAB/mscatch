@@ -4,10 +4,10 @@
 \alias{calc_numbers_at_age}
 \title{Calculates the numbers of fish at age}
 \usage{
-calc_numbers_at_age(expandedLandings, ageLenKeys, lengthWeightParams)
+calc_numbers_at_age(expLandings, ageLenKeys, lengthWeightParams)
 }
 \arguments{
-\item{expandedLandings}{Tibble. Expanded langings by length (from \code{expand_landings_to_lengths})}
+\item{expLandings}{Tibble. Expanded langings by length (from \code{expand_landings_to_lengths})}
 
 \item{lengthWeightParams}{List. alpha = intercept, betas = slope(s), var = residual variance used to formulate the mean (?see Notes section below)}
 

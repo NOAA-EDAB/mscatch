@@ -3,7 +3,7 @@
 #'Given the landings (expanded by length), the age-length key and the length-weight relationship,
 #'the number of fish at a given age is calculated
 #'
-#'@param expandedLandings Tibble. Expanded langings by length (from \code{expand_landings_to_lengths})
+#'@param expLandings Tibble. Expanded langings by length (from \code{expand_landings_to_lengths})
 #'@param ageLengthKeys Tibble. Age Length Keys (from \code{create_yr_semester_age_length_key}
 #'@param lengthWeightParams List. alpha = intercept, betas = slope(s), var = residual variance used to formulate the mean (?see Notes section below)
 #'
@@ -25,18 +25,25 @@
 #'
 #'@export
 
-calc_numbers_at_age <- function(expandedLandings,ageLenKeys,lengthWeightParams){
+calc_numbers_at_age <- function(expLandings,ageLenKeys,lengthWeightParams){
 
   varType <- lengthWeightParams$varType
-  lengthWeightPs <- lengthWeightParams[[toupper(varType)]]
+  lengthWeightParameters <- lengthWeightParams[[toupper(varType)]]
 
   # calculate the average weight of a fish of a given length and the estimated
   # total number of fish of a given length
+  landingsExpanded <- NULL
+  numTimes <- length(lengthWeightParameters$betas)
+  for (it in numTimes) {
+    lengthWeightPs <- lengthWeightParameters
+    lengthWeightPs$betas <- lengthWeightParameters$betas[it]
+    landingsExp <- expLandings %>%
+      dplyr::filter(TIME == it) %>%
+      dplyr::mutate(numbers = expand_to_num(LENGTH,weight,lengthWeightPs,"numbers")) %>%
+      dplyr::mutate(fishWeight = expand_to_num(LENGTH,weight,lengthWeightPs,"fishweight"))
 
-  landingsExpanded <- expandedLandings %>%
-    dplyr::mutate(numbers = mscatch:::expand_to_num(LENGTH,weight,lengthWeightPs,"numbers")) %>%
-    dplyr::mutate(fishWeight = mscatch:::expand_to_num(LENGTH,weight,lengthWeightPs,"fishweight"))
-
+      landingsExpanded <- rbind(landingsExpanded,landingsExp)
+  }
   # multiply my age Length key to obtain number of fish by age
   # long format for age length key
 
