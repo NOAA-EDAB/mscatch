@@ -33,6 +33,7 @@
 
 expand_landings_to_lengths <- function(landingsData,lengthData,lengthWeightParams){
 
+  ## NEED checks to make sure landings aggegation and LW relationship gels
 
   varType <- lengthWeightParams$varType
 
@@ -57,7 +58,7 @@ expand_landings_to_lengths <- function(landingsData,lengthData,lengthWeightParam
       dplyr::select(!!varsPresent,LENGTH,NUMLEN,weight) %>%
       dplyr::ungroup()
 
-  } else if (toupper(varType) %in% c("QUARTER","SEMESTER")) {
+  } else if (toupper(varType) == "QUARTER") {
     # loop over TIME
     timeVals <- unique(joined$TIME)
 
@@ -65,6 +66,36 @@ expand_landings_to_lengths <- function(landingsData,lengthData,lengthWeightParam
       lengthWeightPs <- lengthWeightParams[[toupper(varType)]]
       lengthWeightPs$betas <- lengthWeightPs$betas[it]
 
+      landingsExp <- joined %>%
+        dplyr::filter(TIME == timeVals[it]) %>%
+        dplyr::group_by(dplyr::across(varsPresent)) %>%
+        dplyr::mutate(weight = expand_to_weight(LENGTH,NUMLEN,landings_land,lengthWeightPs)) %>%
+        dplyr::select(!!varsPresent,LENGTH,NUMLEN,weight) %>%
+        dplyr::ungroup()
+
+      landingsExpanded <- rbind(landingsExpanded,landingsExp)
+    }
+
+  } else if (toupper(varType)  == "SEMESTER") {
+    # loop over TIME
+    timeVals <- unique(joined$TIME)
+    nT = length(timeVals)
+
+    for (it in 1:length(timeVals)) {
+      lengthWeightPs <- lengthWeightParams[[toupper(varType)]]
+
+      if (nT == 4) { # aggregated to Q but LW relationship is Semester
+        if (it %in% c(1,2)) {
+          lengthWeightPs$betas <- lengthWeightPs$betas[1]
+        } else {
+          lengthWeightPs$betas <- lengthWeightPs$betas[2]
+        }
+
+      } else if (nT == 2) { # aggregated to S and LW relationship is Semester
+        lengthWeightPs$betas <- lengthWeightPs$betas[it]
+      } else {
+        stop(paste0("Can not agregate landing to YEAR and have a LW relationship at ",toupper(varType)))
+      }
       landingsExp <- joined %>%
         dplyr::filter(TIME == timeVals[it]) %>%
         dplyr::group_by(dplyr::across(varsPresent)) %>%
