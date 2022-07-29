@@ -43,6 +43,7 @@ get_species_object_mskeyrun <- function(species_itis = NULL, stock = NA) {
     speciesRules$LengthWeightTimeBlocks <- NA
     speciesRules$AgeData <- NA
     speciesRules$AgeLengthKey <- NA
+    speciesRules$maxAge <- NA
     speciesRules$startDate <- NA
     speciesRules$stock <- NA
 
@@ -71,6 +72,7 @@ get_species_object_mskeyrun <- function(species_itis = NULL, stock = NA) {
                                                   end = c())
     speciesRules$AgeData <- c("commerical")
     speciesRules$AgeLengthKey <- c("year","semester")
+    speciesRules$maxAge <- 8
     speciesRules$startDate <- 1973
     speciesRules$stock <- NULL
 
@@ -99,6 +101,7 @@ get_species_object_mskeyrun <- function(species_itis = NULL, stock = NA) {
                                                   end = c())
     speciesRules$AgeData <- c("survey","commerical")
     speciesRules$AgeLengthKey <- c("year","semester")
+    speciesRules$maxAge <- 10
     speciesRules$startDate <- 1992
     speciesRules$stock <- NULL
 
@@ -126,7 +129,8 @@ get_species_object_mskeyrun <- function(species_itis = NULL, stock = NA) {
     speciesRules$LengthWeightTimeBlocks <- data.frame(start = c(),
                                                       end = c())
     speciesRules$AgeData <- c("commerical")
-    speciesRules$AgeLengthKey <- c("year","semester","gear")
+    speciesRules$AgeLengthKey <- c("year","semester")
+    speciesRules$maxAge <- 8
     speciesRules$startDate <- 1965
     speciesRules$stock <- NULL
 
@@ -150,11 +154,12 @@ get_species_object_mskeyrun <- function(species_itis = NULL, stock = NA) {
     speciesRules$statStockArea <- c(521,522,523,524,525,526,538,551,552,561,562,537)
     speciesRules$howAggregate <- "borrow" # assumed
     speciesRules$LengthWeightData <- "survey"
-    speciesRules$LengthWeightRelationships <- "semester"
+    speciesRules$LengthWeightRelationships <- c("semester")
     speciesRules$LengthWeightTimeBlocks <- data.frame(start = c(2005),
                                                       end = c(2005))
     speciesRules$AgeData <- c()
-    speciesRules$AgeLengthKey <- c()
+    speciesRules$AgeLengthKey <- c("year","semester")
+    speciesRules$maxAge <- 15
     speciesRules$startDate <- 1964
     speciesRules$stock <- NULL
 
@@ -183,6 +188,7 @@ get_species_object_mskeyrun <- function(species_itis = NULL, stock = NA) {
                                                       end = c(2010))
     speciesRules$AgeData <- c("commerical")
     speciesRules$AgeLengthKey <- c("year","semester")
+    speciesRules$maxAge <- 7
     speciesRules$startDate <- 1982
     speciesRules$stock <- "SNEMA"
 
@@ -211,6 +217,7 @@ get_species_object_mskeyrun <- function(species_itis = NULL, stock = NA) {
                                                       end = c(2007))
     speciesRules$AgeData <- c("commerical")
     speciesRules$AgeLengthKey <- c("year","semester")
+    speciesRules$maxAge <- 15
     speciesRules$startDate <- 1981
     speciesRules$stock <- NULL
 
@@ -303,6 +310,7 @@ get_species_object_mskeyrun <- function(species_itis = NULL, stock = NA) {
                                                       end = c(1979))
     speciesRules$AgeData <- "survey"
     speciesRules$AgeLengthKey <- c("year","semester")
+    speciesRules$maxAge <- 8
     speciesRules$startDate <- 1955
 
 
@@ -329,7 +337,8 @@ get_species_object_mskeyrun <- function(species_itis = NULL, stock = NA) {
     speciesRules$LengthWeightTimeBlocks <- data.frame(start = c(),
                                                       end = c())
     speciesRules$AgeData <- "survey"
-    speciesRules$AgeLengthKey <- c("semester")
+    speciesRules$AgeLengthKey <- c("year","semester")
+    speciesRules$maxAge <- 10
     speciesRules$startDate <- NA
     speciesRules$stock <- NULL
 

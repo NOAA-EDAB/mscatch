@@ -3,6 +3,8 @@
 #' @param data List. Landings data and length data
 #' @param variable Character string.
 #' @param nLenthSamples Numeric scalar. Number of length samples deemed to be "enough" for calculations. This is passed from \code{aggregate_landings}
+#' @param aggregate_to Character string. Level of aggregation for all MARKET_CODES and gears ("QTR", "YEAR", "SEMESTER", MIX").
+#'Default = YEAR.
 #' @param outputDir Character string. Path to output directory (png files saved here)
 #' @param logFile Character string. Specify the name for the log file generated describing all decisions made.
 #'
@@ -10,7 +12,7 @@
 #'@noRd
 
 
-aggregate_unclassifieds <- function(data,variable,nLengthSamples,outputDir,logfile) {
+aggregate_unclassifieds <- function(data,variable,nLengthSamples,aggregate_to,outputDir,logfile) {
 
   # When we go to expand unclasified. We have a problem if there are landings for "UN" but we
   # a. dont have any length samples. Cant expand

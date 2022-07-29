@@ -18,7 +18,7 @@
 combine_age_data <- function(ageSurvey,ageComland,aggregate_to) {
 
 
-  if(aggregate_to == "SEMESTER") {
+  if(toupper(aggregate_to) == "SEMESTER") {
     ageSurvey <- ageSurvey %>%
       dplyr::mutate(TIME = dplyr::case_when(SEASON %in% c("SPRING","SUMMER") ~ 1,
                               SEASON %in% c("FALL","WINTER") ~ 2,
@@ -34,7 +34,10 @@ combine_age_data <- function(ageSurvey,ageComland,aggregate_to) {
   }
 
 
-  if((aggregate_to == "QTR") | (aggregate_to == "YEAR") ) {
+  if ((toupper(aggregate_to) == "QUARTER") |
+      (toupper(aggregate_to) == "QTR")  |
+      (toupper(aggregate_to) == "YEAR") ) {
+
     ageSurvey <- ageSurvey %>%
       dplyr::mutate(TIME = dplyr::case_when(SEASON %in% c("SPRING") ~ 1,
                                             SEASON %in% c("SUMMER") ~ 2,
@@ -47,6 +50,7 @@ combine_age_data <- function(ageSurvey,ageComland,aggregate_to) {
       dplyr::rename(TIME = QTR) %>%
       dplyr::select(YEAR,TIME,SEX,AGE,LENGTH,NUMAGE)
   }
+
 
   ageData <- rbind(ageComland,ageSurvey)
 
