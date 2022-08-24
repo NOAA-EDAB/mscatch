@@ -81,13 +81,14 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">fit_length_weight</span><span class="op">(</span>
-  <span class="va">lengthWeightData</span>,
-  <span class="va">speciesName</span>,
-  <span class="va">speciesRules</span>,
-  outputDir <span class="op">=</span> <span class="cn">NULL</span>,
-  logfile <span class="op">=</span> <span class="cn">NULL</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fit_length_weight</span><span class="op">(</span></span>
+<span>  <span class="va">lengthWeightData</span>,</span>
+<span>  <span class="va">speciesName</span>,</span>
+<span>  <span class="va">speciesRules</span>,</span>
+<span>  outputDir <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  logfile <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  suppressMessages <span class="op">=</span> <span class="cn">F</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -111,6 +112,10 @@
 <dt>logfile</dt>
 <dd><p>Character string. Specify the name for the log file generated describing all decisions made.
 (Default = NULL, no output written)</p></dd>
+
+
+<dt>suppressMessages</dt>
+<dd><p>Boolean. Suppress all messages</p></dd>
 
 </dl></div>
     <div id="value">
@@ -161,7 +166,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

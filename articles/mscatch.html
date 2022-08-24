@@ -165,36 +165,36 @@
 </ul>
 <p>The data is pulled using the function <a href="https://noaa-edab.github.io/survdat/reference/get_length_weight_data.html" class="external-link"><code>get_length_weight_data</code></a> from the <a href="https://noaa-edab.github.io/survdat/" class="external-link"><code>survdat</code></a> package and fit using <code><a href="../reference/fit_length_weight.html">mscatch::fit_length_weight()</a></code></p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Permissions and credentials are required to conect to the database</span>
-<span class="va">channel</span> <span class="op">&lt;-</span> <span class="fu">dbutils</span><span class="fu">::</span><span class="fu"><a href="https://andybeet.github.io/dbutils/reference/connect_to_database.html" class="external-link">connect_to_database</a></span><span class="op">(</span><span class="st">"server"</span>,<span class="st">"user"</span><span class="op">)</span>
-<span class="co"># Haddock data are pulled (SVSPP = 74)</span>
-<span class="va">lengthWeightData</span> <span class="op">&lt;-</span> <span class="fu">survdat</span><span class="fu">::</span><span class="fu">get_length_weight_data</span><span class="op">(</span><span class="va">channel</span>,year<span class="op">=</span><span class="st">"all"</span>, species<span class="op">=</span><span class="fl">74</span><span class="op">)</span>
-<span class="co"># Length-Weight models are thenn fit</span>
-<span class="va">fits</span> <span class="op">&lt;-</span> <span class="fu">mscatch</span><span class="fu">::</span><span class="fu"><a href="../reference/fit_length_weight.html">fit_length_weight</a></span><span class="op">(</span><span class="va">lengthWeightData</span><span class="op">$</span><span class="va">data</span>,<span class="va">speciesName</span>,<span class="va">outputDir</span>,logfile<span class="op">=</span><span class="st">"logfile.txt"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Permissions and credentials are required to conect to the database</span></span>
+<span><span class="va">channel</span> <span class="op">&lt;-</span> <span class="fu">dbutils</span><span class="fu">::</span><span class="fu"><a href="https://andybeet.github.io/dbutils/reference/connect_to_database.html" class="external-link">connect_to_database</a></span><span class="op">(</span><span class="st">"server"</span>,<span class="st">"user"</span><span class="op">)</span></span>
+<span><span class="co"># Haddock data are pulled (SVSPP = 74)</span></span>
+<span><span class="va">lengthWeightData</span> <span class="op">&lt;-</span> <span class="fu">survdat</span><span class="fu">::</span><span class="fu">get_length_weight_data</span><span class="op">(</span><span class="va">channel</span>,year<span class="op">=</span><span class="st">"all"</span>, species<span class="op">=</span><span class="fl">74</span><span class="op">)</span></span>
+<span><span class="co"># Length-Weight models are thenn fit</span></span>
+<span><span class="va">fits</span> <span class="op">&lt;-</span> <span class="fu">mscatch</span><span class="fu">::</span><span class="fu"><a href="../reference/fit_length_weight.html">fit_length_weight</a></span><span class="op">(</span><span class="va">lengthWeightData</span><span class="op">$</span><span class="va">data</span>,<span class="va">speciesName</span>,<span class="va">outputDir</span>,logfile<span class="op">=</span><span class="st">"logfile.txt"</span><span class="op">)</span></span></code></pre></div>
 <ul>
 <li>The fitted model is then used to expand the catch. This is achieved by using <code><a href="../reference/expand_landings_to_lengths.html">mscatch::expand_landings_to_lengths()</a></code>
 </li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R">  <span class="va">expandedLandings</span> <span class="op">&lt;-</span> <span class="fu">mscatch</span><span class="fu">::</span><span class="fu"><a href="../reference/expand_landings_to_lengths.html">expand_landings_to_lengths</a></span><span class="op">(</span><span class="va">aggregatedData</span><span class="op">$</span><span class="va">landings</span>,<span class="va">aggregatedData</span><span class="op">$</span><span class="va">lengthData</span>,<span class="va">fits</span><span class="op">$</span><span class="va">paramsH0</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>speciesName <span class="op">=</span> <span class="va">speciesName</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span>  <span class="va">expandedLandings</span> <span class="op">&lt;-</span> <span class="fu">mscatch</span><span class="fu">::</span><span class="fu"><a href="../reference/expand_landings_to_lengths.html">expand_landings_to_lengths</a></span><span class="op">(</span><span class="va">aggregatedData</span><span class="op">$</span><span class="va">landings</span>,<span class="va">aggregatedData</span><span class="op">$</span><span class="va">lengthData</span>,<span class="va">fits</span><span class="op">$</span><span class="va">paramsH0</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>speciesName <span class="op">=</span> <span class="va">speciesName</span><span class="op">)</span></span></code></pre></div>
 <p>The resulting data will look like this</p>
-<pre><code><span class="co">#&gt;    YEAR NEGEAR MARKET_CODE LENGTH NUMLEN    weight  speciesName</span>
-<span class="co">#&gt; 1  2010    010          LG     77      3  873.8873 ATLANTIC COD</span>
-<span class="co">#&gt; 2  2010    010          LG     78      5 1515.7586 ATLANTIC COD</span>
-<span class="co">#&gt; 3  2010    010          LG     79      1  315.3299 ATLANTIC COD</span>
-<span class="co">#&gt; 4  2010    010          LG     80      2  655.6697 ATLANTIC COD</span>
-<span class="co">#&gt; 5  2010    010          LG     81      2  681.3422 ATLANTIC COD</span>
-<span class="co">#&gt; 6  2010    010          LG     82      1  353.8431 ATLANTIC COD</span>
-<span class="co">#&gt; 7  2010    010          LG     83      4 1469.4219 ATLANTIC COD</span>
-<span class="co">#&gt; 8  2010    010          LG     84      1  381.2127 ATLANTIC COD</span>
-<span class="co">#&gt; 9  2010    010          LG     85      2  790.8386 ATLANTIC COD</span>
-<span class="co">#&gt; 10 2010    010          LG     86      1  409.9799 ATLANTIC COD</span>
-<span class="co">#&gt; 11 2010    010          LG     87      2  849.7979 ATLANTIC COD</span>
-<span class="co">#&gt; 12 2010    010          LG     88      1  440.1811 ATLANTIC COD</span>
-<span class="co">#&gt; 13 2010    010          LG     89      1  455.8308 ATLANTIC COD</span>
-<span class="co">#&gt; 14 2010    010          LG     90      3 1415.5581 ATLANTIC COD</span>
-<span class="co">#&gt; 15 2010    010          LG     91      2  976.5027 ATLANTIC COD</span></code></pre>
+<pre><code><span><span class="co">#&gt;    YEAR NEGEAR MARKET_CODE LENGTH NUMLEN    weight  speciesName</span></span>
+<span><span class="co">#&gt; 1  2010    010          LG     77      3  873.8873 ATLANTIC COD</span></span>
+<span><span class="co">#&gt; 2  2010    010          LG     78      5 1515.7586 ATLANTIC COD</span></span>
+<span><span class="co">#&gt; 3  2010    010          LG     79      1  315.3299 ATLANTIC COD</span></span>
+<span><span class="co">#&gt; 4  2010    010          LG     80      2  655.6697 ATLANTIC COD</span></span>
+<span><span class="co">#&gt; 5  2010    010          LG     81      2  681.3422 ATLANTIC COD</span></span>
+<span><span class="co">#&gt; 6  2010    010          LG     82      1  353.8431 ATLANTIC COD</span></span>
+<span><span class="co">#&gt; 7  2010    010          LG     83      4 1469.4219 ATLANTIC COD</span></span>
+<span><span class="co">#&gt; 8  2010    010          LG     84      1  381.2127 ATLANTIC COD</span></span>
+<span><span class="co">#&gt; 9  2010    010          LG     85      2  790.8386 ATLANTIC COD</span></span>
+<span><span class="co">#&gt; 10 2010    010          LG     86      1  409.9799 ATLANTIC COD</span></span>
+<span><span class="co">#&gt; 11 2010    010          LG     87      2  849.7979 ATLANTIC COD</span></span>
+<span><span class="co">#&gt; 12 2010    010          LG     88      1  440.1811 ATLANTIC COD</span></span>
+<span><span class="co">#&gt; 13 2010    010          LG     89      1  455.8308 ATLANTIC COD</span></span>
+<span><span class="co">#&gt; 14 2010    010          LG     90      3 1415.5581 ATLANTIC COD</span></span>
+<span><span class="co">#&gt; 15 2010    010          LG     91      2  976.5027 ATLANTIC COD</span></span></code></pre>
 <p>where the <code>weight</code> column represents the weight (metric tons) of all fish of a given <code>LENGTH</code></p>
 </div>
 </div>
@@ -217,7 +217,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>

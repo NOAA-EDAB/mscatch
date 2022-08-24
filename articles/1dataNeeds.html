@@ -144,20 +144,20 @@
 <li>The number of times a fish of this length was sampled</li>
 </ul>
 <p>The data set should have this form</p>
-<pre><code><span class="co">#&gt; <span style="color: #949494;"># A tibble: 11 × 6</span></span>
-<span class="co">#&gt;     YEAR   QTR NEGEAR MARKET_CODE LENGTH NUMLEN</span>
-<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>  <span style="text-decoration: underline;">1</span>975     2 050    UN              37      4</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>  <span style="text-decoration: underline;">1</span>975     2 050    UN              38      2</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>  <span style="text-decoration: underline;">1</span>975     2 050    UN              25      1</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>  <span style="text-decoration: underline;">1</span>975     2 050    UN              28      1</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>  <span style="text-decoration: underline;">1</span>975     2 050    UN              30      1</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>  <span style="text-decoration: underline;">1</span>975     2 050    UN              31      4</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>  <span style="text-decoration: underline;">1</span>975     2 050    UN              32      8</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">1</span>975     2 050    UN              33      7</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">1</span>975     2 050    UN              34     14</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">1</span>975     2 050    UN              35      3</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">11</span>  <span style="text-decoration: underline;">1</span>975     2 050    UN              36      4</span></code></pre>
+<pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 11 × 6</span></span></span>
+<span><span class="co">#&gt;     YEAR   QTR NEGEAR MARKET_CODE LENGTH NUMLEN</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>  <span style="text-decoration: underline;">1</span>975     2 050    UN              37      4</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>  <span style="text-decoration: underline;">1</span>975     2 050    UN              38      2</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>  <span style="text-decoration: underline;">1</span>975     2 050    UN              25      1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>  <span style="text-decoration: underline;">1</span>975     2 050    UN              28      1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>  <span style="text-decoration: underline;">1</span>975     2 050    UN              30      1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>  <span style="text-decoration: underline;">1</span>975     2 050    UN              31      4</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>  <span style="text-decoration: underline;">1</span>975     2 050    UN              32      8</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">1</span>975     2 050    UN              33      7</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">1</span>975     2 050    UN              34     14</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">1</span>975     2 050    UN              35      3</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span>  <span style="text-decoration: underline;">1</span>975     2 050    UN              36      4</span></span></code></pre>
 <p>where each row represents the number of fish sampled of a given length in YEAR, QTR, caught using NEGEAR and classed as MARKET_CODE</p>
 <ul>
 <li>LENGTH is the length in cm of sampled fish and</li>
@@ -173,25 +173,25 @@
 <p>Trips with missing gear information is handled in <code>mscatch</code>. It is assumed that trips with unknown gear information are catching fish with lengths proportional to trips with known gear types.</p>
 <p>Discards are not included in this data. At a future date both <a href="https://noaa-edab.github.io/comlandr/index.html" class="external-link"><code>comlandr</code></a> and the stock efficiency initiative will contain discard estimates using the methods of <span class="citation">(Wigley &amp; Tholke, <a href="#ref-Wigley2020" role="doc-biblioref">2020</a>)</span>.</p>
 <p>The resulting Catch data is then merged with the biological samples to summarize total catch (metric tons) by YEAR, QTR, GEAR, MARKET_CODE, the number of biological samples taken (<code>landings_nn</code>), and the total number of fish sampled (<code>len_totalNumlen</code>). The data set should have this form:</p>
-<pre><code><span class="co">#&gt; <span style="color: #949494;"># A tibble: 15 × 8</span></span>
-<span class="co">#&gt;     YEAR   QTR NEGEAR MARKET_CODE landings_land landings_nn len_totalNumLen</span>
-<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>  <span style="text-decoration: underline;">2</span>000     1 010    UN                  <span style="text-decoration: underline;">10</span>935           7              <span style="color: #BB0000;">NA</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>  <span style="text-decoration: underline;">2</span>000     1 050    UN                 <span style="text-decoration: underline;">185</span>019          27              <span style="color: #BB0000;">NA</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>  <span style="text-decoration: underline;">2</span>000     1 100    UN                 <span style="text-decoration: underline;">138</span>712          65              <span style="color: #BB0000;">NA</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>  <span style="text-decoration: underline;">2</span>000     1 360    UN                     34           1              <span style="color: #BB0000;">NA</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>  <span style="text-decoration: underline;">2</span>000     2 010    UN                 <span style="text-decoration: underline;">525</span>450         117             250</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>  <span style="text-decoration: underline;">2</span>000     2 020    UN                     81           3              <span style="color: #BB0000;">NA</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>  <span style="text-decoration: underline;">2</span>000     2 050    UN                  <span style="text-decoration: underline;">12</span>754          45              <span style="color: #BB0000;">NA</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">2</span>000     2 100    UN                 <span style="text-decoration: underline;">319</span>747         433             125</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">2</span>000     2 360    UN                   <span style="text-decoration: underline;">2</span>496          12              <span style="color: #BB0000;">NA</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">2</span>000     3 010    UN                3<span style="text-decoration: underline;">122</span>083         512             655</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">11</span>  <span style="text-decoration: underline;">2</span>000     3 020    UN                 <span style="text-decoration: underline;">128</span>054          41              <span style="color: #BB0000;">NA</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">12</span>  <span style="text-decoration: underline;">2</span>000     3 050    UN                   <span style="text-decoration: underline;">3</span>680          11              <span style="color: #BB0000;">NA</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">13</span>  <span style="text-decoration: underline;">2</span>000     3 100    UN                 <span style="text-decoration: underline;">280</span>584         266             100</span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">14</span>  <span style="text-decoration: underline;">2</span>000     4 050    UN                   <span style="text-decoration: underline;">2</span>160           9              <span style="color: #BB0000;">NA</span></span>
-<span class="co">#&gt; <span style="color: #BCBCBC;">15</span>  <span style="text-decoration: underline;">2</span>000     4 100    UN                   <span style="text-decoration: underline;">4</span>912          16              <span style="color: #BB0000;">NA</span></span>
-<span class="co">#&gt; <span style="color: #949494;"># … with 1 more variable: len_numLengthSamples &lt;int&gt;</span></span></code></pre>
+<pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 15 × 8</span></span></span>
+<span><span class="co">#&gt;     YEAR   QTR NEGEAR MARKET_CODE landings_land landings_nn len_totalN…¹ len_n…²</span></span>
+<span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span>  <span style="text-decoration: underline;">2</span>000     1 010    UN                  <span style="text-decoration: underline;">10</span>935           7           <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span>  <span style="text-decoration: underline;">2</span>000     1 050    UN                 <span style="text-decoration: underline;">185</span>019          27           <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span>  <span style="text-decoration: underline;">2</span>000     1 100    UN                 <span style="text-decoration: underline;">138</span>712          65           <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span>  <span style="text-decoration: underline;">2</span>000     1 360    UN                     34           1           <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span>  <span style="text-decoration: underline;">2</span>000     2 010    UN                 <span style="text-decoration: underline;">525</span>450         117          250       1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span>  <span style="text-decoration: underline;">2</span>000     2 020    UN                     81           3           <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span>  <span style="text-decoration: underline;">2</span>000     2 050    UN                  <span style="text-decoration: underline;">12</span>754          45           <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span>  <span style="text-decoration: underline;">2</span>000     2 100    UN                 <span style="text-decoration: underline;">319</span>747         433          125       1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">2</span>000     2 360    UN                   <span style="text-decoration: underline;">2</span>496          12           <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">2</span>000     3 010    UN                3<span style="text-decoration: underline;">122</span>083         512          655       3</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span>  <span style="text-decoration: underline;">2</span>000     3 020    UN                 <span style="text-decoration: underline;">128</span>054          41           <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">12</span>  <span style="text-decoration: underline;">2</span>000     3 050    UN                   <span style="text-decoration: underline;">3</span>680          11           <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">13</span>  <span style="text-decoration: underline;">2</span>000     3 100    UN                 <span style="text-decoration: underline;">280</span>584         266          100       1</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">14</span>  <span style="text-decoration: underline;">2</span>000     4 050    UN                   <span style="text-decoration: underline;">2</span>160           9           <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">15</span>  <span style="text-decoration: underline;">2</span>000     4 100    UN                   <span style="text-decoration: underline;">4</span>912          16           <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># … with abbreviated variable names ¹​len_totalNumLen, ²​len_numLengthSamples</span></span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="use-mscatch">Use <code>mscatch</code><a class="anchor" aria-label="anchor" href="#use-mscatch"></a>
@@ -229,7 +229,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer>
