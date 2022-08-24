@@ -9,7 +9,8 @@ fit_length_weight(
   speciesName,
   speciesRules,
   outputDir = NULL,
-  logfile = NULL
+  logfile = NULL,
+  suppressMessages = F
 )
 }
 \arguments{
@@ -23,6 +24,8 @@ fit_length_weight(
 
 \item{logfile}{Character string. Specify the name for the log file generated describing all decisions made.
 (Default = NULL, no output written)}
+
+\item{suppressMessages}{Boolean. Suppress all messages}
 }
 \value{
 List of model fit objects

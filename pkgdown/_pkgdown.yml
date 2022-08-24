@@ -12,6 +12,8 @@ reference:
   - expand_landings_to_lengths
   - get_multinomial_props
   - create_age_length_key
+  - calc_numbers_at_age
+  - create_yr_semester_age_length_key
 - title: "Lazy Data"
   desc: "Data loaded with the package"
 - contents:
