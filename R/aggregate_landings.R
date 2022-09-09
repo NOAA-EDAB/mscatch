@@ -38,7 +38,7 @@
 aggregate_landings <- function(channel,
                                landingsData,
                                lengthData,
-                               speciesName,
+                               speciesName = NULL,
                                landingsThresholdGear = .90,
                                nLengthSamples = 1,
                                pValue = 0.05,
@@ -64,6 +64,14 @@ aggregate_landings <- function(channel,
   data <- checks_qa_qc(landingsData,lengthData,speciesName,aggregate_to,outputDir,logfile)
 
   speciesRules <- expand_species_rules(speciesRules,outputDir,logfile)
+
+  if (is.null(speciesName) & is.null(speciesRules)){
+    stop("Missing species Name: The species name must be present in EITHER the argument `speciesName` or `speciesRules$speciesName` ")
+  } else if (!is.null(speciesName) & !is.null(speciesRules)) {
+    stop("Multiple species Names: The species name must be present in EITHER the argument `speciesName` or `speciesRules$speciesName` ")
+  } else if (is.null(speciesName)){
+    speciesName <- speciesRules$speciesName
+  }
 
   plot_landings_by_type(speciesRules$speciesName,data$landings,1,outputPlots,outputDir,"3a",type="QTR")
   plot_lengths_by_type(speciesRules$speciesName,data$landings,1,outputPlots,outputDir,"3c",type="QTR")
