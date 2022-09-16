@@ -8,7 +8,7 @@ get_species_data(
   species_itis = NULL,
   stock = NULL,
   outPath = here::here(),
-  fileName = "speciesData.rds"
+  fileName = NULL
 )
 }
 \arguments{
@@ -28,6 +28,6 @@ List. Data is also written to disk.
 \item{lengths}{Data frame containing fish lengths by YEAR, QTR, NEGEAR, MARKET_CODE }
 }
 \description{
-Pulls data from cfdbs via comlandr.
+Pulls data from cfdbs via \code{\link{[comlandr]}}
 Palmer method applied to assign missing attributes (NEGEAR, QTR, AREA) to landings records
 }

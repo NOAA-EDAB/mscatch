@@ -21,14 +21,30 @@ When working with `mscatch` you will need to:
 *   [Assemble data](1dataNeeds.html) for use in the package
 *   [Aggregate the data](2aggregationRules.html) based on a set of rules
 *   Use length-weight relationships to [expand the catch](3catchExpansion.html) to weights using the length samples
+*   [Create and age Length Key](3bAgeLengthKeys.html)
 
-## Example
 
-Assuming you have assembled the data (for a sample data set see,  [`get_sample_data`](../reference/get_sample_data.html)), the next step is determine how you would like to aggregate the data and how you would like to deal with YEARs/QTRs with missing length samples. 
+Assuming you have assembled the data (for a sample data set see,  [`get_sample_data`](../reference/get_sample_data.html)), the next step is determine how the data should be aggregate and how to deal with missing length samples in YEARs/QTRs where there are catch.
 
-### Aggregate the data
+There are two approaches a user can take
 
-The following example implements the following decisions:
+### Define a species object
+
+A [species object](https://noaa-edab.github.io/mscatch/reference/get_species_object.html) can be defined and passed as an argument to the [aggregate_landings](https://noaa-edab.github.io/mscatch/reference/aggregate_landings.html) function. This object specifies decision rules to be used in the aggregation step specific to the species in question.
+
+### General diagnostics
+
+This option is for exploring the data and assessing the impacts related to aggregation decisions.
+
+
+## Example using species object
+
+The following example implements the following decisions for Haddock.
+
+```{r}
+speciesRules <- get_species_object(species_itis = 164744)
+```
+
 
 * Assigns the name of species (`speciesName = "Haddock"`)
 

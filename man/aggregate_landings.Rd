@@ -8,7 +8,7 @@ aggregate_landings(
   channel,
   landingsData,
   lengthData,
-  speciesName,
+  speciesName = NULL,
   landingsThresholdGear = 0.9,
   nLengthSamples = 1,
   pValue = 0.05,

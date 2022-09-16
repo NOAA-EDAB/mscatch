@@ -1,0 +1,19 @@
+---
+title: "4. Age-Length keys"
+#output: html_document
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{3. Catch Expansion}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+library(magrittr)
+```
+
+

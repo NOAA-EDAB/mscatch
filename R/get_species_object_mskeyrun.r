@@ -3,7 +3,6 @@
 #' Lists set of rules required for catch at length aggregation
 #'
 #'@param species_itis Numeric. Itis code for species (Default = NA, Returns a NA object for user to define)
-#'@param stock Character string. Define stock region for species_itis (Default = NA)
 #'
 #'
 #'@return A List
@@ -26,28 +25,9 @@
 #'
 #'@export
 
-get_species_object_mskeyrun <- function(species_itis = NULL, stock = NA) {
+get_species_object_mskeyrun <- function(species_itis = NULL) {
 
-  if (is.null(species_itis)) {
-    speciesRules <- list()
-    speciesRules$species_itis <- NA
-    speciesRules$speciesName <- NA
-    speciesRules$SVSPP <- NA
-    speciesRules$temporalAggregation <- NA
-    speciesRules$marketCodes <- NA
-    speciesRules$gearCodes <- NA
-    speciesRules$statStockArea <- NA
-    speciesRules$howAggregate <- NA
-    speciesRules$LengthWeightData <- NA
-    speciesRules$LengthWeightRelationships <- NA
-    speciesRules$LengthWeightTimeBlocks <- NA
-    speciesRules$AgeData <- NA
-    speciesRules$AgeLengthKey <- NA
-    speciesRules$maxAge <- NA
-    speciesRules$startDate <- NA
-    speciesRules$stock <- NA
-
-  } else if (species_itis == 172909) { # Yellowtail
+  if (species_itis == 172909) { # Yellowtail
     speciesRules <- list()
     speciesRules$species_itis <- 172909
     speciesRules$speciesName <- mscatch::speciesLookupTable %>%
@@ -64,16 +44,12 @@ get_species_object_mskeyrun <- function(species_itis = NULL, stock = NA) {
     speciesRules$gearCodes <- data.frame(use = c("demersal"),
                                          combine=c("all"))
     speciesRules$statStockArea <- c(521,522,523,524,525,526,538,551,552,561,562,537)
-    speciesRules$howAggregate <- "combine"
+    speciesRules$howAggregate <- "borrow"
     speciesRules$LengthWeightData <- "survey"
-    speciesRules$LengthWeightDataTime <- "all"
     speciesRules$LengthWeightRelationships <- c("semester")
-    speciesRules$LengthWeightTimeBlocks <- data.frame(start = c(),
-                                                  end = c())
-    speciesRules$AgeData <- c("commerical")
+    speciesRules$AgeData <- c("survey","commerical")
     speciesRules$AgeLengthKey <- c("year","semester")
     speciesRules$maxAge <- 8
-    speciesRules$startDate <- 1973
     speciesRules$stock <- NULL
 
 
@@ -97,12 +73,9 @@ get_species_object_mskeyrun <- function(species_itis = NULL, stock = NA) {
     speciesRules$howAggregate <- "borrow"
     speciesRules$LengthWeightData <- "survey"
     speciesRules$LengthWeightRelationships <- "semester"
-    speciesRules$LengthWeightTimeBlocks <- data.frame(start = c(),
-                                                  end = c())
     speciesRules$AgeData <- c("survey","commerical")
     speciesRules$AgeLengthKey <- c("year","semester")
     speciesRules$maxAge <- 10
-    speciesRules$startDate <- 1992
     speciesRules$stock <- NULL
 
 
@@ -123,17 +96,13 @@ get_species_object_mskeyrun <- function(species_itis = NULL, stock = NA) {
     speciesRules$gearCodes <- data.frame(use = c("pelagic"),
                                          combine=c("all"))
     speciesRules$statStockArea <- c(521,522,523,524,525,526,538,551,552,561,562,537)
-    speciesRules$howAggregate <- "combine"
-    speciesRules$LengthWeightData <- "commercial"
+    speciesRules$howAggregate <- "borrow"
+    speciesRules$LengthWeightData <- "survey"
     speciesRules$LengthWeightRelationships <- "quarter"#c("year") #,"quarter","gear") # as aggregation
-    speciesRules$LengthWeightTimeBlocks <- data.frame(start = c(),
-                                                      end = c())
-    speciesRules$AgeData <- c("commerical")
+    speciesRules$AgeData <- c("survey","commerical")
     speciesRules$AgeLengthKey <- c("year","semester")
     speciesRules$maxAge <- 8
-    speciesRules$startDate <- 1965
     speciesRules$stock <- NULL
-
 
   } else if (species_itis == 164744 ) { #Haddock
     speciesRules <- list()
@@ -152,19 +121,16 @@ get_species_object_mskeyrun <- function(species_itis = NULL, stock = NA) {
     speciesRules$gearCodes <- data.frame(use = c("demersal","demersal","fixedGear"),
                                          combine=c("05","13","all"))
     speciesRules$statStockArea <- c(521,522,523,524,525,526,538,551,552,561,562,537)
-    speciesRules$howAggregate <- "borrow" # assumed
+    speciesRules$howAggregate <- "borrow"
     speciesRules$LengthWeightData <- "survey"
     speciesRules$LengthWeightRelationships <- c("semester")
-    speciesRules$LengthWeightTimeBlocks <- data.frame(start = c(2005),
-                                                      end = c(2005))
-    speciesRules$AgeData <- c()
+    speciesRules$AgeData <- c("survey","commerical")
     speciesRules$AgeLengthKey <- c("year","semester")
     speciesRules$maxAge <- 15
-    speciesRules$startDate <- 1964
     speciesRules$stock <- NULL
 
 
-  } else if (species_itis == 172905 & stock == "" ) { #Winter flounder dummy stock
+  } else if (species_itis == 172905) { #Winter flounder dummy stock
     speciesRules <- list()
     speciesRules$species_itis <- 172905
     speciesRules$speciesName <- mscatch::speciesLookupTable %>%
@@ -184,13 +150,10 @@ get_species_object_mskeyrun <- function(species_itis = NULL, stock = NA) {
     speciesRules$howAggregate <- "borrow"
     speciesRules$LengthWeightData <- "survey"
     speciesRules$LengthWeightRelationships <- "single"
-    speciesRules$LengthWeightTimeBlocks <- data.frame(start = c(1960),
-                                                      end = c(2010))
-    speciesRules$AgeData <- c("commerical")
+    speciesRules$AgeData <- c("survey","commerical")
     speciesRules$AgeLengthKey <- c("year","semester")
     speciesRules$maxAge <- 7
-    speciesRules$startDate <- 1982
-    speciesRules$stock <- "SNEMA"
+    speciesRules$stock <- NULL
 
 
   } else if (species_itis == 164712) { # Cod (GB).  East + West(561-562) regions
@@ -210,15 +173,12 @@ get_species_object_mskeyrun <- function(species_itis = NULL, stock = NA) {
     speciesRules$gearCodes <- data.frame(use = c("demersal","demersal","demersal","demersal","fixedGear"),
                                          combine= c("05","16","36","13","all"))
     speciesRules$statStockArea <- c(521,522,523,524,525,526,538,551,552,561,562,537)
-    speciesRules$howAggregate <- "borrow" # assumed
+    speciesRules$howAggregate <- "borrow"
     speciesRules$LengthWeightData <- "survey"
     speciesRules$LengthWeightRelationships <- c("semester")
-    speciesRules$LengthWeightTimeBlocks <- data.frame(start = c(1992),
-                                                      end = c(2007))
-    speciesRules$AgeData <- c("commerical")
+    speciesRules$AgeData <- c("survey","commerical")
     speciesRules$AgeLengthKey <- c("year","semester")
     speciesRules$maxAge <- 15
-    speciesRules$startDate <- 1981
     speciesRules$stock <- NULL
 
 
@@ -242,11 +202,9 @@ get_species_object_mskeyrun <- function(species_itis = NULL, stock = NA) {
     speciesRules$howAggregate <- "borrow" #???
     speciesRules$LengthWeightData <- "survey"
     speciesRules$LengthWeightRelationships <- "single"#c("sex")
-    speciesRules$LengthWeightTimeBlocks <- data.frame(start = c(),
-                                                      end = c())
     speciesRules$AgeData <- NA
     speciesRules$AgeLengthKey <- NA
-    speciesRules$startDate <- NA
+    speciesRules$maxAge <- NA
     speciesRules$stock <- NULL
 
 
@@ -267,18 +225,16 @@ get_species_object_mskeyrun <- function(species_itis = NULL, stock = NA) {
     speciesRules$marketCodes <- data.frame(use = "UN",
                                          combine = "all")
     speciesRules$statStockArea <- c(521,522,523,524,525,526,538,551,552,561,562,537)#???
-    speciesRules$howAggregate <- NA
+    speciesRules$howAggregate <- "borrow"
     speciesRules$LengthWeightData <- "survey"
     speciesRules$LengthWeightRelationships <- "single"
-    speciesRules$LengthWeightTimeBlocks <- data.frame(start = c(),
-                                                      end = c())
     speciesRules$AgeData <- NA
     speciesRules$AgeLengthKey <- NA
-    speciesRules$startDate <- NA
+    speciesRules$maxAge <- NA
     speciesRules$stock <- NULL
 
 
-  } else if (species_itis == 164791) { # silver hake
+  } else if (species_itis == 164791) { # silver hake dummy stock
     speciesRules <- list()
     speciesRules$species_itis <- 164791
     speciesRules$speciesName <- mscatch::speciesLookupTable %>%
@@ -290,29 +246,19 @@ get_species_object_mskeyrun <- function(species_itis = NULL, stock = NA) {
       dplyr::distinct(SVSPP) %>%
       dplyr::pull()
     speciesRules$temporalAggregation <- "semester"
-
-    if(is.null(stock)) {
-      stop(paste0("Please enter a valid stock definition for ",speciesRules$speciesName,". Either North or South"))
-    }
-
     speciesRules$statStockArea <- c(521,522,523,524,525,526,538,551,552,561,562,537)
-
     speciesRules$howAggregate <- "borrow"
     speciesRules$marketCodes <- data.frame(use=c("UN"),
                                            combine=c("all"))
     speciesRules$gearCodes <- data.frame(use = c("demersal"),
                                          combine = c("all"))
-    speciesRules$stock <- "all"
 
     speciesRules$LengthWeightData <- "survey"
     speciesRules$LengthWeightRelationships <- c("semester")
-    speciesRules$LengthWeightTimeBlocks <- data.frame(start = c(1973),
-                                                      end = c(1979))
-    speciesRules$AgeData <- "survey"
+    speciesRules$AgeData <- c("survey","commerical")
     speciesRules$AgeLengthKey <- c("year","semester")
     speciesRules$maxAge <- 8
-    speciesRules$startDate <- 1955
-
+    speciesRules$stock <- NULL
 
   } else if (species_itis == 164499) { # monkfish
     speciesRules <- list()
@@ -334,12 +280,9 @@ get_species_object_mskeyrun <- function(species_itis = NULL, stock = NA) {
     speciesRules$howAggregate <- "borrow"
     speciesRules$LengthWeightData <- "survey"
     speciesRules$LengthWeightRelationships <- "semester" # c("year","semester")
-    speciesRules$LengthWeightTimeBlocks <- data.frame(start = c(),
-                                                      end = c())
-    speciesRules$AgeData <- "survey"
+    speciesRules$AgeData <- c("survey","commerical")
     speciesRules$AgeLengthKey <- c("year","semester")
     speciesRules$maxAge <- 10
-    speciesRules$startDate <- NA
     speciesRules$stock <- NULL
 
 

@@ -1,6 +1,6 @@
 #' Pull species data from cfdbs
 #'
-#' Pulls data from cfdbs via comlandr.
+#' Pulls data from cfdbs via \code{\link{[comlandr]}}
 #' Palmer method applied to assign missing attributes (NEGEAR, QTR, AREA) to landings records
 #'
 #'@param species_itis Numeric. Itis code for species (Default = NA, Returns a NA object for user to define)
@@ -18,15 +18,17 @@
 #'
 #'@export
 
-get_species_data <- function(species_itis = NULL, stock = NULL, outPath= here::here(), fileName = "speciesData.rds") {
+get_species_data <- function(species_itis = NULL, stock = NULL, outPath= here::here(), fileName = NULL) {
 
   if (is.null(species_itis)) {
     stop(paste0("Please supply a species itis code"))
   }
 
-  speciesRules <- get_species_object(species_itis)
+  #speciesRules <- get_species_object(species_itis)
 
   # pull data from comlandr over spatial unit of interest, eg GB. Include discards
+
+
 
   # Rename columns of interest, eg MARKET_CODE, NEGEAR etc
 
@@ -38,7 +40,12 @@ get_species_data <- function(species_itis = NULL, stock = NULL, outPath= here::h
 
   # format the data in the format required for mscatch and save to machine
 
-  saveRDS(data,file = paste0(outPath,"/",fileName))
+  if (is.null(fileName)) {
+    saveRDS(data,file = paste0(outPath,"/","speciesData_",species_itis,".rds"))
+  } else {
+    saveRDS(data,file = paste0(outPath,"/",fileName))
+  }
+
 
   return(data)
 
