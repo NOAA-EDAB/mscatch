@@ -29,3 +29,23 @@ reference:
   desc: ""
 - contents:
   - mscatch
+
+navbar:
+ components:
+  articles:
+   text: Articles
+   menu:
+   - text: Data Requirements
+     href: articles/dataNeeds.html
+   - text: Rules of Aggregation
+     href: articles/aggregationRules.html
+   - text: Catch expansion to lengths
+     href: articles/catchExpansion.html
+   - text: Catch expansion to Ages
+     href: articles/ageExpansion.html
+   - text: Sample Output
+     href: articles/sampleFigures.html
+   - text: Underlyng rules
+     href: articles/underlyingRules.html
+   - text: --------
+   - t
