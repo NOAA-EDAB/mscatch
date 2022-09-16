@@ -3,7 +3,6 @@
 #' Lists set of rules required for catch at length aggregation
 #'
 #'@param species_itis Numeric. Itis code for species (Default = NA, Returns a NA object for user to define)
-#'@param stock Character string. Define stock region for species_itis (Default = NA)
 #'
 #'
 #'@return A List
@@ -26,7 +25,7 @@
 #'
 #'@export
 
-get_species_object_mskeyrun <- function(species_itis = NULL, stock = NA) {
+get_species_object_mskeyrun <- function(species_itis = NULL) {
 
   if (species_itis == 172909) { # Yellowtail
     speciesRules <- list()
