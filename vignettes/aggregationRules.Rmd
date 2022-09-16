@@ -1,9 +1,9 @@
 ---
-title: "2. Rules of Aggregation"
+title: "Rules of Aggregation"
 #output: html_document
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{2. Rules of Aggregation}
+  %\VignetteIndexEntry{Rules of Aggregation}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

@@ -1,9 +1,9 @@
 ---
-title: "3. Catch Expansion"
+title: "Catch Expansion"
 #output: html_document
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{3. Catch Expansion}
+  %\VignetteIndexEntry{Catch Expansion}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

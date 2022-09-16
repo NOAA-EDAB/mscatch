@@ -18,10 +18,10 @@ knitr::opts_chunk$set(
 
 When working with `mscatch` you will need to:
 
-*   [Assemble data](1dataNeeds.html) for use in the package
-*   [Aggregate the data](2aggregationRules.html) based on a set of rules
-*   Use length-weight relationships to [expand the catch](3catchExpansion.html) to weights using the length samples
-*   [Create and age Length Key](3bAgeLengthKeys.html)
+*   [Assemble data](articles/dataNeeds.html) for use in the package
+*   [Aggregate the data](articles/aggregationRules.html) based on a set of rules
+*   Use length-weight relationships to [expand the catch](articles/catchExpansion.html) to weights using the length samples
+*   [Create and age Length Key](articles/ageExpansion.html)
 
 
 Assuming you have assembled the data (for a sample data set see,  [`get_sample_data`](../reference/get_sample_data.html)), the next step is determine how the data should be aggregate and how to deal with missing length samples in YEARs/QTRs where there are catch.
@@ -41,7 +41,7 @@ This option is for exploring the data and assessing the impacts related to aggre
 
 The following example implements the following decisions for Haddock.
 
-```{r}
+```{r, echo=F,eval=F}
 speciesRules <- get_species_object(species_itis = 164744)
 ```
 

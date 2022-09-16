@@ -1,9 +1,9 @@
 ---
-title: "4. Age-Length keys"
+title: "Age-Length keys"
 #output: html_document
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{3. Catch Expansion}
+  %\VignetteIndexEntry{Age-Length keys}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

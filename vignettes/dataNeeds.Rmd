@@ -1,12 +1,12 @@
 ---
-title: "1. Data Requirements"
+title: "Data Requirements"
 #output: html_document
 output: rmarkdown::html_vignette
 csl: apa-annotated-bibliography.csl
 bibliography: references.bib
 link-citations: yes
 vignette: >
-  %\VignetteIndexEntry{1. Data Requirements}
+  %\VignetteIndexEntry{Data Requirements}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
