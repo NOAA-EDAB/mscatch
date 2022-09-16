@@ -9,10 +9,14 @@
 [![gitleaks](https://github.com/NOAA-EDAB/mscatch/workflows/gitleaks/badge.svg)](https://github.com/NOAA-EDAB/mscatch/actions)
 <!-- badges: end -->
 
-In development …
+Currently in development …
 
-The goal of `mscatch` is to expand total catch by species and area
-apportioned to length composition in a consistent manner.
+The goal of `mscatch` is to:
+
+* Expand total catch by species and area apportioned to length composition
+* Expand total catch by species and area apportioned to age composition
+
+
 
 ## Installation
 
