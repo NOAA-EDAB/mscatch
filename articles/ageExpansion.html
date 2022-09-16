@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Underlying Rules • mscatch</title>
+<title>Age-Length keys • mscatch</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -17,7 +17,7 @@
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Underlying Rules">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Age-Length keys">
 <meta property="og:description" content="mscatch">
 <meta property="og:image" content="https://noaa-edab.github.io/mscatch/logo.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
@@ -100,98 +100,25 @@
 
       
 
-      </header><script src="underlyingRules_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><script src="ageExpansion_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Underlying Rules</h1>
+      <h1 data-toc-skip>Age-Length keys</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/NOAA-EDAB/mscatch/blob/HEAD/vignettes/underlyingRules.Rmd" class="external-link"><code>vignettes/underlyingRules.Rmd</code></a></small>
-      <div class="hidden name"><code>underlyingRules.Rmd</code></div>
+      <small class="dont-index">Source: <a href="https://github.com/NOAA-EDAB/mscatch/blob/HEAD/vignettes/ageExpansion.Rmd" class="external-link"><code>vignettes/ageExpansion.Rmd</code></a></small>
+      <div class="hidden name"><code>ageExpansion.Rmd</code></div>
 
     </div>
 
     
     
-<p>The following set of rules are the basis for <code>mscatch</code>.</p>
-<p>In many stock assessments each year may result in a different level of aggregation (i.e quarters, semesters or different gear types).</p>
-<p>Note: minimum number of length samples ~ 1 per 200 metric tonnes landed. (unwritten rule of thumb, check )</p>
-<p>(Within each year, t)</p>
-<div class="section level2">
-<h2 id="combine">Combine:<a class="anchor" aria-label="anchor" href="#combine"></a>
-</h2>
-<ul>
-<li>Are there <em>gear</em> types with total landings greater than 0 but total sample sizes less than <em>X</em>?</li>
-</ul>
-<pre><code>    + if YES: Combine gear types (explore to see if combined lengths similar) 
-    to increase sample size or Ignore and continue (add to total at the end).
-    + if NO: Count your blessings and continue.  </code></pre>
-<ul>
-<li>Are there <em>market categories</em> (they are not on ordinal scale) with total landings greater than 0 but sample sizes less than <em>X</em>? (after combining gears).</li>
-</ul>
-<pre><code>      + if YES: combine market categories with similar length distributions. 
-      + if NO : Count your blessings and continue.  </code></pre>
-<ul>
-<li>Are there <em>quarters</em> with landings but sample sizes less than <em>X</em>?</li>
-</ul>
-<pre><code>    + if YES: Create semesters?  (Currently semesters are skipped and jump straight to annual)
-      + if NO: Count your blessings and continue.  </code></pre>
-<ul>
-<li>Are there <em>strata</em> with landings but sample sizes less than <em>X</em>?</li>
-</ul>
-<pre><code>      + If YES: define groups of similar strata  
-      + If NO: Count your blessings and continue.  </code></pre>
-<ul>
-<li>Interpolate remaining holes.</li>
-</ul>
-<pre><code>      + Select length within year/market category from adjacent strata or strata group
-      (after determining if appropriate).  
-      + Select length within year/market category from adjacent quarter or semester
-      (after determining if appropriate).  
-      + Select length within year/market category from adjacent year
-      (after determining if appropriate).  
-      </code></pre>
-<ul>
-<li>If unclassified market category and no other information available:</li>
-</ul>
-<pre><code>      + Combine market category samples to create an unclassified  
-      + Use appropriate observer length samples to apply to unclassified. </code></pre>
-<ul>
-<li>If holes remain</li>
-</ul>
-<pre><code>      + Calculate ratio of sampled to un-sampled landings and expand
-      total length frequency such that expanded sample weight equals
-      total landings weight for year t.</code></pre>
-</div>
-<div class="section level2">
-<h2 id="interpolate-only">Interpolate only:<a class="anchor" aria-label="anchor" href="#interpolate-only"></a>
-</h2>
-<p>If examination of sample matrix shows only sporadic missing cells with landings but sample sizes less than <em>X</em>:</p>
-<ul>
-<li>
-<p>Samples by year/gear/quarter/stat area/market category</p>
-<pre><code>+ Nearest stat area within market category/quarter/gear/year  
-    + Keeping year/market category constant:  
-        + Adjacent quarter/ same stat area  
-            + Adjacent quarter/ any stat area within ecoregion  
-                + Adjacent semester/matching stat area  
-                    + Adjacent semester/ any stat area within ecoregion  
-                      +  If lengths by gear are similar: Alternative gear/same quarter/stat area  
-                            + Alternative gear/same quarter/any stat area
-                                + Alternative gear/semester/same stat area
-                                    + Alternative gear/semester/any stat area
-                                        + No options- extrapolate to total</code></pre>
-</li>
-</ul>
-<p><em>Or combination of both approaches</em></p>
-</div>
+
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
-    </nav>
-</div>
+      </div>
 
 </div>
 

@@ -2,14 +2,15 @@ pandoc: 2.7.3
 pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
-  1dataNeeds: 1dataNeeds.html
-  2aggregationRules: 2aggregationRules.html
-  3catchExpansion: 3catchExpansion.html
-  4sampleFigures: 4sampleFigures.html
-  5notes: 5notes.html
+  ageExpansion: ageExpansion.html
+  aggregationRules: aggregationRules.html
+  catchExpansion: catchExpansion.html
+  dataNeeds: dataNeeds.html
   mscatch: mscatch.html
+  notes: notes.html
+  sampleFigures: sampleFigures.html
   underlyingRules: underlyingRules.html
-last_built: 2022-08-24T14:41Z
+last_built: 2022-09-16T20:28Z
 urls:
   reference: https://noaa-edab.github.io/mscatch/reference
   article: https://noaa-edab.github.io/mscatch/articles

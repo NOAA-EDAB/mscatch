@@ -60,22 +60,22 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/1dataNeeds.html">1. Data Requirements</a>
+      <a href="../articles/dataNeeds.html">Data Requirements</a>
     </li>
     <li>
-      <a href="../articles/2aggregationRules.html">2. Rules of Aggregation</a>
+      <a href="../articles/aggregationRules.html">Rules of Aggregation</a>
     </li>
     <li>
-      <a href="../articles/3catchExpansion.html">3. Catch Expansion</a>
+      <a href="../articles/catchExpansion.html">Catch expansion to lengths</a>
     </li>
     <li>
-      <a href="../articles/4sampleFigures.html">4. Sample Output</a>
+      <a href="../articles/ageExpansion.html">Catch expansion to Ages</a>
     </li>
     <li>
-      <a href="../articles/5notes.html">Notes</a>
+      <a href="../articles/sampleFigures.html">Sample Output</a>
     </li>
     <li>
-      <a href="../articles/underlyingRules.html">Underlying Rules</a>
+      <a href="../articles/underlyingRules.html">Underlyng rules</a>
     </li>
   </ul>
 </li>
@@ -116,19 +116,28 @@
 <p>When working with <code>mscatch</code> you will need to:</p>
 <ul>
 <li>
-<a href="1dataNeeds.html">Assemble data</a> for use in the package</li>
+<a href="articles/dataNeeds.html">Assemble data</a> for use in the package</li>
 <li>
-<a href="2aggregationRules.html">Aggregate the data</a> based on a set of rules</li>
-<li>Use length-weight relationships to <a href="3catchExpansion.html">expand the catch</a> to weights using the length samples</li>
+<a href="articles/aggregationRules.html">Aggregate the data</a> based on a set of rules</li>
+<li>Use length-weight relationships to <a href="articles/catchExpansion.html">expand the catch</a> to weights using the length samples</li>
+<li><a href="articles/ageExpansion.html">Create and age Length Key</a></li>
 </ul>
-<div class="section level2">
-<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
-</h2>
-<p>Assuming you have assembled the data (for a sample data set see, <a href="../reference/get_sample_data.html"><code>get_sample_data</code></a>), the next step is determine how you would like to aggregate the data and how you would like to deal with YEARs/QTRs with missing length samples.</p>
+<p>Assuming you have assembled the data (for a sample data set see, <a href="../reference/get_sample_data.html"><code>get_sample_data</code></a>), the next step is determine how the data should be aggregate and how to deal with missing length samples in YEARs/QTRs where there are catch.</p>
+<p>There are two approaches a user can take</p>
 <div class="section level3">
-<h3 id="aggregate-the-data">Aggregate the data<a class="anchor" aria-label="anchor" href="#aggregate-the-data"></a>
+<h3 id="define-a-species-object">Define a species object<a class="anchor" aria-label="anchor" href="#define-a-species-object"></a>
 </h3>
-<p>The following example implements the following decisions:</p>
+<p>A <a href="https://noaa-edab.github.io/mscatch/reference/get_species_object.html">species object</a> can be defined and passed as an argument to the <a href="https://noaa-edab.github.io/mscatch/reference/aggregate_landings.html">aggregate_landings</a> function. This object specifies decision rules to be used in the aggregation step specific to the species in question.</p>
+</div>
+<div class="section level3">
+<h3 id="general-diagnostics">General diagnostics<a class="anchor" aria-label="anchor" href="#general-diagnostics"></a>
+</h3>
+<p>This option is for exploring the data and assessing the impacts related to aggregation decisions.</p>
+</div>
+<div class="section level2">
+<h2 id="example-using-species-object">Example using species object<a class="anchor" aria-label="anchor" href="#example-using-species-object"></a>
+</h2>
+<p>The following example implements the following decisions for Haddock.</p>
 <ul>
 <li><p>Assigns the name of species (<code>speciesName = "Haddock"</code>)</p></li>
 <li><p>Aggregates landings over QTR year to YEARly data and combines all length samples to same level of aggregation (<code>aggregate_to = "YEAR"</code>).</p></li>
@@ -151,7 +160,6 @@
 <span id="cb1-10"><a href="#cb1-10"></a>                                               <span class="dt">logfile =</span> <span class="st">"logfile.txt"</span></span>
 <span id="cb1-11"><a href="#cb1-11"></a>                                               <span class="dt">outputPlots =</span> T)</span></code></pre></div>
 <p>At this point,<code>aggregateData</code> contains length samples for every combination of YEAR, NEGEAR, MARKET_CODE. All decisions made regarding gear type selection, market code selection, and which YEAR length samples were borrowed from are recorded in the <code>logfile</code>. If <code>outputPlots=T</code> a suite of plots are also output in the <code>outputDir</code>.</p>
-</div>
 <div class="section level3">
 <h3 id="expand-the-catch">Expand the catch<a class="anchor" aria-label="anchor" href="#expand-the-catch"></a>
 </h3>
