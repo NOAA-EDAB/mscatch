@@ -288,7 +288,7 @@ get_species_object_mskeyrun <- function(species_itis = NULL) {
 
 
   } else {
-    stop(paste0("Not coded for species itis code =  ",species_itis, " with stock = ",stock))
+    stop(paste0("Not coded for species itis code =  ",species_itis))
   }
 
 
