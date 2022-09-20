@@ -34,7 +34,7 @@ calc_numbers_at_age <- function(expLandings,ageLenKeys,lengthWeightParams){
   # total number of fish of a given length
   landingsExpanded <- NULL
   numTimes <- length(lengthWeightParameters$betas)
-  for (it in numTimes) {
+  for (it in 1:numTimes) {
     lengthWeightPs <- lengthWeightParameters
     lengthWeightPs$betas <- lengthWeightParameters$betas[it]
     landingsExp <- expLandings %>%
@@ -44,6 +44,7 @@ calc_numbers_at_age <- function(expLandings,ageLenKeys,lengthWeightParams){
 
       landingsExpanded <- rbind(landingsExpanded,landingsExp)
   }
+
   # multiply my age Length key to obtain number of fish by age
   # long format for age length key
 
