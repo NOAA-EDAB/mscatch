@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 library(magrittr)
 ```
 
-After [pulling the data](1dataNeeds.html) (length sample data and the landings data) for a particular species a user can now use the [aggregate_landings()`](../reference/aggregate_landings.html) function to aggregate the landings and the length data. The user has several choices to make that determine how the data should be processed. All decision points are written to a [logfile](4sampleFigures.html) for the user to inspect. Many of the steps below are dictated by user inputs in the form of function arguments.
+After [pulling the data](dataNeeds.html) (length sample data and the landings data) for a particular species a user can now use the [aggregate_landings()`](../reference/aggregate_landings.html) function to aggregate the landings and the length data. The user has several choices to make that determine how the data should be processed. All decision points are written to a [logfile](sampleFigures.html) for the user to inspect. Many of the steps below are dictated by user inputs in the form of function arguments.
 
 ## Gear
 
