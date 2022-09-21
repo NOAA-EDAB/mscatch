@@ -24,7 +24,11 @@ test_data_pull <- function(channel,species=164744,species_itis = T,area="all",ar
   message("Pulling landings data from STOCKEFF ...")
   testDataPullLandings <- cfdbs::get_landings(channel,year="all",area=area,species=species,species_itis=species_itis)
 
-  ## for test data assume we this is EPU data. To achive this we just sum over AREAS for now
+  ##############################
+  ## All landings are in lbs ###
+  ##############################
+
+  ## for test data assume we this is EPU data. To achieve this we just sum over AREAS for now
   lands <- testDataPullLandings$data %>%
     dplyr::group_by(YEAR, MONTH, NEGEAR, MARKET_CODE) %>%
     dplyr::summarize(landings=sum(as.numeric(SPPLNDLB)),n=dplyr::n(),.groups="drop")
