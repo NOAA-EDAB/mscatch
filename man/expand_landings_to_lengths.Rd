@@ -24,7 +24,7 @@ A Tibble of expanded landings to represent weight of landings by length
 \item{weight}{expanded weight (mt) of all fish of given LENGTH in YEAR, NEGEAR etc..}
 }
 \description{
-Proportions commercial landings based on length sample distribution
+LandingsData and data used to estimate lengthWeightParams must be in the same units. Lbs or MT
 }
 \section{Notes}{
 
