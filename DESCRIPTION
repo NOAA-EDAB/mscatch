@@ -31,7 +31,8 @@ Suggests:
     cfdbs,
     kableExtra,
     readr,
-    NEFSCspatial
+    NEFSCspatial,
+    flextable
 VignetteBuilder: knitr
 Imports: 
     dplyr,
