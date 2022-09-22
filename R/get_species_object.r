@@ -65,7 +65,6 @@ get_species_object <- function(species_itis = NULL, stock = NA) {
     speciesRules$statStockArea <- c(520, 522:525, 541:543, 550:552, 560:562)
     speciesRules$howAggregate <- "combine"
     speciesRules$LengthWeightData <- "survey"
-    speciesRules$LengthWeightDataTime <- "all"
     speciesRules$LengthWeightRelationships <- c("semester")
     speciesRules$LengthWeightTimeBlocks <- data.frame(start = c(),
                                                   end = c())

@@ -14,36 +14,51 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
  library(magrittr)
+source(here::here("data-raw/R/create_species_rules_table.r"))
 ```
 
-When working with `mscatch` you will need to:
+When working with `mscatch`, depending on what you want to do, you will need to:
 
-*   [Assemble data](../articles/dataNeeds.html) for use in the package
-*   [Aggregate the data](../articles/aggregationRules.html) based on a set of rules
-*   Use length-weight relationships to [expand the catch](../articles/catchExpansion.html) to weights using the length samples
-*   [Create and age Length Key](../articles/ageExpansion.html)
+*   [Assemble data](dataNeeds.html) for use in the package
+*   [Aggregate the catch data](aggregationRules.html) based on a set of rules
+*   Use length-weight relationships to [expand the catch](catchExpansion.html) to weights using the length samples
+*   [Create an Age-Length Key](ageExpansion.html)
+*   Calculate [numbers at age](numbersAtAge.html)
 
 
-Assuming you have assembled the data (for a sample data set see,  [`get_sample_data`](../reference/get_sample_data.html)), the next step is determine how the data should be aggregate and how to deal with missing length samples in YEARs/QTRs where there are catch.
+Assuming you have assembled the data (for a sample data set see,  [`get_sample_data`](../reference/get_sample_data.html)), the next step is to determine how the data should be aggregate and how to deal with missing length samples in YEARs/QTRs where there are catch.
 
-There are two approaches a user can take
+There are two approaches a user can take:
+
+* Define specific rules in a species object list
+* Specify general rules for a more exploratory approach.
 
 ### Define a species object
 
-A [species object](https://noaa-edab.github.io/mscatch/reference/get_species_object.html) can be defined and passed as an argument to the [aggregate_landings](https://noaa-edab.github.io/mscatch/reference/aggregate_landings.html) function. This object specifies decision rules to be used in the aggregation step specific to the species in question.
+A [species object](https://noaa-edab.github.io/mscatch/reference/get_species_object.html) can be defined and passed as an argument to the [aggregate_landings](https://noaa-edab.github.io/mscatch/reference/aggregate_landings.html) function. This object specifies decision rules to be used in the aggregation step that answer the following questions:
 
-### General diagnostics
+* Which gear types should be aggregated?
+* Which market codes should be aggregated?
+* How to deal with with missing length samples? where to borrow from if at all?
+* Which statistical areas define the stock?
+* Where is length-weight data pulled from to fit length-weight relationships? survey database, commercial database, both?
+* At what time scale are length weight relationships fitted? Semester, quartery, annually?
+* Where is the age data pulled from?
+* How should age length keys be calculated? Annually, by semester annually, by gear, semester, annually?
+* What is the maximum age of the species ?
 
-This option is for exploring the data and assessing the impacts related to aggregation decisions.
+### General rules
+
+This option is for exploring the data and assessing the impacts related to aggregation decisions to help inform building a species object. For example:
+
+* To explore the most important gear types that are associated with landing a species a user can specify a threshold value relating to the proportion of cumulative landings, over which all other gear types are considered insignificant and are grouped together.
+
+* Market codes are aggregated if the length frequency distributions are found to be significantly insignificant (using the Kolmogorov-Smirnov test). The level of the test (p-value) can be passed as an argument.
 
 
-## Example using species object
+## Examples
 
-The following example implements the following decisions for Haddock.
-
-```{r, echo=F,eval=F}
-speciesRules <- get_species_object(species_itis = 164744)
-```
+### Using the exploratory approach
 
 
 * Assigns the name of species (`speciesName = "Haddock"`)
@@ -58,15 +73,16 @@ speciesRules <- get_species_object(species_itis = 164744)
 
 * Minimum number of length samples required when borrowing samples from other NEGEARs, QTRs, or YEARs (`nLengthSamples = 1`)
 
-* Assigns an output folder (`outputDir=here::here("output/Haddock")`)
+* Assigns an output folder (`outputDir=here::here("output/Haddock")`) for all diagnostic plots and the logfile
 
-* Assigns a name to the log file produced (`logfile = "logfile.txt"`)
+* Assigns a name to the log file produced (`logfile = "logfile.txt"`). This documents all decisions made in aggregation steps and documents the years in which length samples were borrowed and the year from which they were borrowed
 
 
-```{r , echo =T, eval = F}
- aggregatedData <- mscatch::aggregate_landings(landingsData,
+```{r aggdata, echo =T, eval = F}
+ aggregatedData <- mscatch::aggregate_landings(channel,
+                                               landingsData,
                                                lengthData,
-                                               outputDir=here::here("output/Groundfish"),
+                                               outputDir=here::here("output/Haddok"),
                                                speciesName = "Haddock"
                                                landingThresholdGear = 0.9,
                                                nLengthSamples = 1,
@@ -74,14 +90,48 @@ speciesRules <- get_species_object(species_itis = 164744)
                                                borrowLengths = T,
                                                otherGear = "998",
                                                logfile = "logfile.txt"
-                                               outputPlots = T)
+                                               outputPlots = T,
+                                               speciesRules = NULL)
 ```
 
-At this point,`aggregateData` contains length samples for every combination of YEAR, NEGEAR, MARKET_CODE. All decisions made regarding gear type selection, market code selection, and which YEAR length samples were borrowed from are recorded in the `logfile`. If `outputPlots=T` a suite of plots are also output in the `outputDir`.
+At this point, `aggregateData` contains length samples for every combination of YEAR, NEGEAR, MARKET_CODE. All decisions made regarding gear type selection, market code selection, and which YEAR length samples were borrowed from are recorded in the `logfile`. If `outputPlots=T` a suite of plots are also output in the `outputDir`.
 
-### Expand the catch
+### Using a species object
 
-To expand the catch to weight-by-length a length-weight key is required. This is achieved by obtaining parameter values that satisfy the [length-weight relationship](3catchExpansion.html). This can be obtained in one of two ways: 
+A template for the species object is bundled with `mscatch` which can then be adapted
+
+```{r template , echo = T, eval = T}
+# Haddock species itis code = 164744
+species_itis <- 164744
+speciesRules <- mscatch::get_species_object(species_itis)
+speciesRules$marketCodes %>% 
+  flextable::flextable()
+```
+
+
+This specifies the market code aggregation; LG and XG codes are combind and relabeled as LG, SR and SK remain as they are. All other market codes are treated as unclassifieds, UN.
+
+```{r gr}
+speciesRules$gearCodes %>% 
+  flextable::flextable()
+```
+
+All gear codes are aggregated and labelled as gear code "050"
+
+
+Other related rules:
+
+```{r otherprops, echo = F, eval = T}
+create_species_rules_table(spitis = species_itis)
+
+```
+
+This `speciesRules` object is then passed as an argument to  [`aggregate_landings`](../reference/aggregate_landings.html)
+
+
+### Expand the catch (Length & Numbers)
+
+To expand the catch to weight-by-length a length-weight key is required. This is achieved by obtaining parameter values that satisfy the [length-weight relationship](catchExpansion.html). This can be obtained in one of two ways: 
 
 * Pull parameter values from Survey database (svdbs) using function [`get_length_weight`](https://noaa-edab.github.io/survdat/reference/get_length_weight.html) function from the [`survdat`](https://noaa-edab.github.io/survdat/index.html) package.
 
@@ -89,7 +139,7 @@ or
 
 * Pull raw length-weight data and fit own model. The bottom trawl survey data is used (for this example). A series of nested length-weight models are then fit to the data.
 
-The data is pulled using the function [`get_length_weight_data`](https://noaa-edab.github.io/survdat/reference/get_length_weight_data.html) from the [`survdat`](https://noaa-edab.github.io/survdat/) package and fit using `mscatch::fit_length_weight()`
+The data is pulled using the function [`get_length_weight_data`](https://noaa-edab.github.io/survdat/reference/get_length_weight_data.html) from the [`survdat`](https://noaa-edab.github.io/survdat/) package and fit using `fit_length_weight()`
 
 ```{r lw, echo =T , eval = F}
 # Permissions and credentials are required to conect to the database
@@ -97,11 +147,11 @@ channel <- dbutils::connect_to_database("server","user")
 # Haddock data are pulled (SVSPP = 74)
 lengthWeightData <- survdat::get_length_weight_data(channel,year="all", species=74)
 # Length-Weight models are thenn fit
-fits <- mscatch::fit_length_weight(lengthWeightData$data,speciesName,outputDir,logfile="logfile.txt")
+fits <- mscatch::fit_length_weight(lengthWeightData$data,speciesName,speciesRules,outputDir,logfile="logfile.txt")
 
 ```
 
-* The fitted model is then used to expand the catch. This is achieved by using `mscatch::expand_landings_to_lengths()`
+* The fitted model is then used to expand the catch. This is achieved by using `expand_landings_to_lengths()`
 
 ```{r expand, echo = T, eval = F}
   expandedLandings <- mscatch::expand_landings_to_lengths(aggregatedData$landings,aggregatedData$lengthData,fits$paramsH0) %>%
@@ -109,12 +159,9 @@ fits <- mscatch::fit_length_weight(lengthWeightData$data,speciesName,outputDir,l
 
 ```
 
-The resulting data will look like this
 
-```{r expdata,echo=F,eval=T}
+* Pull age data from either survey, commercial or both
 
-sl <- readRDS(here::here("data-raw/data/sampleExpanded.RDS")) 
-sl
-```
-where the `weight` column represents the weight (metric tons) of all fish of a given `LENGTH`
+* Create age-length key
 
+* Calculate the numbers at age

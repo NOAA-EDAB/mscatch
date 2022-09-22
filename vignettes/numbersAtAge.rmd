@@ -1,9 +1,9 @@
 ---
-title: "Age-Length keys"
+title: "Calculate numbers at age"
 #output: html_document
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Age-Length keys}
+  %\VignetteIndexEntry{Calculate numbers at age}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -17,4 +17,3 @@ library(magrittr)
 ```
 
 
-Documention forthcoming ...

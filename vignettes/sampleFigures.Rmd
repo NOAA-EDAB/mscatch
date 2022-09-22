@@ -1,9 +1,9 @@
 ---
-title: "4. Sample Output"
+title: "Sample Output"
 #output: html_document
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{4. Sample Output}
+  %\VignetteIndexEntry{Sample Output}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
