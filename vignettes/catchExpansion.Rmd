@@ -16,11 +16,11 @@ knitr::opts_chunk$set(
 library(magrittr)
 ```
 
-The final stage in data preparation (after [aggregating the data](2aggregationRules.html)) is to expand the catch data to a distribution of weights using a length-weight relationship, then finally to scale the weights to match total landings.
+The final stage in data preparation (after [aggregating the data](aggregationRules.html)) is to expand the catch data to a distribution of weights using a length-weight relationship, then finally to scale the weights to match total landings.
 
 ## Length-weight relationship {#len-weight}
 
-Length-weight data is obtained from SVDBS (other data sources can be substituted if necessary). A length-weight relationship is fit to the data using `mscatch::fit_length_weight` (as an alternative parameter values from database svdbs.LENGTH_WEIGHT_COEFFICIENTS can be used, see [`survdat::get_length_weight`](https://noaa-edab.github.io/survdat/reference/get_length_weight.html). The relationship between the weight and length of fish *i* is modelled as,
+Length-weight data is obtained from SVDBS (other data sources can be substituted if necessary). A length-weight relationship is fit to the data using `fit_length_weight` (as an alternative parameter values from database svdbs.LENGTH_WEIGHT_COEFFICIENTS can be used, see [`survdat::get_length_weight`](https://noaa-edab.github.io/survdat/reference/get_length_weight.html). The relationship between the weight and length of fish *i* is modelled as,
 
 $$ W_i = \alpha L_i ^ \beta e^{z_i}$$
 
@@ -39,7 +39,7 @@ The fitted length-weight relationship is applied to the length distributions and
 
 ### Known market codes
 
-For each unique category (YEAR, QTR, NEGEAR, MARKET_CODE) we have both total landings (metric tons) and a sample of fish lengths for this category. The sampled fish lengths are converted to mean weights using the [weight-length relationship](#len-weight). The resulting sample fish weights are mean weights (metric tons). The weight distribution of sampled fish is then scaled to the weight of total landings. This scaling assumes that the landed (commercial) fish have the same length distribution as the sampled fish.
+For each unique category (YEAR, QTR, NEGEAR, MARKET_CODE) we have both total landings (metric tons) and a sample of fish lengths for this category. The sampled fish lengths are converted to mean weights using the [length-weight relationship](#len-weight). The resulting sample fish weights are mean weights (metric tons). The weight distribution of sampled fish is then scaled to the weight of total landings. This scaling assumes that the landed (commercial) fish have the same length distribution as the sampled fish.
 
 For each unique category we define 
 
@@ -52,7 +52,7 @@ The result is a distribution of weights based on lengths for each unique categor
 
 ### Unclassified market code
 
-The unclassified landings for a specific (YEAR, QTR, NEGEAR) are assumed to be a mixture of fish lengths similar to that in the observed MARKET_CODEs. Therefore the length distribution for the unclassified landings are assumed to have the same distribution as the length distributions of the landed fish in all of the known market codes combined. The sampled fish lengths (from the known market codes) are converted to weights using the [weight-length relationship](#len-weight). 
+The unclassified landings for a specific (YEAR, QTR, NEGEAR) are assumed to be a mixture of fish lengths similar to that in the observed MARKET_CODEs. Therefore the length distribution for the unclassified landings are assumed to have the same distribution as the length distributions of the landed fish in all of the known market codes combined. The sampled fish lengths (from the known market codes) are converted to weights using the [length-weight relationship](#len-weight). 
 
 For each unique category we define
 

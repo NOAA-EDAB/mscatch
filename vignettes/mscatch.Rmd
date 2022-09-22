@@ -19,11 +19,11 @@ source(here::here("data-raw/R/create_species_rules_table.r"))
 
 When working with `mscatch`, depending on what you want to do, you will need to:
 
-*   [Assemble data](../articles/dataNeeds.html) for use in the package
-*   [Aggregate the catch data](../articles/aggregationRules.html) based on a set of rules
-*   Use length-weight relationships to [expand the catch](../articles/catchExpansion.html) to weights using the length samples
-*   [Create an Age-Length Key](../articles/ageExpansion.html)
-*   Calculate [numbers at age](articles/numbersAtAge.html)
+*   [Assemble data](dataNeeds.html) for use in the package
+*   [Aggregate the catch data](aggregationRules.html) based on a set of rules
+*   Use length-weight relationships to [expand the catch](catchExpansion.html) to weights using the length samples
+*   [Create an Age-Length Key](ageExpansion.html)
+*   Calculate [numbers at age](numbersAtAge.html)
 
 
 Assuming you have assembled the data (for a sample data set see,  [`get_sample_data`](../reference/get_sample_data.html)), the next step is to determine how the data should be aggregate and how to deal with missing length samples in YEARs/QTRs where there are catch.
@@ -129,7 +129,7 @@ create_species_rules_table(spitis = species_itis)
 This `speciesRules` object is then passed as an argument to  [`aggregate_landings`](../reference/aggregate_landings.html)
 
 
-### Expand the catch
+### Expand the catch (Length & Numbers)
 
 To expand the catch to weight-by-length a length-weight key is required. This is achieved by obtaining parameter values that satisfy the [length-weight relationship](catchExpansion.html). This can be obtained in one of two ways: 
 
@@ -139,7 +139,7 @@ or
 
 * Pull raw length-weight data and fit own model. The bottom trawl survey data is used (for this example). A series of nested length-weight models are then fit to the data.
 
-The data is pulled using the function [`get_length_weight_data`](https://noaa-edab.github.io/survdat/reference/get_length_weight_data.html) from the [`survdat`](https://noaa-edab.github.io/survdat/) package and fit using `mscatch::fit_length_weight()`
+The data is pulled using the function [`get_length_weight_data`](https://noaa-edab.github.io/survdat/reference/get_length_weight_data.html) from the [`survdat`](https://noaa-edab.github.io/survdat/) package and fit using `fit_length_weight()`
 
 ```{r lw, echo =T , eval = F}
 # Permissions and credentials are required to conect to the database
@@ -151,7 +151,7 @@ fits <- mscatch::fit_length_weight(lengthWeightData$data,speciesName,speciesRule
 
 ```
 
-* The fitted model is then used to expand the catch. This is achieved by using `mscatch::expand_landings_to_lengths()`
+* The fitted model is then used to expand the catch. This is achieved by using `expand_landings_to_lengths()`
 
 ```{r expand, echo = T, eval = F}
   expandedLandings <- mscatch::expand_landings_to_lengths(aggregatedData$landings,aggregatedData$lengthData,fits$paramsH0) %>%

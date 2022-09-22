@@ -60,7 +60,7 @@ where each row represents the number of fish sampled of a given length in YEAR, 
 
 ## Catch data
 
-Landings data can be pulled from the oracle table (`stockeff.mv_cf_landings`) under the stock efficiency initiative or from the annual (cfdet, wodet, woland) AA tables. If pulled from the AA tables, the MARKET_CODE field does not exist. NESPP4 codes will need to be mapped to MARKET_CODE categories outlined `mscatch::marketCodeLookupTable`. (created from [`comlandr::get_species_itis`](https://noaa-edab.github.io/comlandr/reference/get_species_itis.html))
+Landings data can be pulled from the oracle table (`stockeff.mv_cf_landings`) under the stock efficiency initiative or from the annual (cfdet, wodet, woland) AA tables. If pulled from the AA tables, the MARKET_CODE field does not exist. NESPP4 codes will need to be mapped to MARKET_CODE categories outlined `marketCodeLookupTable`. (created from [`comlandr::get_species_itis`](https://noaa-edab.github.io/comlandr/reference/get_species_itis.html))
 
 Some trips will have missing information in the AREA field. These trips will need to be assigned an area using the methods outlined by [@Palmer2008] prior to using `mscatch`. The package [`comlandr`](https://noaa-edab.github.io/comlandr/index.html) replicates these methods.
 
@@ -78,7 +78,7 @@ sc
 
 ## Use `mscatch`
 
-Once the above data sets have been assembled they can now be used to [aggregate the landings and length samples](2aggregationRules.html) and then [expand](3catchExpansion.html) the commercial landings data to length distributions using `mscatch`
+Once the above data sets have been assembled they can now be used to [aggregate the landings and length samples](aggregationRules.html) and then [expand](catchExpansion.html) the commercial landings data to length distributions using `mscatch`
 
 
 ## References
