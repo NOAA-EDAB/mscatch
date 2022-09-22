@@ -168,7 +168,7 @@
 <div class="section level2">
 <h2 id="catch-data">Catch data<a class="anchor" aria-label="anchor" href="#catch-data"></a>
 </h2>
-<p>Landings data can be pulled from the oracle table (<code>stockeff.mv_cf_landings</code>) under the stock efficiency initiative or from the annual (cfdet, wodet, woland) AA tables. If pulled from the AA tables, the MARKET_CODE field does not exist. NESPP4 codes will need to be mapped to MARKET_CODE categories outlined <code><a href="../reference/marketCodeLookupTable.html">mscatch::marketCodeLookupTable</a></code>. (created from <a href="https://noaa-edab.github.io/comlandr/reference/get_species_itis.html" class="external-link"><code>comlandr::get_species_itis</code></a>)</p>
+<p>Landings data can be pulled from the oracle table (<code>stockeff.mv_cf_landings</code>) under the stock efficiency initiative or from the annual (cfdet, wodet, woland) AA tables. If pulled from the AA tables, the MARKET_CODE field does not exist. NESPP4 codes will need to be mapped to MARKET_CODE categories outlined <code>marketCodeLookupTable</code>. (created from <a href="https://noaa-edab.github.io/comlandr/reference/get_species_itis.html" class="external-link"><code>comlandr::get_species_itis</code></a>)</p>
 <p>Some trips will have missing information in the AREA field. These trips will need to be assigned an area using the methods outlined by <span class="citation">(Palmer, <a href="#ref-Palmer2008" role="doc-biblioref">2008</a>)</span> prior to using <code>mscatch</code>. The package <a href="https://noaa-edab.github.io/comlandr/index.html" class="external-link"><code>comlandr</code></a> replicates these methods.</p>
 <p>Trips with missing gear information is handled in <code>mscatch</code>. It is assumed that trips with unknown gear information are catching fish with lengths proportional to trips with known gear types.</p>
 <p>Discards are not included in this data. At a future date both <a href="https://noaa-edab.github.io/comlandr/index.html" class="external-link"><code>comlandr</code></a> and the stock efficiency initiative will contain discard estimates using the methods of <span class="citation">(Wigley &amp; Tholke, <a href="#ref-Wigley2020" role="doc-biblioref">2020</a>)</span>.</p>
@@ -196,7 +196,7 @@
 <div class="section level2">
 <h2 id="use-mscatch">Use <code>mscatch</code><a class="anchor" aria-label="anchor" href="#use-mscatch"></a>
 </h2>
-<p>Once the above data sets have been assembled they can now be used to <a href="2aggregationRules.html">aggregate the landings and length samples</a> and then <a href="3catchExpansion.html">expand</a> the commercial landings data to length distributions using <code>mscatch</code></p>
+<p>Once the above data sets have been assembled they can now be used to <a href="aggregationRules.html">aggregate the landings and length samples</a> and then <a href="catchExpansion.html">expand</a> the commercial landings data to length distributions using <code>mscatch</code></p>
 </div>
 <div class="section level2 unnumbered">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>

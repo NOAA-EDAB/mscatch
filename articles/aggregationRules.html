@@ -114,7 +114,7 @@
 
     
     
-<p>After <a href="1dataNeeds.html">pulling the data</a> (length sample data and the landings data) for a particular species a user can now use the <a href="../reference/aggregate_landings.html">aggregate_landings()`</a> function to aggregate the landings and the length data. The user has several choices to make that determine how the data should be processed. All decision points are written to a <a href="4sampleFigures.html">logfile</a> for the user to inspect. Many of the steps below are dictated by user inputs in the form of function arguments.</p>
+<p>After <a href="dataNeeds.html">pulling the data</a> (length sample data and the landings data) for a particular species a user can now use the <a href="../reference/aggregate_landings.html">aggregate_landings()`</a> function to aggregate the landings and the length data. The user has several choices to make that determine how the data should be processed. All decision points are written to a <a href="sampleFigures.html">logfile</a> for the user to inspect. Many of the steps below are dictated by user inputs in the form of function arguments.</p>
 <div class="section level2">
 <h2 id="gear">Gear<a class="anchor" aria-label="anchor" href="#gear"></a>
 </h2>
@@ -257,6 +257,7 @@ Proportion
 <ul>
 <li>The length distributions (aggregated over time, MARKET_CODE) are then tested against each other (using the Kolmogorov-Smirnov test) at a predetermined significance level (<code>pValue=0.05</code>) to determine if they are significantly different. Any NEGEAR codes that are found to be statistically insignificant are aggregated.</li>
 </ul>
+<p><em>If a <a href="../reference/get_species_object.html">species_object</a> is used the steps above are skipped since all gear aggregations are predetermined by the user</em></p>
 </div>
 <div class="section level2">
 <h2 id="market-category">Market Category<a class="anchor" aria-label="anchor" href="#market-category"></a>
@@ -265,15 +266,15 @@ Proportion
 <ul>
 <li><p>Any MARKET_CODEs that do not have any length samples (when aggregated over YEAR, QTR) are treated first. The user has the option to aggregate these market codes with any other market code. The default option is to relabel these as unknowns, “UN”. Often these MARKET_CODEs have a small amount of landings attributed to them and the impact of this aggregation is negligible</p></li>
 <li><p>The length distributions for the remaining MARKET_CODEs (aggregated over YEAR, QTR) are then tested against each other (using the Kolmogorov-Smirnov test) at a predetermined significance level (<code>pValue=0.05</code>) to determine if they are significantly different. Any MARKET_CODEs that are found to be statistically insignificant are aggregated.</p></li>
-<li><p><strong>Future development: Include option to do this for each YEAR</strong></p></li>
 </ul>
+<p><em>If a <a href="../reference/get_species_object.html">species_object</a> is used the steps above are skipped since all market code aggregations are predetermined by the user</em></p>
 <p>The user has the option of stopping at this point (<code>borrowLengths=F</code>). The data returned will either be at the QTR or YEAR level depending on user inputs.</p>
 </div>
 <div class="section level2">
 <h2 id="time">Time<a class="anchor" aria-label="anchor" href="#time"></a>
 </h2>
 <p>The user supplies the level in which landings should be aggregated, (YEAR, QTR, or SEMESTER). All combinations of Time, NEGEAR, MARKET_CODE that do not have associated length samples borrow samples from the nearest neighbor in time. <strong>Future development: Include nearest neighbor based on spatial units and/or GEAR</strong></p>
-<p>Before the borrowing of length samples commences, any gear types found to not have any length samples are aggrgated with the otherGear category</p>
+<p>Before the borrowing of length samples commences, any gear types found to not have any length samples are aggregated with the otherGear category (<em>This does not occur if <a href="../reference/get_species_object.html">species_object</a> is used</em>)</p>
 <p>The borrowing of length samples from one time interval to use in another time interval can be a subjective process that differs among species based on life history traits. To complicate matters length distributions sampled within MARKET_CODEs may have shifted over time. These issues will be dealt with at a future date. A generalized method is currently applied (<strong>Future development: Include additional options based on life history traits and fishing industry changes</strong>)</p>
 <ul>
 <li>Aggregate landings to QTRs and borrow length samples where necessary <sup>1</sup>
@@ -310,7 +311,9 @@ Proportion
 <ul>
 <li>Landings and length data are relabeled from QTR to SEMESTER (SEMESTER 1 = QTR 1 and 2, SEMESTER 2 = QTR 3 and 4). The procedure for borrowing length samples is the same for QTRs</li>
 </ul>
-<!-- #### MIX --><!-- * A tolerance for the allowed proportion of missing length samples by QTR (for each NEGEAR and MARKET_CODE) is used to determine if length samples should be assigned to ALL QTRs (as described by the methods above) or whether landings should be aggregated to annual data. -->
+<p><strong>All decisions made regarding where length samples are borrowed from are written to the <a href="sampleFigures.html#logfile">logfile</a> for later inspecition</strong></p>
+<!-- #### MIX -->
+<!-- * A tolerance for the allowed proportion of missing length samples by QTR (for each NEGEAR and MARKET_CODE) is used to determine if length samples should be assigned to ALL QTRs (as described by the methods above) or whether landings should be aggregated to annual data. -->
 </div>
 </div>
 <div class="section level2">
