@@ -1,7 +1,9 @@
 #'Calculates the numbers of fish at length
 #'
 #'Given the landings (expanded by length), and the length-weight relationship,
-#'the number of fish at a given length is calculated
+#'the number of fish at a given length is calculated.
+#'
+#'THIS NEEDS TO BE GENERALIZED.
 #'
 #'@param expLandings Tibble. Expanded langings by length (from \code{expand_landings_to_lengths})
 #'@param lengthWeightParams List. alpha = intercept, betas = slope(s), var = residual variance used to formulate the mean (?see Notes section below)
@@ -32,18 +34,79 @@ calc_numbers_at_length <- function(expLandings,lengthWeightParams){
   # calculate the average weight of a fish of a given length and the estimated
   # total number of fish of a given length
   landingsExpanded <- NULL
-  numTimes <- length(lengthWeightParameters$betas)
-  for (it in 1:numTimes) {
-    lengthWeightPs <- lengthWeightParameters
-    lengthWeightPs$betas <- lengthWeightParameters$betas[it]
-    landingsExp <- expLandings %>%
-      dplyr::filter(TIME == it) %>%
-      dplyr::mutate(numbers = expand_to_num(LENGTH,weight,lengthWeightPs,"numbers")) %>%
-      dplyr::mutate(fishWeight = expand_to_num(LENGTH,weight,lengthWeightPs,"fishweight"))
+  # number of length weight relationships
+  numFits <- length(lengthWeightParameters$betas)
+  # number of levels of aggregation
+  temporalAgg <- length(unique(expLandings$TIME))
 
-      landingsExpanded <- rbind(landingsExpanded,landingsExp)
+  # Note: the level of aggregation may not necessarily = the number og l-w fits
+  # Eg. Aggregate to semester level but use a single length weight relationship
+  # Eg aggregate to quarter but use semester l-w relationships
+  if (numFits > 4) {
+    stop("We have not coded for for > quarterly l-w relationships. Eg. annual or by Sex")
   }
 
+  if (numFits > temporalAgg) {
+    stop("Level of aggegation is smaller than level of l-w relationships. Eg. Tring to apply quartly l-w relaionships to catch data
+         aggregated to the the semester level")
+  }
+
+  # MAY BE ABLE TO DO ALL OF THIS IN ONE, USING DPLYR
+
+  if (numFits == temporalAgg) { # eg. quarter - quarter
+
+    for (it in 1:numFits) {
+      lengthWeightPs <- lengthWeightParameters
+      lengthWeightPs$betas <- lengthWeightParameters$betas[it]
+
+      if (temporalAgg == 1) { # aggregation to annual level. all TIME is recoded ==0
+        landingsExp <- expLandings %>%
+          dplyr::mutate(numbers = expand_to_num(LENGTH,weight,lengthWeightPs,"numbers")) %>%
+          dplyr::mutate(fishWeight = expand_to_num(LENGTH,weight,lengthWeightPs,"fishweight"))
+      } else {
+        landingsExp <- expLandings %>%
+          dplyr::filter(TIME == it) %>%
+          dplyr::mutate(numbers = expand_to_num(LENGTH,weight,lengthWeightPs,"numbers")) %>%
+          dplyr::mutate(fishWeight = expand_to_num(LENGTH,weight,lengthWeightPs,"fishweight"))
+      }
+
+      landingsExpanded <- rbind(landingsExpanded,landingsExp)
+    }
+
+  } else if ((temporalAgg==4) & (numFits == 2)) { # quarter -> semester
+
+    for (it in 1:numFits) {
+      lengthWeightPs <- lengthWeightParameters
+      lengthWeightPs$betas <- lengthWeightParameters$betas[it]
+
+      # ugly code. sort out
+      sem <- c(1,2)
+      itt <- 2*(it-1) + sem
+      landingsExp <- expLandings %>%
+        dplyr::filter(TIME %in% itt) %>%
+        dplyr::mutate(numbers = expand_to_num(LENGTH,weight,lengthWeightPs,"numbers")) %>%
+        dplyr::mutate(fishWeight = expand_to_num(LENGTH,weight,lengthWeightPs,"fishweight"))
+
+      landingsExpanded <- rbind(landingsExpanded,landingsExp)
+    }
+
+  } else if (numFits == 1) { # ANYTHING -> year
+print("########################## HERE ##########################")
+    for (it in 1:numFits) {
+      lengthWeightPs <- lengthWeightParameters
+      lengthWeightPs$betas <- lengthWeightParameters$betas[it]
+
+      # no need to filter time since apply same l-w
+      landingsExp <- expLandings %>%
+        dplyr::mutate(numbers = expand_to_num(LENGTH,weight,lengthWeightPs,"numbers")) %>%
+        dplyr::mutate(fishWeight = expand_to_num(LENGTH,weight,lengthWeightPs,"fishweight"))
+
+      landingsExpanded <- rbind(landingsExpanded,landingsExp)
+    }
+
+  } else {
+    stop(paste0("temporalAgg = ",temporalAgg ," and numFits = ",numFits))
+  }
 
   return(landingsExpanded)
 }

@@ -23,7 +23,10 @@ A Tibble of expanded landings to represent weight of landings by length
 }
 \description{
 Given the landings (expanded by length), and the length-weight relationship,
-the number of fish at a given length is calculated
+the number of fish at a given length is calculated.
+}
+\details{
+THIS NEEDS TO BE GENERALIZED.
 }
 \section{Notes}{
 

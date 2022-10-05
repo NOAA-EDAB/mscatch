@@ -27,7 +27,9 @@
 
 calc_numbers_at_age <- function(expLandings,ageLenKeys,lengthWeightParams){
 
-  landingsExpanded <- calc_numbers_at_length(expLandings,lengthWeightParams)
+
+  landingsExpanded <- calc_numbers_at_length(expLandings=expLandings,
+                                             lengthWeightParams=lengthWeightParams)
 
   # multiply my age Length key to obtain number of fish by age
   # long format for age length key
