@@ -9,6 +9,8 @@
 #'@param channel obtained from logging into the sole database.
 #'@param species species_itis or nespp3 code. default = 164744 (147) (haddock - should be the easiest with most complete data)
 #'@param species_itis. boolean. TRUE indicates species code is species_itis, FALSE = nespp3
+#'@param area numeric vector. Statistical Areas in which to pull landings data from
+#'@param areaLengths numberic vector. Statistical Areas in which to pull length data from
 #'
 #'@section Other species of interest:
 #'212 - atlantic mackerel - (K.Curti assessment)

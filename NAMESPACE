@@ -2,6 +2,7 @@
 
 export(aggregate_landings)
 export(calc_numbers_at_age)
+export(calc_numbers_at_length)
 export(combine_age_data)
 export(create_age_length_key)
 export(create_yr_semester_age_length_key)
