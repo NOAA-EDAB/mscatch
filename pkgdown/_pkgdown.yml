@@ -13,6 +13,7 @@ reference:
   - get_multinomial_props
   - create_age_length_key
   - calc_numbers_at_age
+  - calc_numbers_at_length
   - create_yr_semester_age_length_key
 - title: "Lazy Data"
   desc: "Data loaded with the package"
