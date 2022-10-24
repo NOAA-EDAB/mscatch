@@ -22,11 +22,13 @@ output_data <- function(data,aggregate_to) {
                        len_totalNumLen = sum(.data$len_totalNumLen),
                        len_numLengthSamples = sum(.data$len_numLengthSamples),
                        landings_nn = sum(.data$landings_nn),
-                       .groups="drop")
+                       .groups="drop") %>%
+      dplyr::rename(TIME = QTR)
 
     data$lengthData <- data$lengthData %>%
       dplyr::group_by(.data$YEAR, .data$NEGEAR,.data$MARKET_CODE,.data$LENGTH) %>%
-      dplyr::summarise(NUMLEN = sum(.data$NUMLEN),.groups="drop")
+      dplyr::summarise(NUMLEN = sum(.data$NUMLEN),.groups="drop") %>%
+      dplyr::rename(TIME = QTR)
 
   } else if (aggregate_to == "QTR") {
     data$landings <- data$landings %>%
@@ -35,11 +37,13 @@ output_data <- function(data,aggregate_to) {
                        len_totalNumLen = sum(.data$len_totalNumLen),
                        len_numLengthSamples = sum(.data$len_numLengthSamples),
                        landings_nn = sum(.data$landings_nn),
-                       .groups="drop")
+                       .groups="drop")  %>%
+      dplyr::rename(TIME = QTR)
 
     data$lengthData <- data$lengthData %>%
       dplyr::group_by(.data$YEAR,.data$QTR, .data$NEGEAR,.data$MARKET_CODE,.data$LENGTH) %>%
-      dplyr::summarise(NUMLEN = sum(.data$NUMLEN),.groups="drop")
+      dplyr::summarise(NUMLEN = sum(.data$NUMLEN),.groups="drop")  %>%
+      dplyr::rename(TIME = QTR)
 
   } else if (aggregate_to == "SEMESTER") {
     ## Assumes 1st SEMESTER = QTR 1 + 2
@@ -50,11 +54,14 @@ output_data <- function(data,aggregate_to) {
                        len_totalNumLen = sum(.data$len_totalNumLen),
                        len_numLengthSamples = sum(.data$len_numLengthSamples),
                        landings_nn = sum(.data$landings_nn),
-                       .groups="drop")
+                       .groups="drop")  %>%
+      dplyr::rename(TIME = SEMESTER)
 
     data$lengthData <- data$lengthData %>%
       dplyr::group_by(.data$YEAR,.data$SEMESTER, .data$NEGEAR,.data$MARKET_CODE,.data$LENGTH) %>%
-      dplyr::summarise(NUMLEN = sum(.data$NUMLEN),.groups="drop")
+      dplyr::summarise(NUMLEN = sum(.data$NUMLEN),.groups="drop")  %>%
+      dplyr::rename(TIME = SEMESTER)
+
   } else {# do nothing
     stop("This isn't currently supported, please select a level of aggregation (\"QTR\", \"SEMESTER\", \"YEAR\")")
 
