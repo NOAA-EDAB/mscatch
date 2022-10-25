@@ -47,7 +47,7 @@ calc_numbers_at_length <- function(expLandings,lengthWeightParams){
   }
 
   if (numFits > temporalAgg) {
-    stop("Level of aggegation is smaller than level of l-w relationships. Eg. Tring to apply quartly l-w relaionships to catch data
+    stop("Level of aggegation is smaller than level of l-w relationships. Eg. Trying to apply quartly l-w relaionships to catch data
          aggregated to the the semester level")
   }
 
