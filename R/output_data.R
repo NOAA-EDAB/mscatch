@@ -23,12 +23,12 @@ output_data <- function(data,aggregate_to) {
                        len_numLengthSamples = sum(.data$len_numLengthSamples),
                        landings_nn = sum(.data$landings_nn),
                        .groups="drop") %>%
-      dplyr::rename(TIME = QTR)
+      dplyr::mutate(TIME = 0)
 
     data$lengthData <- data$lengthData %>%
       dplyr::group_by(.data$YEAR, .data$NEGEAR,.data$MARKET_CODE,.data$LENGTH) %>%
       dplyr::summarise(NUMLEN = sum(.data$NUMLEN),.groups="drop") %>%
-      dplyr::rename(TIME = QTR)
+      dplyr::mutate(TIME = 0)
 
   } else if (aggregate_to == "QTR") {
     data$landings <- data$landings %>%
@@ -67,5 +67,7 @@ output_data <- function(data,aggregate_to) {
 
   }
 
+
   return(data)
 }
+
