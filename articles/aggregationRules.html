@@ -100,7 +100,7 @@
 
       
 
-      </header><script src="aggregationRules_files/accessible-code-block-0.0.1/empty-anchor.js"></script><script src="aggregationRules_files/kePrint-0.0.1/kePrint.js"></script><link href="aggregationRules_files/lightable-0.0.1/lightable.css" rel="stylesheet">
+      </header><script src="aggregationRules_files/kePrint-0.0.1/kePrint.js"></script><link href="aggregationRules_files/lightable-0.0.1/lightable.css" rel="stylesheet">
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
@@ -114,16 +114,37 @@
 
     
     
-<p>After <a href="dataNeeds.html">pulling the data</a> (length sample data and the landings data) for a particular species a user can now use the <a href="../reference/aggregate_landings.html">aggregate_landings()`</a> function to aggregate the landings and the length data. The user has several choices to make that determine how the data should be processed. All decision points are written to a <a href="sampleFigures.html">logfile</a> for the user to inspect. Many of the steps below are dictated by user inputs in the form of function arguments.</p>
+<p>After <a href="dataNeeds.html">pulling the data</a> (length sample
+data and the landings data) for a particular species a user can now use
+the <a href="../reference/aggregate_landings.html">aggregate_landings()`</a>
+function to aggregate the landings and the length data. The user has
+several choices to make that determine how the data should be processed.
+All decision points are written to a <a href="sampleFigures.html">logfile</a> for the user to inspect. Many of
+the steps below are dictated by user inputs in the form of function
+arguments.</p>
 <div class="section level2">
 <h2 id="gear">Gear<a class="anchor" aria-label="anchor" href="#gear"></a>
 </h2>
-<p>Gear is defined using the field NEGEAR which characterizes gear by a three character code. A list of gear types with their codes and descriptions can be found using <a href="https://noaa-edab.github.io/comlandr/reference/get_gears.html" class="external-link"><code>comlandr::get_gears()</code></a></p>
+<p>Gear is defined using the field NEGEAR which characterizes gear by a
+three character code. A list of gear types with their codes and
+descriptions can be found using <a href="https://noaa-edab.github.io/comlandr/reference/get_gears.html" class="external-link"><code>comlandr::get_gears()</code></a></p>
 <ul>
-<li>This step ignores time (YEAR, QTR), MARKET_CODE, and length distributions and looks at aggregated landings by gear type to determine dominant gear types in fishery. The resulting number of distinct gear types to be selected is controlled by a user defined parameter indicating the total percentage of landings to be accounted for by distinct gear types. (The remaining gears are combined into an <strong>otherGear</strong> category)</li>
+<li>This step ignores time (YEAR, QTR), MARKET_CODE, and length
+distributions and looks at aggregated landings by gear type to determine
+dominant gear types in fishery. The resulting number of distinct gear
+types to be selected is controlled by a user defined parameter
+indicating the total percentage of landings to be accounted for by
+distinct gear types. (The remaining gears are combined into an
+<strong>otherGear</strong> category)</li>
 </ul>
-<p>For example, using a value of 95% (<code>landingsThresholdGear = .95</code>) would select the distinct gear types, when ordered by landings, for which the cumulative sum &gt; 95% of total landings. All other gear types (those comprising &lt; 5% of total landings) would be combined into an <strong>otherGear</strong> category.</p>
-<p>In the table, the gear types (050,010,100) would be retained. All other gear types would be combined together.</p>
+<p>For example, using a value of 95%
+(<code>landingsThresholdGear = .95</code>) would select the distinct
+gear types, when ordered by landings, for which the cumulative sum &gt;
+95% of total landings. All other gear types (those comprising &lt; 5% of
+total landings) would be combined into an <strong>otherGear</strong>
+category.</p>
+<p>In the table, the gear types (050,010,100) would be retained. All
+other gear types would be combined together.</p>
 <table class="table">
 <thead><tr>
 <th style="text-align:left;">
@@ -255,63 +276,137 @@ Proportion
 </tbody>
 </table>
 <ul>
-<li>The length distributions (aggregated over time, MARKET_CODE) are then tested against each other (using the Kolmogorov-Smirnov test) at a predetermined significance level (<code>pValue=0.05</code>) to determine if they are significantly different. Any NEGEAR codes that are found to be statistically insignificant are aggregated.</li>
+<li>The length distributions (aggregated over time, MARKET_CODE) are
+then tested against each other (using the Kolmogorov-Smirnov test) at a
+predetermined significance level (<code>pValue=0.05</code>) to determine
+if they are significantly different. Any NEGEAR codes that are found to
+be statistically insignificant are aggregated.</li>
 </ul>
-<p><em>If a <a href="../reference/get_species_object.html">species_object</a> is used the steps above are skipped since all gear aggregations are predetermined by the user</em></p>
+<p><em>If a <a href="../reference/get_species_object.html">species_object</a> is used
+the steps above are skipped since all gear aggregations are
+predetermined by the user</em></p>
 </div>
 <div class="section level2">
 <h2 id="market-category">Market Category<a class="anchor" aria-label="anchor" href="#market-category"></a>
 </h2>
-<p>Market categories are defined by the field MARKET_CODE which characterizes market codes by a two character code. A list of market codes for a species can be found using <a href="https://noaa-edab.github.io/comlandr/reference/get_species_itis.html" class="external-link"><code>comlandr::get_species_itis()</code></a></p>
+<p>Market categories are defined by the field MARKET_CODE which
+characterizes market codes by a two character code. A list of market
+codes for a species can be found using <a href="https://noaa-edab.github.io/comlandr/reference/get_species_itis.html" class="external-link"><code>comlandr::get_species_itis()</code></a></p>
 <ul>
-<li><p>Any MARKET_CODEs that do not have any length samples (when aggregated over YEAR, QTR) are treated first. The user has the option to aggregate these market codes with any other market code. The default option is to relabel these as unknowns, “UN”. Often these MARKET_CODEs have a small amount of landings attributed to them and the impact of this aggregation is negligible</p></li>
-<li><p>The length distributions for the remaining MARKET_CODEs (aggregated over YEAR, QTR) are then tested against each other (using the Kolmogorov-Smirnov test) at a predetermined significance level (<code>pValue=0.05</code>) to determine if they are significantly different. Any MARKET_CODEs that are found to be statistically insignificant are aggregated.</p></li>
+<li><p>Any MARKET_CODEs that do not have any length samples (when
+aggregated over YEAR, QTR) are treated first. The user has the option to
+aggregate these market codes with any other market code. The default
+option is to relabel these as unknowns, “UN”. Often these MARKET_CODEs
+have a small amount of landings attributed to them and the impact of
+this aggregation is negligible</p></li>
+<li><p>The length distributions for the remaining MARKET_CODEs
+(aggregated over YEAR, QTR) are then tested against each other (using
+the Kolmogorov-Smirnov test) at a predetermined significance level
+(<code>pValue=0.05</code>) to determine if they are significantly
+different. Any MARKET_CODEs that are found to be statistically
+insignificant are aggregated.</p></li>
 </ul>
-<p><em>If a <a href="../reference/get_species_object.html">species_object</a> is used the steps above are skipped since all market code aggregations are predetermined by the user</em></p>
-<p>The user has the option of stopping at this point (<code>borrowLengths=F</code>). The data returned will either be at the QTR or YEAR level depending on user inputs.</p>
+<p><em>If a <a href="../reference/get_species_object.html">species_object</a> is used
+the steps above are skipped since all market code aggregations are
+predetermined by the user</em></p>
+<p>The user has the option of stopping at this point
+(<code>borrowLengths=F</code>). The data returned will either be at the
+QTR or YEAR level depending on user inputs.</p>
 </div>
 <div class="section level2">
 <h2 id="time">Time<a class="anchor" aria-label="anchor" href="#time"></a>
 </h2>
-<p>The user supplies the level in which landings should be aggregated, (YEAR, QTR, or SEMESTER). All combinations of Time, NEGEAR, MARKET_CODE that do not have associated length samples borrow samples from the nearest neighbor in time. <strong>Future development: Include nearest neighbor based on spatial units and/or GEAR</strong></p>
-<p>Before the borrowing of length samples commences, any gear types found to not have any length samples are aggregated with the otherGear category (<em>This does not occur if <a href="../reference/get_species_object.html">species_object</a> is used</em>)</p>
-<p>The borrowing of length samples from one time interval to use in another time interval can be a subjective process that differs among species based on life history traits. To complicate matters length distributions sampled within MARKET_CODEs may have shifted over time. These issues will be dealt with at a future date. A generalized method is currently applied (<strong>Future development: Include additional options based on life history traits and fishing industry changes</strong>)</p>
+<p>The user supplies the level in which landings should be aggregated,
+(YEAR, QTR, or SEMESTER). All combinations of Time, NEGEAR, MARKET_CODE
+that do not have associated length samples borrow samples from the
+nearest neighbor in time. <strong>Future development: Include nearest
+neighbor based on spatial units and/or GEAR</strong></p>
+<p>Before the borrowing of length samples commences, any gear types
+found to not have any length samples are aggregated with the otherGear
+category (<em>This does not occur if <a href="../reference/get_species_object.html">species_object</a> is
+used</em>)</p>
+<p>The borrowing of length samples from one time interval to use in
+another time interval can be a subjective process that differs among
+species based on life history traits. To complicate matters length
+distributions sampled within MARKET_CODEs may have shifted over time.
+These issues will be dealt with at a future date. A generalized method
+is currently applied (<strong>Future development: Include additional
+options based on life history traits and fishing industry
+changes</strong>)</p>
 <ul>
-<li>Aggregate landings to QTRs and borrow length samples where necessary <sup>1</sup>
+<li>Aggregate landings to QTRs and borrow length samples where necessary
+<sup>1</sup>
 </li>
-<li>Aggregate landings to SEMESTERs and borrow length samples where necessary</li>
-<li>Aggregate landings to YEARs and borrow length samples where necessary</li>
-<li>Aggregate landings in each year to either YEAR, SEMESTER, QTR depending on availability of length samples in close proximity to the target year. <strong>Future development</strong>
+<li>Aggregate landings to SEMESTERs and borrow length samples where
+necessary</li>
+<li>Aggregate landings to YEARs and borrow length samples where
+necessary</li>
+<li>Aggregate landings in each year to either YEAR, SEMESTER, QTR
+depending on availability of length samples in close proximity to the
+target year. <strong>Future development</strong>
 </li>
 </ul>
-<p><sup>1</sup> The method of borrowing length samples is complex and the user has several options. These methods are described below.</p>
+<p><sup>1</sup> The method of borrowing length samples is complex and
+the user has several options. These methods are described below.</p>
 <div class="section level4">
 <h4 id="aggregate-to-year">Aggregate to YEAR<a class="anchor" aria-label="anchor" href="#aggregate-to-year"></a>
 </h4>
 <p>The following are performed sequentially:</p>
 <ul>
-<li><p>The landings and length sample data are aggregated over QTR to the the annual (YEAR) level</p></li>
-<li><p>For each gear type (NEGEAR) the Kolmogorov-Smirnov test is applied in each YEAR (<strong>Future work</strong>) to test for differences in the length distributions among MARKET_CODEs. Any MARKET_CODEs with length distributions found to be statistically insignificant can be aggregated by the user. The default is no aggregation of MARKET_CODEs.</p></li>
-<li><p>For each gear type (NEGEAR) and market code: A YEAR with missing length samples borrows length samples from the YEAR closest to it in time (in the future or the past)</p></li>
-<li><p>For any NEGEAR/MARKET_CODE combinations where the number of length samples is less than the user defined value (<code>nLengthSamples</code>), for all YEARS, length samples are borrowed from another NEGEAR type with the same MARKET_CODE. Samples are borrowed from the NEGEAR with the most landings (since it is assumed they will have the most length samples). If there are insufficient length samples, the next NEGEAR in order of total landings is checked. And so on.</p></li>
-<li><p>The sampling program for most species started several years after landings were first recorded. So there is a stretch of consecutive years in the early part of the time series without any length samples. These years are assigned length samples from the first year in which samples were taken.</p></li>
+<li><p>The landings and length sample data are aggregated over QTR to
+the the annual (YEAR) level</p></li>
+<li><p>For each gear type (NEGEAR) the Kolmogorov-Smirnov test is
+applied in each YEAR (<strong>Future work</strong>) to test for
+differences in the length distributions among MARKET_CODEs. Any
+MARKET_CODEs with length distributions found to be statistically
+insignificant can be aggregated by the user. The default is no
+aggregation of MARKET_CODEs.</p></li>
+<li><p>For each gear type (NEGEAR) and market code: A YEAR with missing
+length samples borrows length samples from the YEAR closest to it in
+time (in the future or the past)</p></li>
+<li><p>For any NEGEAR/MARKET_CODE combinations where the number of
+length samples is less than the user defined value
+(<code>nLengthSamples</code>), for all YEARS, length samples are
+borrowed from another NEGEAR type with the same MARKET_CODE. Samples are
+borrowed from the NEGEAR with the most landings (since it is assumed
+they will have the most length samples). If there are insufficient
+length samples, the next NEGEAR in order of total landings is checked.
+And so on.</p></li>
+<li><p>The sampling program for most species started several years after
+landings were first recorded. So there is a stretch of consecutive years
+in the early part of the time series without any length samples. These
+years are assigned length samples from the first year in which samples
+were taken.</p></li>
 </ul>
 </div>
 <div class="section level4">
 <h4 id="aggregate-to-qtr">Aggregate to QTR<a class="anchor" aria-label="anchor" href="#aggregate-to-qtr"></a>
 </h4>
 <ul>
-<li><p>For YEARs where there are landings before any length samples were taken all YEAR/QTRs are assigned the length samples from the first YEAR in which length samples were taken (from the same QTR)</p></li>
-<li><p>For YEARs when QTRs have missing length samples the previous years length samples for the same QTR are assigned. If there are not length samples in the previous year then the process is repeated until a length sample is available. If this still results in no length samples then the nearest neighbor is used. Length samples from the nearest QTR (any QTR) are used. If this still results in no length samples then the nearest neighbor is used from the NEGEAR type that is attributed with the majority of the landings.</p></li>
+<li><p>For YEARs where there are landings before any length samples were
+taken all YEAR/QTRs are assigned the length samples from the first YEAR
+in which length samples were taken (from the same QTR)</p></li>
+<li><p>For YEARs when QTRs have missing length samples the previous
+years length samples for the same QTR are assigned. If there are not
+length samples in the previous year then the process is repeated until a
+length sample is available. If this still results in no length samples
+then the nearest neighbor is used. Length samples from the nearest QTR
+(any QTR) are used. If this still results in no length samples then the
+nearest neighbor is used from the NEGEAR type that is attributed with
+the majority of the landings.</p></li>
 </ul>
 </div>
 <div class="section level4">
 <h4 id="aggregate-to-semester">Aggregate to SEMESTER<a class="anchor" aria-label="anchor" href="#aggregate-to-semester"></a>
 </h4>
 <ul>
-<li>Landings and length data are relabeled from QTR to SEMESTER (SEMESTER 1 = QTR 1 and 2, SEMESTER 2 = QTR 3 and 4). The procedure for borrowing length samples is the same for QTRs</li>
+<li>Landings and length data are relabeled from QTR to SEMESTER
+(SEMESTER 1 = QTR 1 and 2, SEMESTER 2 = QTR 3 and 4). The procedure for
+borrowing length samples is the same for QTRs</li>
 </ul>
-<p><strong>All decisions made regarding where length samples are borrowed from are written to the <a href="sampleFigures.html#logfile">logfile</a> for later inspecition</strong></p>
+<p><strong>All decisions made regarding where length samples are
+borrowed from are written to the <a href="sampleFigures.html#logfile">logfile</a> for later
+inspecition</strong></p>
 <!-- #### MIX -->
 <!-- * A tolerance for the allowed proportion of missing length samples by QTR (for each NEGEAR and MARKET_CODE) is used to determine if length samples should be assigned to ALL QTRs (as described by the methods above) or whether landings should be aggregated to annual data. -->
 </div>
@@ -319,16 +414,28 @@ Proportion
 <div class="section level2">
 <h2 id="other-gear">Other Gear<a class="anchor" aria-label="anchor" href="#other-gear"></a>
 </h2>
-<p>In all methods above the <code>otherGear</code> category is by definition sparse. This gear type is always aggregated to annual data.</p>
+<p>In all methods above the <code>otherGear</code> category is by
+definition sparse. This gear type is always aggregated to annual
+data.</p>
 </div>
 <div class="section level2">
 <h2 id="unclassified-market-code">Unclassified Market Code<a class="anchor" aria-label="anchor" href="#unclassified-market-code"></a>
 </h2>
-<p>In all methods above the landings and length sample data for the unclassified market category, <code>UN</code>, are aggregated to the same level as other MARKET_CODEs.</p>
-<p>The unclassified landings for a specific (YEAR, QTR, NEGEAR) are assumed to be a mixture of fish lengths similar to that in the observed MARKET_CODEs. Therefore the length distribution for the unclassified landings are assumed to have the same distribution as the length distributions of the landed fish in all of the known market codes combined.</p>
+<p>In all methods above the landings and length sample data for the
+unclassified market category, <code>UN</code>, are aggregated to the
+same level as other MARKET_CODEs.</p>
+<p>The unclassified landings for a specific (YEAR, QTR, NEGEAR) are
+assumed to be a mixture of fish lengths similar to that in the observed
+MARKET_CODEs. Therefore the length distribution for the unclassified
+landings are assumed to have the same distribution as the length
+distributions of the landed fish in all of the known market codes
+combined.</p>
 <ul>
-<li><p>For each YEAR, QTR, NEGEARs where there are no length samples available then all length samples over all MARKET_CODES are assigned to the Unclassifieds.</p></li>
-<li><p>For cases where there are no samples for these other MARKET_CODEs then the nearest neighbor in time is used.</p></li>
+<li><p>For each YEAR, QTR, NEGEARs where there are no length samples
+available then all length samples over all MARKET_CODES are assigned to
+the Unclassifieds.</p></li>
+<li><p>For cases where there are no samples for these other MARKET_CODEs
+then the nearest neighbor in time is used.</p></li>
 </ul>
 </div>
   </div>

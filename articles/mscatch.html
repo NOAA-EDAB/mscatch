@@ -100,7 +100,7 @@
 
       
 
-      </header><script src="mscatch_files/accessible-code-block-0.0.1/empty-anchor.js"></script><link href="mscatch_files/tabwid-1.1.0/tabwid.css" rel="stylesheet">
+      </header><link href="mscatch_files/tabwid-1.1.0/tabwid.css" rel="stylesheet">
 <link href="mscatch_files/tabwid-1.1.0/scrool.css" rel="stylesheet">
 <div class="row">
   <div class="col-md-9 contents">
@@ -115,18 +115,25 @@
 
     
     
-<p>When working with <code>mscatch</code>, depending on what you want to do, you will need to:</p>
+<p>When working with <code>mscatch</code>, depending on what you want to
+do, you will need to:</p>
 <ul>
 <li>
-<a href="dataNeeds.html">Assemble data</a> for use in the package</li>
+<a href="dataNeeds.html">Assemble data</a> for use in the
+package</li>
 <li>
-<a href="aggregationRules.html">Aggregate the catch data</a> based on a set of rules</li>
-<li>Use length-weight relationships to <a href="catchExpansion.html">expand the catch</a> to weights using the length samples</li>
+<a href="aggregationRules.html">Aggregate the catch data</a> based
+on a set of rules</li>
+<li>Use length-weight relationships to <a href="catchExpansion.html">expand the catch</a> to weights using the
+length samples</li>
 <li><a href="ageExpansion.html">Create an Age-Length Key</a></li>
 <li>Calculate <a href="numbersAtAge.html">numbers at age</a>
 </li>
 </ul>
-<p>Assuming you have assembled the data (for a sample data set see, <a href="../reference/get_sample_data.html"><code>get_sample_data</code></a>), the next step is to determine how the data should be aggregate and how to deal with missing length samples in YEARs/QTRs where there are catch.</p>
+<p>Assuming you have assembled the data (for a sample data set see, <a href="../reference/get_sample_data.html"><code>get_sample_data</code></a>),
+the next step is to determine how the data should be aggregate and how
+to deal with missing length samples in YEARs/QTRs where there are
+catch.</p>
 <p>There are two approaches a user can take:</p>
 <ul>
 <li>Define specific rules in a species object list</li>
@@ -135,26 +142,41 @@
 <div class="section level3">
 <h3 id="define-a-species-object">Define a species object<a class="anchor" aria-label="anchor" href="#define-a-species-object"></a>
 </h3>
-<p>A <a href="https://noaa-edab.github.io/mscatch/reference/get_species_object.html">species object</a> can be defined and passed as an argument to the <a href="https://noaa-edab.github.io/mscatch/reference/aggregate_landings.html">aggregate_landings</a> function. This object specifies decision rules to be used in the aggregation step that answer the following questions:</p>
+<p>A <a href="https://noaa-edab.github.io/mscatch/reference/get_species_object.html">species
+object</a> can be defined and passed as an argument to the <a href="https://noaa-edab.github.io/mscatch/reference/aggregate_landings.html">aggregate_landings</a>
+function. This object specifies decision rules to be used in the
+aggregation step that answer the following questions:</p>
 <ul>
 <li>Which gear types should be aggregated?</li>
 <li>Which market codes should be aggregated?</li>
-<li>How to deal with with missing length samples? where to borrow from if at all?</li>
+<li>How to deal with with missing length samples? where to borrow from
+if at all?</li>
 <li>Which statistical areas define the stock?</li>
-<li>Where is length-weight data pulled from to fit length-weight relationships? survey database, commercial database, both?</li>
-<li>At what time scale are length weight relationships fitted? Semester, quartery, annually?</li>
+<li>Where is length-weight data pulled from to fit length-weight
+relationships? survey database, commercial database, both?</li>
+<li>At what time scale are length weight relationships fitted? Semester,
+quartery, annually?</li>
 <li>Where is the age data pulled from?</li>
-<li>How should age length keys be calculated? Annually, by semester annually, by gear, semester, annually?</li>
+<li>How should age length keys be calculated? Annually, by semester
+annually, by gear, semester, annually?</li>
 <li>What is the maximum age of the species ?</li>
 </ul>
 </div>
 <div class="section level3">
 <h3 id="general-rules">General rules<a class="anchor" aria-label="anchor" href="#general-rules"></a>
 </h3>
-<p>This option is for exploring the data and assessing the impacts related to aggregation decisions to help inform building a species object. For example:</p>
+<p>This option is for exploring the data and assessing the impacts
+related to aggregation decisions to help inform building a species
+object. For example:</p>
 <ul>
-<li><p>To explore the most important gear types that are associated with landing a species a user can specify a threshold value relating to the proportion of cumulative landings, over which all other gear types are considered insignificant and are grouped together.</p></li>
-<li><p>Market codes are aggregated if the length frequency distributions are found to be significantly insignificant (using the Kolmogorov-Smirnov test). The level of the test (p-value) can be passed as an argument.</p></li>
+<li><p>To explore the most important gear types that are associated with
+landing a species a user can specify a threshold value relating to the
+proportion of cumulative landings, over which all other gear types are
+considered insignificant and are grouped together.</p></li>
+<li><p>Market codes are aggregated if the length frequency distributions
+are found to be significantly insignificant (using the
+Kolmogorov-Smirnov test). The level of the test (p-value) can be passed
+as an argument.</p></li>
 </ul>
 </div>
 <div class="section level2">
@@ -164,41 +186,63 @@
 <h3 id="using-the-exploratory-approach">Using the exploratory approach<a class="anchor" aria-label="anchor" href="#using-the-exploratory-approach"></a>
 </h3>
 <ul>
-<li><p>Assigns the name of species (<code>speciesName = "Haddock"</code>)</p></li>
-<li><p>Aggregates landings over QTR year to YEARly data and combines all length samples to same level of aggregation (<code>aggregate_to = "YEAR"</code>).</p></li>
-<li><p>Uses gear types (NEGEARs) which contribute the most to total landings. Uses a cumulative landings threshold of 90% to select gears. Other gears will be aggregated into an “other Gear” category (<code>landingThresholdGear = 0.9</code>)</p></li>
-<li><p>Assigns other gears to code “998” (<code>otherGear = "998"</code>)</p></li>
-<li><p>Borrows length samples from nearest neighbor, whether by QTR, YEAR, or NEGEAR (<code>borrowLengths = T</code>).</p></li>
-<li><p>Minimum number of length samples required when borrowing samples from other NEGEARs, QTRs, or YEARs (<code>nLengthSamples = 1</code>)</p></li>
-<li><p>Assigns an output folder (<code>outputDir=here::here("output/Haddock")</code>) for all diagnostic plots and the logfile</p></li>
-<li><p>Assigns a name to the log file produced (<code>logfile = "logfile.txt"</code>). This documents all decisions made in aggregation steps and documents the years in which length samples were borrowed and the year from which they were borrowed</p></li>
+<li><p>Assigns the name of species
+(<code>speciesName = "Haddock"</code>)</p></li>
+<li><p>Aggregates landings over QTR year to YEARly data and combines all
+length samples to same level of aggregation
+(<code>aggregate_to = "YEAR"</code>).</p></li>
+<li><p>Uses gear types (NEGEARs) which contribute the most to total
+landings. Uses a cumulative landings threshold of 90% to select gears.
+Other gears will be aggregated into an “other Gear” category
+(<code>landingThresholdGear = 0.9</code>)</p></li>
+<li><p>Assigns other gears to code “998”
+(<code>otherGear = "998"</code>)</p></li>
+<li><p>Borrows length samples from nearest neighbor, whether by QTR,
+YEAR, or NEGEAR (<code>borrowLengths = T</code>).</p></li>
+<li><p>Minimum number of length samples required when borrowing samples
+from other NEGEARs, QTRs, or YEARs
+(<code>nLengthSamples = 1</code>)</p></li>
+<li><p>Assigns an output folder
+(<code>outputDir=here::here("output/Haddock")</code>) for all diagnostic
+plots and the logfile</p></li>
+<li><p>Assigns a name to the log file produced
+(<code>logfile = "logfile.txt"</code>). This documents all decisions
+made in aggregation steps and documents the years in which length
+samples were borrowed and the year from which they were
+borrowed</p></li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a> aggregatedData &lt;-<span class="st"> </span>mscatch<span class="op">::</span><span class="kw">aggregate_landings</span>(channel,</span>
-<span id="cb1-2"><a href="#cb1-2"></a>                                               landingsData,</span>
-<span id="cb1-3"><a href="#cb1-3"></a>                                               lengthData,</span>
-<span id="cb1-4"><a href="#cb1-4"></a>                                               <span class="dt">outputDir=</span>here<span class="op">::</span><span class="kw">here</span>(<span class="st">"output/Haddok"</span>),</span>
-<span id="cb1-5"><a href="#cb1-5"></a>                                               <span class="dt">speciesName =</span> <span class="st">"Haddock"</span></span>
-<span id="cb1-6"><a href="#cb1-6"></a>                                               <span class="dt">landingThresholdGear =</span> <span class="fl">0.9</span>,</span>
-<span id="cb1-7"><a href="#cb1-7"></a>                                               <span class="dt">nLengthSamples =</span> <span class="dv">1</span>,</span>
-<span id="cb1-8"><a href="#cb1-8"></a>                                               <span class="dt">aggregate_to =</span> <span class="st">"YEAR"</span>,</span>
-<span id="cb1-9"><a href="#cb1-9"></a>                                               <span class="dt">borrowLengths =</span> T,</span>
-<span id="cb1-10"><a href="#cb1-10"></a>                                               <span class="dt">otherGear =</span> <span class="st">"998"</span>,</span>
-<span id="cb1-11"><a href="#cb1-11"></a>                                               <span class="dt">logfile =</span> <span class="st">"logfile.txt"</span></span>
-<span id="cb1-12"><a href="#cb1-12"></a>                                               <span class="dt">outputPlots =</span> T,</span>
-<span id="cb1-13"><a href="#cb1-13"></a>                                               <span class="dt">speciesRules =</span> <span class="ot">NULL</span>)</span></code></pre></div>
-<p>At this point, <code>aggregateData</code> contains length samples for every combination of YEAR, NEGEAR, MARKET_CODE. All decisions made regarding gear type selection, market code selection, and which YEAR length samples were borrowed from are recorded in the <code>logfile</code>. If <code>outputPlots=T</code> a suite of plots are also output in the <code>outputDir</code>.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a> aggregatedData <span class="ot">&lt;-</span> mscatch<span class="sc">::</span><span class="fu">aggregate_landings</span>(channel,</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                                               landingsData,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>                                               lengthData,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">outputDir=</span>here<span class="sc">::</span><span class="fu">here</span>(<span class="st">"output/Haddok"</span>),</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">speciesName =</span> <span class="st">"Haddock"</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">landingThresholdGear =</span> <span class="fl">0.9</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">nLengthSamples =</span> <span class="dv">1</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">aggregate_to =</span> <span class="st">"YEAR"</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">borrowLengths =</span> T,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">otherGear =</span> <span class="st">"998"</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">logfile =</span> <span class="st">"logfile.txt"</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">outputPlots =</span> T,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>                                               <span class="at">speciesRules =</span> <span class="cn">NULL</span>)</span></code></pre></div>
+<p>At this point, <code>aggregateData</code> contains length samples for
+every combination of YEAR, NEGEAR, MARKET_CODE. All decisions made
+regarding gear type selection, market code selection, and which YEAR
+length samples were borrowed from are recorded in the
+<code>logfile</code>. If <code>outputPlots=T</code> a suite of plots are
+also output in the <code>outputDir</code>.</p>
 </div>
 <div class="section level3">
 <h3 id="using-a-species-object">Using a species object<a class="anchor" aria-label="anchor" href="#using-a-species-object"></a>
 </h3>
-<p>A template for the species object is bundled with <code>mscatch</code> which can then be adapted</p>
+<p>A template for the species object is bundled with
+<code>mscatch</code> which can then be adapted</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Haddock species itis code = 164744</span></span>
 <span><span class="va">species_itis</span> <span class="op">&lt;-</span> <span class="fl">164744</span></span>
 <span><span class="va">speciesRules</span> <span class="op">&lt;-</span> <span class="fu">mscatch</span><span class="fu">::</span><span class="fu"><a href="../reference/get_species_object.html">get_species_object</a></span><span class="op">(</span><span class="va">species_itis</span><span class="op">)</span></span>
 <span><span class="va">speciesRules</span><span class="op">$</span><span class="va">marketCodes</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu">flextable</span><span class="fu">::</span><span class="fu"><a href="https://davidgohel.github.io/flextable/reference/flextable.html" class="external-link">flextable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<template id="9080326b-ddfb-4a57-be3c-c1826403a250"><style>
+<template id="c1858306-9bfd-4d08-9a3f-64e0cabacca0"><style>
 .tabwid table{
   border-spacing:0px !important;
   border-collapse:collapse;
@@ -239,48 +283,50 @@ background-color: transparent;
 }
 </style>
 <div class="tabwid">
-<style>.cl-a8920924{}.cl-a8849398{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-a88a3488{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-a88a55ee{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a88a55f8{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a88a5602{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
-<table class="table cl-a8920924">
+<style>.cl-2e467c12{}.cl-2e311fac{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-2e3d2bbc{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-2e3d58d0{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-2e3d58da{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-2e3d58db{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
+<table class="table cl-2e467c12">
 <thead><tr style="overflow-wrap:break-word;">
-<td class="cl-a88a55ee"><p class="cl-a88a3488"><span class="cl-a8849398">use</span></p></td>
-<td class="cl-a88a55ee"><p class="cl-a88a3488"><span class="cl-a8849398">combine</span></p></td>
+<td class="cl-2e3d58d0"><p class="cl-2e3d2bbc"><span class="cl-2e311fac">use</span></p></td>
+<td class="cl-2e3d58d0"><p class="cl-2e3d2bbc"><span class="cl-2e311fac">combine</span></p></td>
 </tr></thead>
 <tbody>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-a88a55f8"><p class="cl-a88a3488"><span class="cl-a8849398">LG</span></p></td>
-<td class="cl-a88a55f8"><p class="cl-a88a3488"><span class="cl-a8849398">LG</span></p></td>
+<td class="cl-2e3d58da"><p class="cl-2e3d2bbc"><span class="cl-2e311fac">LG</span></p></td>
+<td class="cl-2e3d58da"><p class="cl-2e3d2bbc"><span class="cl-2e311fac">LG</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-a88a55f8"><p class="cl-a88a3488"><span class="cl-a8849398">LG</span></p></td>
-<td class="cl-a88a55f8"><p class="cl-a88a3488"><span class="cl-a8849398">XG</span></p></td>
+<td class="cl-2e3d58da"><p class="cl-2e3d2bbc"><span class="cl-2e311fac">LG</span></p></td>
+<td class="cl-2e3d58da"><p class="cl-2e3d2bbc"><span class="cl-2e311fac">XG</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-a88a55f8"><p class="cl-a88a3488"><span class="cl-a8849398">SR</span></p></td>
-<td class="cl-a88a55f8"><p class="cl-a88a3488"><span class="cl-a8849398">SR</span></p></td>
+<td class="cl-2e3d58da"><p class="cl-2e3d2bbc"><span class="cl-2e311fac">SR</span></p></td>
+<td class="cl-2e3d58da"><p class="cl-2e3d2bbc"><span class="cl-2e311fac">SR</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-a88a55f8"><p class="cl-a88a3488"><span class="cl-a8849398">SK</span></p></td>
-<td class="cl-a88a55f8"><p class="cl-a88a3488"><span class="cl-a8849398">SK</span></p></td>
+<td class="cl-2e3d58da"><p class="cl-2e3d2bbc"><span class="cl-2e311fac">SK</span></p></td>
+<td class="cl-2e3d58da"><p class="cl-2e3d2bbc"><span class="cl-2e311fac">SK</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-a88a5602"><p class="cl-a88a3488"><span class="cl-a8849398">UN</span></p></td>
-<td class="cl-a88a5602"><p class="cl-a88a3488"><span class="cl-a8849398">all</span></p></td>
+<td class="cl-2e3d58db"><p class="cl-2e3d2bbc"><span class="cl-2e311fac">UN</span></p></td>
+<td class="cl-2e3d58db"><p class="cl-2e3d2bbc"><span class="cl-2e311fac">all</span></p></td>
 </tr>
 </tbody>
 </table>
-</div></template><div class="flextable-shadow-host" id="f3e1dfad-5ed0-416b-b481-3d50ae2251c0"></div>
+</div></template><div class="flextable-shadow-host" id="5330ef61-98df-461e-a554-ddec66cbc3a9"></div>
 <script>
-var dest = document.getElementById("f3e1dfad-5ed0-416b-b481-3d50ae2251c0");
-var template = document.getElementById("9080326b-ddfb-4a57-be3c-c1826403a250");
+var dest = document.getElementById("5330ef61-98df-461e-a554-ddec66cbc3a9");
+var template = document.getElementById("c1858306-9bfd-4d08-9a3f-64e0cabacca0");
 var caption = template.content.querySelector("caption");
 var fantome = dest.attachShadow({mode: 'open'});
 var templateContent = template.content;
 fantome.appendChild(templateContent);
-</script><p>This specifies the market code aggregation; LG and XG codes are combind and relabeled as LG, SR and SK remain as they are. All other market codes are treated as unclassifieds, UN.</p>
+</script><p>This specifies the market code aggregation; LG and XG codes are
+combind and relabeled as LG, SR and SK remain as they are. All other
+market codes are treated as unclassifieds, UN.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">speciesRules</span><span class="op">$</span><span class="va">gearCodes</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu">flextable</span><span class="fu">::</span><span class="fu"><a href="https://davidgohel.github.io/flextable/reference/flextable.html" class="external-link">flextable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<template id="7e6ebebb-b35a-48a6-aa5b-39f69544920a"><style>
+<template id="8190115e-96dc-41a1-a609-4ddf57f2aa15"><style>
 .tabwid table{
   border-spacing:0px !important;
   border-collapse:collapse;
@@ -321,28 +367,28 @@ background-color: transparent;
 }
 </style>
 <div class="tabwid">
-<style>.cl-a8c2215e{}.cl-a8b1a7e8{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-a8bbfd56{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-a8bc2a06{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a8bc2a10{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
-<table class="table cl-a8c2215e">
+<style>.cl-2e73a32c{}.cl-2e6278fe{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-2e6cc318{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-2e6ce9e2{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-2e6ce9f6{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
+<table class="table cl-2e73a32c">
 <thead><tr style="overflow-wrap:break-word;">
-<td class="cl-a8bc2a06"><p class="cl-a8bbfd56"><span class="cl-a8b1a7e8">use</span></p></td>
-<td class="cl-a8bc2a06"><p class="cl-a8bbfd56"><span class="cl-a8b1a7e8">combine</span></p></td>
+<td class="cl-2e6ce9e2"><p class="cl-2e6cc318"><span class="cl-2e6278fe">use</span></p></td>
+<td class="cl-2e6ce9e2"><p class="cl-2e6cc318"><span class="cl-2e6278fe">combine</span></p></td>
 </tr></thead>
 <tbody><tr style="overflow-wrap:break-word;">
-<td class="cl-a8bc2a10"><p class="cl-a8bbfd56"><span class="cl-a8b1a7e8">050</span></p></td>
-<td class="cl-a8bc2a10"><p class="cl-a8bbfd56"><span class="cl-a8b1a7e8">all</span></p></td>
+<td class="cl-2e6ce9f6"><p class="cl-2e6cc318"><span class="cl-2e6278fe">050</span></p></td>
+<td class="cl-2e6ce9f6"><p class="cl-2e6cc318"><span class="cl-2e6278fe">all</span></p></td>
 </tr></tbody>
 </table>
-</div></template><div class="flextable-shadow-host" id="8232eedf-eab7-4a87-8993-f27ab5ae06e3"></div>
+</div></template><div class="flextable-shadow-host" id="c50b0d49-b1b4-4566-895d-36cd7b4809e9"></div>
 <script>
-var dest = document.getElementById("8232eedf-eab7-4a87-8993-f27ab5ae06e3");
-var template = document.getElementById("7e6ebebb-b35a-48a6-aa5b-39f69544920a");
+var dest = document.getElementById("c50b0d49-b1b4-4566-895d-36cd7b4809e9");
+var template = document.getElementById("8190115e-96dc-41a1-a609-4ddf57f2aa15");
 var caption = template.content.querySelector("caption");
 var fantome = dest.attachShadow({mode: 'open'});
 var templateContent = template.content;
 fantome.appendChild(templateContent);
 </script><p>All gear codes are aggregated and labelled as gear code “050”</p>
 <p>Other related rules:</p>
-<template id="85baf169-37ef-4e77-99f9-fff1eb573c54"><style>
+<template id="4dd9cec2-e2e2-44bd-85c5-545acae2c828"><style>
 .tabwid table{
   border-spacing:0px !important;
   border-collapse:collapse;
@@ -383,69 +429,79 @@ background-color: transparent;
 }
 </style>
 <div class="tabwid">
-<style>.cl-a905c60c{}.cl-a8ee9db0{font-family:'Helvetica';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-a8ee9dba{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-a8f2d06a{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-a8f2ed0c{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a8f2ed16{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a8f2ed20{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-a8f2ed21{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
-<table class="table cl-a905c60c">
+<style>.cl-2eae90c2{}.cl-2e96bb64{font-family:'Helvetica';font-size:11pt;font-weight:bold;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-2e96bb78{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-2e9bbc2c{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-2e9bde28{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 2pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-2e9bde3c{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-2e9bde3d{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0.5pt solid rgba(102, 102, 102, 1.00);border-top: 0.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-2e9bde46{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 2pt solid rgba(102, 102, 102, 1.00);border-top: 0.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style>
+<table class="table cl-2eae90c2">
 <thead><tr style="overflow-wrap:break-word;">
-<td class="cl-a8f2ed0c"><p class="cl-a8f2d06a"><span class="cl-a8ee9db0">rowname</span></p></td>
-<td class="cl-a8f2ed0c"><p class="cl-a8f2d06a"><span class="cl-a8ee9db0">value</span></p></td>
+<td class="cl-2e9bde28"><p class="cl-2e9bbc2c"><span class="cl-2e96bb64">rowname</span></p></td>
+<td class="cl-2e9bde28"><p class="cl-2e9bbc2c"><span class="cl-2e96bb64">value</span></p></td>
 </tr></thead>
 <tbody>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-a8f2ed16"><p class="cl-a8f2d06a"><span class="cl-a8ee9dba">species</span></p></td>
-<td class="cl-a8f2ed16"><p class="cl-a8f2d06a"><span class="cl-a8ee9dba">HADDOCK</span></p></td>
+<td class="cl-2e9bde3c"><p class="cl-2e9bbc2c"><span class="cl-2e96bb78">species</span></p></td>
+<td class="cl-2e9bde3c"><p class="cl-2e9bbc2c"><span class="cl-2e96bb78">HADDOCK</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-a8f2ed20"><p class="cl-a8f2d06a"><span class="cl-a8ee9dba">temporalAggregation</span></p></td>
-<td class="cl-a8f2ed20"><p class="cl-a8f2d06a"><span class="cl-a8ee9dba">semester</span></p></td>
+<td class="cl-2e9bde3d"><p class="cl-2e9bbc2c"><span class="cl-2e96bb78">temporalAggregation</span></p></td>
+<td class="cl-2e9bde3d"><p class="cl-2e9bbc2c"><span class="cl-2e96bb78">semester</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-a8f2ed20"><p class="cl-a8f2d06a"><span class="cl-a8ee9dba">howAggregate</span></p></td>
-<td class="cl-a8f2ed20"><p class="cl-a8f2d06a"><span class="cl-a8ee9dba">borrow</span></p></td>
+<td class="cl-2e9bde3d"><p class="cl-2e9bbc2c"><span class="cl-2e96bb78">howAggregate</span></p></td>
+<td class="cl-2e9bde3d"><p class="cl-2e9bbc2c"><span class="cl-2e96bb78">borrow</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-a8f2ed20"><p class="cl-a8f2d06a"><span class="cl-a8ee9dba">LengthWeightData</span></p></td>
-<td class="cl-a8f2ed20"><p class="cl-a8f2d06a"><span class="cl-a8ee9dba">survey</span></p></td>
+<td class="cl-2e9bde3d"><p class="cl-2e9bbc2c"><span class="cl-2e96bb78">LengthWeightData</span></p></td>
+<td class="cl-2e9bde3d"><p class="cl-2e9bbc2c"><span class="cl-2e96bb78">survey</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-a8f2ed20"><p class="cl-a8f2d06a"><span class="cl-a8ee9dba">LengthWeightRelationships</span></p></td>
-<td class="cl-a8f2ed20"><p class="cl-a8f2d06a"><span class="cl-a8ee9dba">semester</span></p></td>
+<td class="cl-2e9bde3d"><p class="cl-2e9bbc2c"><span class="cl-2e96bb78">LengthWeightRelationships</span></p></td>
+<td class="cl-2e9bde3d"><p class="cl-2e9bbc2c"><span class="cl-2e96bb78">semester</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-a8f2ed20"><p class="cl-a8f2d06a"><span class="cl-a8ee9dba">AgeData</span></p></td>
-<td class="cl-a8f2ed20"><p class="cl-a8f2d06a"><span class="cl-a8ee9dba">survey,commerical</span></p></td>
+<td class="cl-2e9bde3d"><p class="cl-2e9bbc2c"><span class="cl-2e96bb78">AgeData</span></p></td>
+<td class="cl-2e9bde3d"><p class="cl-2e9bbc2c"><span class="cl-2e96bb78">survey,commerical</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-a8f2ed20"><p class="cl-a8f2d06a"><span class="cl-a8ee9dba">AgeLengthKey</span></p></td>
-<td class="cl-a8f2ed20"><p class="cl-a8f2d06a"><span class="cl-a8ee9dba">year,semester</span></p></td>
+<td class="cl-2e9bde3d"><p class="cl-2e9bbc2c"><span class="cl-2e96bb78">AgeLengthKey</span></p></td>
+<td class="cl-2e9bde3d"><p class="cl-2e9bbc2c"><span class="cl-2e96bb78">year,semester</span></p></td>
 </tr>
 <tr style="overflow-wrap:break-word;">
-<td class="cl-a8f2ed21"><p class="cl-a8f2d06a"><span class="cl-a8ee9dba">maxAge</span></p></td>
-<td class="cl-a8f2ed21"><p class="cl-a8f2d06a"><span class="cl-a8ee9dba">15</span></p></td>
+<td class="cl-2e9bde46"><p class="cl-2e9bbc2c"><span class="cl-2e96bb78">maxAge</span></p></td>
+<td class="cl-2e9bde46"><p class="cl-2e9bbc2c"><span class="cl-2e96bb78">15</span></p></td>
 </tr>
 </tbody>
 </table>
-</div></template><div class="flextable-shadow-host" id="35391241-e196-4691-ba8d-59677e76b364"></div>
+</div></template><div class="flextable-shadow-host" id="49631a99-c1ea-4bac-aac5-d8e1db4bb137"></div>
 <script>
-var dest = document.getElementById("35391241-e196-4691-ba8d-59677e76b364");
-var template = document.getElementById("85baf169-37ef-4e77-99f9-fff1eb573c54");
+var dest = document.getElementById("49631a99-c1ea-4bac-aac5-d8e1db4bb137");
+var template = document.getElementById("4dd9cec2-e2e2-44bd-85c5-545acae2c828");
 var caption = template.content.querySelector("caption");
 var fantome = dest.attachShadow({mode: 'open'});
 var templateContent = template.content;
 fantome.appendChild(templateContent);
-</script><p>This <code>speciesRules</code> object is then passed as an argument to <a href="../reference/aggregate_landings.html"><code>aggregate_landings</code></a></p>
+</script><p>This <code>speciesRules</code> object is then passed as an argument
+to <a href="../reference/aggregate_landings.html"><code>aggregate_landings</code></a></p>
 </div>
 <div class="section level3">
 <h3 id="expand-the-catch-length-numbers">Expand the catch (Length &amp; Numbers)<a class="anchor" aria-label="anchor" href="#expand-the-catch-length-numbers"></a>
 </h3>
-<p>To expand the catch to weight-by-length a length-weight key is required. This is achieved by obtaining parameter values that satisfy the <a href="catchExpansion.html">length-weight relationship</a>. This can be obtained in one of two ways:</p>
+<p>To expand the catch to weight-by-length a length-weight key is
+required. This is achieved by obtaining parameter values that satisfy
+the <a href="catchExpansion.html">length-weight relationship</a>. This
+can be obtained in one of two ways:</p>
 <ul>
-<li>Pull parameter values from Survey database (svdbs) using function <a href="https://noaa-edab.github.io/survdat/reference/get_length_weight.html" class="external-link"><code>get_length_weight</code></a> function from the <a href="https://noaa-edab.github.io/survdat/index.html" class="external-link"><code>survdat</code></a> package.</li>
+<li>Pull parameter values from Survey database (svdbs) using function <a href="https://noaa-edab.github.io/survdat/reference/get_length_weight.html" class="external-link"><code>get_length_weight</code></a>
+function from the <a href="https://noaa-edab.github.io/survdat/index.html" class="external-link"><code>survdat</code></a>
+package.</li>
 </ul>
 <p>or</p>
 <ul>
-<li>Pull raw length-weight data and fit own model. The bottom trawl survey data is used (for this example). A series of nested length-weight models are then fit to the data.</li>
+<li>Pull raw length-weight data and fit own model. The bottom trawl
+survey data is used (for this example). A series of nested length-weight
+models are then fit to the data.</li>
 </ul>
-<p>The data is pulled using the function <a href="https://noaa-edab.github.io/survdat/reference/get_length_weight_data.html" class="external-link"><code>get_length_weight_data</code></a> from the <a href="https://noaa-edab.github.io/survdat/" class="external-link"><code>survdat</code></a> package and fit using <code><a href="../reference/fit_length_weight.html">fit_length_weight()</a></code></p>
+<p>The data is pulled using the function <a href="https://noaa-edab.github.io/survdat/reference/get_length_weight_data.html" class="external-link"><code>get_length_weight_data</code></a>
+from the <a href="https://noaa-edab.github.io/survdat/" class="external-link"><code>survdat</code></a>
+package and fit using <code><a href="../reference/fit_length_weight.html">fit_length_weight()</a></code></p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Permissions and credentials are required to conect to the database</span></span>
 <span><span class="va">channel</span> <span class="op">&lt;-</span> <span class="fu">dbutils</span><span class="fu">::</span><span class="fu"><a href="https://andybeet.github.io/dbutils/reference/connect_to_database.html" class="external-link">connect_to_database</a></span><span class="op">(</span><span class="st">"server"</span>,<span class="st">"user"</span><span class="op">)</span></span>
@@ -454,7 +510,8 @@ fantome.appendChild(templateContent);
 <span><span class="co"># Length-Weight models are thenn fit</span></span>
 <span><span class="va">fits</span> <span class="op">&lt;-</span> <span class="fu">mscatch</span><span class="fu">::</span><span class="fu"><a href="../reference/fit_length_weight.html">fit_length_weight</a></span><span class="op">(</span><span class="va">lengthWeightData</span><span class="op">$</span><span class="va">data</span>,<span class="va">speciesName</span>,<span class="va">speciesRules</span>,<span class="va">outputDir</span>,logfile<span class="op">=</span><span class="st">"logfile.txt"</span><span class="op">)</span></span></code></pre></div>
 <ul>
-<li>The fitted model is then used to expand the catch. This is achieved by using <code><a href="../reference/expand_landings_to_lengths.html">expand_landings_to_lengths()</a></code>
+<li>The fitted model is then used to expand the catch. This is achieved
+by using <code><a href="../reference/expand_landings_to_lengths.html">expand_landings_to_lengths()</a></code>
 </li>
 </ul>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">

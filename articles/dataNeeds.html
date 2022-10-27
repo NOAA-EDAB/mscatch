@@ -100,7 +100,7 @@
 
       
 
-      </header><script src="dataNeeds_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Data Requirements</h1>
@@ -113,26 +113,36 @@
 
     
     
-<p>To use <code>mscatch</code> you will need to compile two data sets for a specific region of interest, whether a stock area, an ecological production unit, or a larger area:</p>
+<p>To use <code>mscatch</code> you will need to compile two data sets
+for a specific region of interest, whether a stock area, an ecological
+production unit, or a larger area:</p>
 <ul>
 <li>Length data</li>
 <li>Catch data</li>
 </ul>
-<p>If you want a sample data set to begin to use <code>mscatch</code> then you can use the function <a href="../reference/get_sample_data.html"><code>get_sample_data</code></a></p>
+<p>If you want a sample data set to begin to use <code>mscatch</code>
+then you can use the function <a href="../reference/get_sample_data.html"><code>get_sample_data</code></a></p>
 <div class="section level2">
 <h2 id="length-data">Length data<a class="anchor" aria-label="anchor" href="#length-data"></a>
 </h2>
-<p>Length data (lengths of sampled catch taken by port samplers) can be pulled from the oracle table (<code>stockeff.mv_cf_len</code>) under the stock efficiency initiative or from the annual (cflen, wolen) AA tables. It is then aggregated by YEAR, QTR, GEAR, MARKET_CODE to summarize two data sets</p>
+<p>Length data (lengths of sampled catch taken by port samplers) can be
+pulled from the oracle table (<code>stockeff.mv_cf_len</code>) under the
+stock efficiency initiative or from the annual (cflen, wolen) AA tables.
+It is then aggregated by YEAR, QTR, GEAR, MARKET_CODE to summarize two
+data sets</p>
 <ul>
 <li>The size of the biological samples taken on trips</li>
-<li>Individual fish lengths and their frequencies from these samples</li>
+<li>Individual fish lengths and their frequencies from these
+samples</li>
 </ul>
 <div class="section level3">
 <h3 id="size-of-biological-samples">Size of biological samples<a class="anchor" aria-label="anchor" href="#size-of-biological-samples"></a>
 </h3>
 <ul>
-<li>The number of length samples (number trips in which samples were taken)</li>
-<li>The total number of lengths (number of actual fish that were sampled)</li>
+<li>The number of length samples (number trips in which samples were
+taken)</li>
+<li>The total number of lengths (number of actual fish that were
+sampled)</li>
 </ul>
 <p>This is then merged with the catch data.</p>
 </div>
@@ -158,7 +168,8 @@
 <span><span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span>  <span style="text-decoration: underline;">1</span>975     2 050    UN              34     14</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">10</span>  <span style="text-decoration: underline;">1</span>975     2 050    UN              35      3</span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">11</span>  <span style="text-decoration: underline;">1</span>975     2 050    UN              36      4</span></span></code></pre>
-<p>where each row represents the number of fish sampled of a given length in YEAR, QTR, caught using NEGEAR and classed as MARKET_CODE</p>
+<p>where each row represents the number of fish sampled of a given
+length in YEAR, QTR, caught using NEGEAR and classed as MARKET_CODE</p>
 <ul>
 <li>LENGTH is the length in cm of sampled fish and</li>
 <li>NUMLEN is the number of fish of this size sampled</li>
@@ -168,11 +179,29 @@
 <div class="section level2">
 <h2 id="catch-data">Catch data<a class="anchor" aria-label="anchor" href="#catch-data"></a>
 </h2>
-<p>Landings data can be pulled from the oracle table (<code>stockeff.mv_cf_landings</code>) under the stock efficiency initiative or from the annual (cfdet, wodet, woland) AA tables. If pulled from the AA tables, the MARKET_CODE field does not exist. NESPP4 codes will need to be mapped to MARKET_CODE categories outlined <code>marketCodeLookupTable</code>. (created from <a href="https://noaa-edab.github.io/comlandr/reference/get_species_itis.html" class="external-link"><code>comlandr::get_species_itis</code></a>)</p>
-<p>Some trips will have missing information in the AREA field. These trips will need to be assigned an area using the methods outlined by <span class="citation">(Palmer, <a href="#ref-Palmer2008" role="doc-biblioref">2008</a>)</span> prior to using <code>mscatch</code>. The package <a href="https://noaa-edab.github.io/comlandr/index.html" class="external-link"><code>comlandr</code></a> replicates these methods.</p>
-<p>Trips with missing gear information is handled in <code>mscatch</code>. It is assumed that trips with unknown gear information are catching fish with lengths proportional to trips with known gear types.</p>
-<p>Discards are not included in this data. At a future date both <a href="https://noaa-edab.github.io/comlandr/index.html" class="external-link"><code>comlandr</code></a> and the stock efficiency initiative will contain discard estimates using the methods of <span class="citation">(Wigley &amp; Tholke, <a href="#ref-Wigley2020" role="doc-biblioref">2020</a>)</span>.</p>
-<p>The resulting Catch data is then merged with the biological samples to summarize total catch (metric tons) by YEAR, QTR, GEAR, MARKET_CODE, the number of biological samples taken (<code>landings_nn</code>), and the total number of fish sampled (<code>len_totalNumlen</code>). The data set should have this form:</p>
+<p>Landings data can be pulled from the oracle table
+(<code>stockeff.mv_cf_landings</code>) under the stock efficiency
+initiative or from the annual (cfdet, wodet, woland) AA tables. If
+pulled from the AA tables, the MARKET_CODE field does not exist. NESPP4
+codes will need to be mapped to MARKET_CODE categories outlined
+<code>marketCodeLookupTable</code>. (created from <a href="https://noaa-edab.github.io/comlandr/reference/get_species_itis.html" class="external-link"><code>comlandr::get_species_itis</code></a>)</p>
+<p>Some trips will have missing information in the AREA field. These
+trips will need to be assigned an area using the methods outlined by
+<span class="citation">(<a href="#ref-Palmer2008" role="doc-biblioref">Palmer, 2008</a>)</span> prior to using
+<code>mscatch</code>. The package <a href="https://noaa-edab.github.io/comlandr/index.html" class="external-link"><code>comlandr</code></a>
+replicates these methods.</p>
+<p>Trips with missing gear information is handled in
+<code>mscatch</code>. It is assumed that trips with unknown gear
+information are catching fish with lengths proportional to trips with
+known gear types.</p>
+<p>Discards are not included in this data. At a future date both <a href="https://noaa-edab.github.io/comlandr/index.html" class="external-link"><code>comlandr</code></a>
+and the stock efficiency initiative will contain discard estimates using
+the methods of <span class="citation">(<a href="#ref-Wigley2020" role="doc-biblioref">Wigley &amp; Tholke, 2020</a>)</span>.</p>
+<p>The resulting Catch data is then merged with the biological samples
+to summarize total catch (metric tons) by YEAR, QTR, GEAR, MARKET_CODE,
+the number of biological samples taken (<code>landings_nn</code>), and
+the total number of fish sampled (<code>len_totalNumlen</code>). The
+data set should have this form:</p>
 <pre><code><span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 15 × 8</span></span></span>
 <span><span class="co">#&gt;     YEAR   QTR NEGEAR MARKET_CODE landings_land landings_nn len_totalN…¹ len_n…²</span></span>
 <span><span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
@@ -196,17 +225,26 @@
 <div class="section level2">
 <h2 id="use-mscatch">Use <code>mscatch</code><a class="anchor" aria-label="anchor" href="#use-mscatch"></a>
 </h2>
-<p>Once the above data sets have been assembled they can now be used to <a href="aggregationRules.html">aggregate the landings and length samples</a> and then <a href="catchExpansion.html">expand</a> the commercial landings data to length distributions using <code>mscatch</code></p>
+<p>Once the above data sets have been assembled they can now be used to
+<a href="aggregationRules.html">aggregate the landings and length
+samples</a> and then <a href="catchExpansion.html">expand</a> the
+commercial landings data to length distributions using
+<code>mscatch</code></p>
 </div>
 <div class="section level2 unnumbered">
-<h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references">
-<div id="ref-Palmer2008">
-<p>Palmer, M. (2008). A method to apportion landings with unknown area, month and unspecified market categories among landings with similar region and fleet characteristics. <em>NOAA Working Paper</em>.</p>
+<div id="refs" class="references csl-bib-body hanging-indent" line-spacing="2">
+<div id="ref-Palmer2008" class="csl-entry">
+Palmer, M. C. (2008). A method to apportion landings with unknown area,
+month and unspecified market categories among landings with similar
+region and fleet characteristics. <em>NOAA Working Paper</em>.
 </div>
-<div id="ref-Wigley2020">
-<p>Wigley, S., &amp; Tholke, C. (2020). 2020 discard estimation, precision, and sample size analyses for 14 federally managed species groups in the waters off the northeastern united states. <em>NOAA Working Paper, NMFS-NE-261</em>.</p>
+<div id="ref-Wigley2020" class="csl-entry">
+Wigley, S. E., &amp; Tholke, C. (2020). 2020 discard estimation,
+precision, and sample size analyses for 14 federally managed species
+groups in the waters off the northeastern united states. <em>NOAA
+Working Paper, NMFS-NE-261</em>.
 </div>
 </div>
 </div>
