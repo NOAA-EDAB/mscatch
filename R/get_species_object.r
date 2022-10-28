@@ -209,7 +209,7 @@ get_species_object <- function(species_itis = NULL, stock = NA) {
                                            combine = c("LS","LG","XG","LM","MD","SQ","PW","all"))
     speciesRules$gearCodes <- data.frame(use="050",
                                          combine="all")
-    speciesRules$statStockArea <- c(521,526,533:539,611:613)
+    speciesRules$statStockArea <- c(521,526,533:539,611:639)
     speciesRules$howAggregate <- "combine"
     speciesRules$LengthWeightData <- "survey"
     speciesRules$LengthWeightRelationships <- "single"
