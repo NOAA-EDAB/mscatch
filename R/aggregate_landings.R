@@ -179,7 +179,7 @@ aggregate_landings <- function(channel,
 
   plot_market_code_by_time(data,9,outputDir,outputPlots,aggregate_to = aggregate_to)
 
-  plot_length_sample_table(data,11,outputDir,outputPlots,aggregate_to = aggregate_to)
+  plot_length_sample_table(data,11,outputDir,outputPlots,aggregate_to = aggregate_to,speciesName)
 
 
   # Return data without any length borrowing

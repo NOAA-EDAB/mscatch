@@ -14,9 +14,13 @@
 #'
 #'@noRd
 
-plot_length_sample_table <- function(data,plotID,outputDir,outputPlots=T,aggregate_to) {
+plot_length_sample_table <- function(data,plotID,outputDir,outputPlots=T,aggregate_to,speciesName) {
 
   if (outputPlots == F) return()
+
+  if(aggregate_to == "YEAR") {
+    aggregate_to <- "QTR"
+  }
 
   landings <- data$landings
   lengths <- data$lengthData
@@ -72,7 +76,7 @@ plot_length_sample_table <- function(data,plotID,outputDir,outputPlots=T,aggrega
       kableExtra::kable_styling(bootstrap_options = c("striped", "hover")) %>%
       kableExtra::column_spec(1,border_right = T) %>%
       kableExtra::add_header_above(header) %>%
-      kableExtra::save_kable(.,file=paste0(outputDir,"/",plotID,"_",gear,"_length_frequency_table1.png"))
+      kableExtra::save_kable(.,file=paste0(outputDir,"/",plotID,"_",gear,"_length_frequency_table1_",speciesName,".png"))
 
     # find all years market code, time combinations
     allYears <- d %>%
@@ -100,11 +104,15 @@ plot_length_sample_table <- function(data,plotID,outputDir,outputPlots=T,aggrega
     nyrs <- length(unique(d2$YEAR))
 
     ptab2 <- ggplot2::ggplot(data = d2) +
-    ggplot2::geom_histogram(mapping=ggplot2::aes(vals),binwidth = 1) +
-    ggplot2::facet_grid(rows=dplyr::vars(YEAR),cols=dplyr::vars(vars),switch = "y") +
-    ggplot2::theme(strip.background = ggplot2::element_blank())
+      ggplot2::geom_histogram(mapping=ggplot2::aes(vals),binwidth = 1) +
+      ggplot2::facet_grid(rows=dplyr::vars(YEAR),cols=dplyr::vars(vars),switch = "y") +
+      ggplot2::theme(strip.background = ggplot2::element_blank()) +
+      ggplot2::xlab("length (cm)") +
+      ggplot2::ylab("Frequency") +
+      ggplot2::ggtitle(paste0("Gear Type: ",gear))
 
-    ggplot2::ggsave(ptab2,filename=paste0(plotID,"_",gear,"_length_frequency_table2.png"),
+
+    ggplot2::ggsave(ptab2,filename=paste0(plotID,"_",gear,"_length_frequency_table2_",speciesName,".png"),
                     path = outputDir,
                     height = nyrs*0.35,
                     width = ncols*1.25,
