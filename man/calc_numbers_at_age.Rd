@@ -7,7 +7,7 @@
 calc_numbers_at_age(expLandings, ageLenKeys, lengthWeightParams)
 }
 \arguments{
-\item{expLandings}{Tibble. Expanded langings by length (from \code{expand_landings_to_lengths})}
+\item{expLandings}{Tibble. Expanded landings by length (from \code{expand_landings_to_lengths})}
 
 \item{lengthWeightParams}{List. alpha = intercept, betas = slope(s), var = residual variance used to formulate the mean (?see Notes section below)}
 
