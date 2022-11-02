@@ -144,10 +144,29 @@ fit_length_weight <- function(lengthWeightData,speciesName,speciesRules,outputDi
 
   if(!is.null(outputDir)) {
     for (mod in models) {
-      if (mod == "SINGLE") {next}
+
       if(!suppressMessages){
         message(paste0("Creating plots for ",mod, " in output folder ..."))
       }
+
+      if (mod == "SINGLE") {
+        textFitH0 <- c(paste0("Common slope (red): W = ",signif(exp(fits$SINGLE$coefficients[1]),6),"L^",signif(fits$SINGLE$coefficients[2],6)))
+        xmin = min(modelData[[mod]]$LENGTH)
+        ymax = max(modelData[[mod]]$INDWT)
+
+        png(paste0(outputDir,"/length_weight_relationship_",speciesName,"-",mod,".png"),width = 1000,height = 1000,units="px")
+        p <- ggplot2::ggplot(data = modelData[[mod]], ggplot2::aes(x=LENGTH, y = INDWT, color = as.factor(SEX))) +
+          ggplot2::geom_point(shape = 1) +
+          ggplot2::geom_line(ggplot2::aes(y = predWt),color = "red") +
+          ggplot2::xlab("Length (cm)") +
+          ggplot2::ylab("Weight (kg)") +
+          ggplot2::labs(title = paste0("Length-weight (SVDBS) relationship for ",speciesName, " by ",mod),color="SEX") +
+          ggplot2::geom_text(ggplot2::aes(x=xmin,y=.9*ymax,label = textFitH0),show.legend = F,size=3,color="black",hjust="inward")
+        print(p)
+        dev.off()
+        next
+      }
+
 
       ncoefs <- length(fits[[mod]]$coefficients)
       coeffs <- fits[[mod]]$coefficients

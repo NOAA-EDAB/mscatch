@@ -45,6 +45,7 @@ get_species_object <- function(species_itis = NULL, stock = NA) {
     speciesRules$AgeLengthKey <- NA
     speciesRules$startDate <- NA
     speciesRules$stock <- NA
+    speciesRules$maxAge <- NA
 
   } else if (species_itis == 172909) { # Yellowtail
     speciesRules <- list()
@@ -72,6 +73,7 @@ get_species_object <- function(species_itis = NULL, stock = NA) {
     speciesRules$AgeLengthKey <- c("year","semester")
     speciesRules$startDate <- 1973
     speciesRules$stock <- NULL
+    speciesRules$maxAge <- 8
 
 
   } else if (species_itis == 172414 ) { #Mackerel
@@ -102,6 +104,7 @@ get_species_object <- function(species_itis = NULL, stock = NA) {
     speciesRules$AgeLengthKey <- c("year","semester")
     speciesRules$startDate <- 1992
     speciesRules$stock <- NULL
+    speciesRules$maxAge <- 10
 
 
   } else if (species_itis == 161722 ) { #Herring
@@ -133,6 +136,7 @@ get_species_object <- function(species_itis = NULL, stock = NA) {
     speciesRules$AgeLengthKey <- c("year","semester","gear")
     speciesRules$startDate <- 1965
     speciesRules$stock <- NULL
+    speciesRules$maxAge <- 8
 
 
   } else if (species_itis == 164744 ) { #Haddock
@@ -162,6 +166,7 @@ get_species_object <- function(species_itis = NULL, stock = NA) {
     speciesRules$AgeLengthKey <- c()
     speciesRules$startDate <- 1964
     speciesRules$stock <- NULL
+    speciesRules$maxAge <- 15
 
 
 
@@ -192,6 +197,7 @@ get_species_object <- function(species_itis = NULL, stock = NA) {
     speciesRules$AgeLengthKey <- c("year","semester")
     speciesRules$startDate <- 1964
     speciesRules$stock <- "GB"
+    speciesRules$maxAge <- 7
 
   } else if (species_itis == 172905 & stock == "SNEMA" ) { #Winter flounder SNEMA
     speciesRules <- list()
@@ -219,6 +225,7 @@ get_species_object <- function(species_itis = NULL, stock = NA) {
     speciesRules$AgeLengthKey <- c("year","semester")
     speciesRules$startDate <- 1982
     speciesRules$stock <- "SNEMA"
+    speciesRules$maxAge <- 7
 
   } else if (species_itis == 172905 & stock == "" ) { #Winter flounder dummy stock
     speciesRules <- list()
@@ -246,6 +253,8 @@ get_species_object <- function(species_itis = NULL, stock = NA) {
     speciesRules$AgeLengthKey <- c("year","semester")
     speciesRules$startDate <- 1982
     speciesRules$stock <- "SNEMA"
+    speciesRules$maxAge <- 7
+
 
 
   } else if (species_itis == 164712) { # Cod (GB).  East + West(561-562) regions
@@ -274,6 +283,7 @@ get_species_object <- function(species_itis = NULL, stock = NA) {
     speciesRules$AgeLengthKey <- c("year","semester")
     speciesRules$startDate <- 1981
     speciesRules$stock <- NULL
+    speciesRules$maxAge <- 15
 
 
   } else if (species_itis == 160617) { # spiny dog
@@ -386,6 +396,7 @@ get_species_object <- function(species_itis = NULL, stock = NA) {
     speciesRules$AgeData <- "survey"
     speciesRules$AgeLengthKey <- c("year","semester")
     speciesRules$startDate <- 1955
+    speciesRules$maxAge <- 8
 
 
   } else if (species_itis == 164499) { # monkfish
@@ -414,6 +425,7 @@ get_species_object <- function(species_itis = NULL, stock = NA) {
     speciesRules$AgeLengthKey <- c("semester")
     speciesRules$startDate <- NA
     speciesRules$stock <- NULL
+    speciesRules$maxAge <- 10
 
 
   } else if (species_itis == 167687) { # black sea bass

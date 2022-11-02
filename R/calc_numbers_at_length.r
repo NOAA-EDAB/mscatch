@@ -91,7 +91,7 @@ calc_numbers_at_length <- function(expLandings,lengthWeightParams){
     }
 
   } else if (numFits == 1) { # ANYTHING -> year
-print("########################## HERE ##########################")
+
     for (it in 1:numFits) {
       lengthWeightPs <- lengthWeightParameters
       lengthWeightPs$betas <- lengthWeightParameters$betas[it]

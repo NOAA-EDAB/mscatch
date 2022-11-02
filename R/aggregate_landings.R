@@ -59,11 +59,6 @@ aggregate_landings <- function(channel,
   # write function call to log file
   write_to_logfile(outputDir,logfile,data=deparse(dbutils::capture_function_call()),label="Arguments passed to aggregate_landings:",append=F)
 
-  ## CHECKS QA/QC #################################################
-  # Perform data checks, qa/qc and return summarized data as a list
-  data <- checks_qa_qc(landingsData,lengthData,speciesName,aggregate_to,outputDir,logfile)
-
-  speciesRules <- expand_species_rules(speciesRules,outputDir,logfile)
 
   if (is.null(speciesName) & is.null(speciesRules)){
     stop("Missing species Name: The species name must be present in EITHER the argument `speciesName` or `speciesRules$speciesName` ")
@@ -73,6 +68,13 @@ aggregate_landings <- function(channel,
     speciesName <- speciesRules$speciesName
   }
 
+  ## CHECKS QA/QC #################################################
+  # Perform data checks, qa/qc and return summarized data as a list
+  data <- checks_qa_qc(landingsData,lengthData,speciesName,aggregate_to,outputDir,logfile)
+
+  speciesRules <- expand_species_rules(speciesRules,outputDir,logfile)
+
+  # plot histogram of landings (and lengths) over time by QTR
   plot_landings_by_type(speciesRules$speciesName,data$landings,1,outputPlots,outputDir,"3a",type="QTR")
   plot_lengths_by_type(speciesRules$speciesName,data$landings,1,outputPlots,outputDir,"3c",type="QTR")
 

@@ -3,7 +3,7 @@
 #'Given the landings (expanded by length), the age-length key and the length-weight relationship,
 #'the number of fish at a given age is calculated
 #'
-#'@param expLandings Tibble. Expanded langings by length (from \code{expand_landings_to_lengths})
+#'@param expLandings Tibble. Expanded landings by length (from \code{expand_landings_to_lengths})
 #'@param ageLengthKeys Tibble. Age Length Keys (from \code{create_yr_semester_age_length_key}
 #'@param lengthWeightParams List. alpha = intercept, betas = slope(s), var = residual variance used to formulate the mean (?see Notes section below)
 #'
