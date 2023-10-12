@@ -21,7 +21,7 @@ The goal of `mscatch` is to:
 ## Installation
 
 ``` r
-remotes::install_github("NOAA-EDAB/mscatch")
+devtools::install_github("NOAA-EDAB/mscatch")
 ```
 
 ## Contact
