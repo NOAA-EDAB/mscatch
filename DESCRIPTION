@@ -42,11 +42,9 @@ Imports:
     here,
     purrr,
     stringr,
-    dbutils,
     nnet
 Remotes:
     andybeet/cfdbs,
-    andybeet/dbutils,
     andybeet/NEFSCspatial
 Depends: 
     R (>= 3.60)
