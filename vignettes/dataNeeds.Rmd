@@ -46,8 +46,8 @@ This is then merged with the catch data.
 
 The data set should have this form
 
-``` {r lengths, echo = F, eval = T}
-sl <- readRDS(here::here("data-raw/data/sampleLengths.RDS"))  |> 
+``` {r lengthsneeds, echo = F, eval = T}
+sl <- readRDS(here::here("/data-raw/data/sampleLengths.RDS"))  |> 
   dplyr::select(-tripid)
 sl
 ```
@@ -69,7 +69,7 @@ Discards are not included in this data. At a future date both [`comlandr`](https
 
 The resulting Catch data is then merged with the biological samples to summarize total catch (metric tons) by YEAR, QTR, GEAR, MARKET_CODE, the number of biological samples taken (`landings_nn`), and the total number of fish sampled (`len_totalNumlen`). The data set should have this form:
 
-``` {r catch, echo = F, eval = T}
+``` {r catchneeds, echo = F, eval = T}
 sc <- readRDS(here::here("data-raw/data/sampleCatch.RDS"))
 sc
 ```

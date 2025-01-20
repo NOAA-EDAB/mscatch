@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
   comment = "#>"
 )
 
-source(here::here("data-raw/R/create_species_rules_table.r"))
+source("../data-raw/R/create_species_rules_table.r")
 ```
 
 When working with `mscatch`, depending on what you want to do, you will need to:
