@@ -28,10 +28,8 @@ Suggests:
     rmarkdown,
     DT,
     DBI,
-    cfdbs,
     kableExtra,
     readr,
-    NEFSCspatial,
     flextable
 VignetteBuilder: knitr
 Imports: 
@@ -43,8 +41,5 @@ Imports:
     purrr,
     stringr,
     nnet
-Remotes:
-    andybeet/cfdbs,
-    andybeet/NEFSCspatial
 Depends: 
     R (>= 3.60)
