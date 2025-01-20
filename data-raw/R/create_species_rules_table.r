@@ -21,14 +21,14 @@ create_species_rules_table <- function(spitis) {
   zz <- as.data.frame(speciesRules)
 
 
-  tab <- zz  %>%
-    dplyr::rename(species = speciesName) %>%
-    dplyr::select(-c(species_itis,SVSPP)) %>%
-    t() %>%
-    as.data.frame() %>%
-    tibble::rownames_to_column() %>%
-    dplyr::rename(value = V1) %>%
-    flextable::flextable() %>%
+  tab <- zz  |>
+    dplyr::rename(species = speciesName) |>
+    dplyr::select(-c(species_itis,SVSPP)) |>
+    t() |>
+    as.data.frame() |>
+    tibble::rownames_to_column() |>
+    dplyr::rename(value = V1) |>
+    flextable::flextable() |>
     flextable::theme_vanilla()
 
   return(tab)

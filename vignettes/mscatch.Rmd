@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
- library(magrittr)
+
 source(here::here("data-raw/R/create_species_rules_table.r"))
 ```
 
@@ -104,7 +104,7 @@ A template for the species object is bundled with `mscatch` which can then be ad
 # Haddock species itis code = 164744
 species_itis <- 164744
 speciesRules <- mscatch::get_species_object(species_itis)
-speciesRules$marketCodes %>% 
+speciesRules$marketCodes  |>  
   flextable::flextable()
 ```
 
@@ -112,7 +112,7 @@ speciesRules$marketCodes %>%
 This specifies the market code aggregation; LG and XG codes are combind and relabeled as LG, SR and SK remain as they are. All other market codes are treated as unclassifieds, UN.
 
 ```{r gr}
-speciesRules$gearCodes %>% 
+speciesRules$gearCodes |> 
   flextable::flextable()
 ```
 
@@ -154,7 +154,7 @@ fits <- mscatch::fit_length_weight(lengthWeightData$data,speciesName,speciesRule
 * The fitted model is then used to expand the catch. This is achieved by using `expand_landings_to_lengths()`
 
 ```{r expand, echo = T, eval = F}
-  expandedLandings <- mscatch::expand_landings_to_lengths(aggregatedData$landings,aggregatedData$lengthData,fits$paramsH0) %>%
+  expandedLandings <- mscatch::expand_landings_to_lengths(aggregatedData$landings,aggregatedData$lengthData,fits$paramsH0) |> 
     dplyr::mutate(speciesName = speciesName)
 
 ```

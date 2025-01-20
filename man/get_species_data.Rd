@@ -5,17 +5,21 @@
 \title{Pull species data from cfdbs}
 \usage{
 get_species_data(
-  species_itis = NULL,
-  stock = NULL,
+  channel,
+  speciesRules = NULL,
+  year = "all",
   outPath = here::here(),
   fileName = NULL
 )
 }
 \arguments{
-\item{species_itis}{Numeric. Itis code for species (Default = NA, Returns a NA object for user to define)}
+\item{channel}{an Object inherited from \link[DBI]{DBIConnection-class}.
+This object is used to communicate with the database engine. (see \code{\link[dbutils]{connect_to_database}})}
 
-\item{stock}{Character string. Define the stock associated with species of interest.
-eg. for winter flounder stock = "GB" or "SNEMA". For black sea bass, "North" or "South"}
+\item{speciesRules}{List. Containing species specific rules. Default = NULL (Fully automated).
+Note:  Predefined \code{speciesRules} will be bundled with the package for select species}
+
+\item{year}{Numeric vector. Containing the years to search over. Default = "all"}
 
 \item{outPath}{Character string. Path to directory where data will be saved}
 
