@@ -1,99 +1,35 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://noaa-edab.github.io/mscatch/404.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/mscatch/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/mscatch/articles/ageExpansion.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/mscatch/articles/aggregationRules.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/mscatch/articles/catchExpansion.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/mscatch/articles/dataNeeds.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/mscatch/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/mscatch/articles/mscatch.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/mscatch/articles/notes.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/mscatch/articles/numbersAtAge.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/mscatch/articles/sampleFigures.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/mscatch/articles/underlyingRules.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/mscatch/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/mscatch/index.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/mscatch/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/mscatch/reference/aggregate_landings.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/mscatch/reference/calc_numbers_at_age.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/mscatch/reference/calc_numbers_at_length.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/mscatch/reference/combine_age_data.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/mscatch/reference/create_age_length_key.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/mscatch/reference/create_yr_semester_age_length_key.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/mscatch/reference/expand_landings_to_lengths.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/mscatch/reference/fit_length_weight.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/mscatch/reference/get_multinomial_props.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/mscatch/reference/get_sample_data.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/mscatch/reference/get_species_data.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/mscatch/reference/get_species_object.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/mscatch/reference/get_species_object_mskeyrun.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/mscatch/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/mscatch/reference/marketCodeLookupTable.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/mscatch/reference/mscatch.html</loc>
-  </url>
-  <url>
-    <loc>https://noaa-edab.github.io/mscatch/reference/speciesLookupTable.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://noaa-edab.github.io/mscatch/404.html</loc></url>
+<url><loc>https://noaa-edab.github.io/mscatch/LICENSE-text.html</loc></url>
+<url><loc>https://noaa-edab.github.io/mscatch/articles/ageExpansion.html</loc></url>
+<url><loc>https://noaa-edab.github.io/mscatch/articles/aggregationRules.html</loc></url>
+<url><loc>https://noaa-edab.github.io/mscatch/articles/catchExpansion.html</loc></url>
+<url><loc>https://noaa-edab.github.io/mscatch/articles/dataNeeds.html</loc></url>
+<url><loc>https://noaa-edab.github.io/mscatch/articles/index.html</loc></url>
+<url><loc>https://noaa-edab.github.io/mscatch/articles/mscatch.html</loc></url>
+<url><loc>https://noaa-edab.github.io/mscatch/articles/notes.html</loc></url>
+<url><loc>https://noaa-edab.github.io/mscatch/articles/numbersAtAge.html</loc></url>
+<url><loc>https://noaa-edab.github.io/mscatch/articles/sampleFigures.html</loc></url>
+<url><loc>https://noaa-edab.github.io/mscatch/articles/underlyingRules.html</loc></url>
+<url><loc>https://noaa-edab.github.io/mscatch/authors.html</loc></url>
+<url><loc>https://noaa-edab.github.io/mscatch/index.html</loc></url>
+<url><loc>https://noaa-edab.github.io/mscatch/news/index.html</loc></url>
+<url><loc>https://noaa-edab.github.io/mscatch/reference/aggregate_landings.html</loc></url>
+<url><loc>https://noaa-edab.github.io/mscatch/reference/calc_numbers_at_age.html</loc></url>
+<url><loc>https://noaa-edab.github.io/mscatch/reference/calc_numbers_at_length.html</loc></url>
+<url><loc>https://noaa-edab.github.io/mscatch/reference/combine_age_data.html</loc></url>
+<url><loc>https://noaa-edab.github.io/mscatch/reference/create_age_length_key.html</loc></url>
+<url><loc>https://noaa-edab.github.io/mscatch/reference/create_yr_semester_age_length_key.html</loc></url>
+<url><loc>https://noaa-edab.github.io/mscatch/reference/expand_landings_to_lengths.html</loc></url>
+<url><loc>https://noaa-edab.github.io/mscatch/reference/fit_length_weight.html</loc></url>
+<url><loc>https://noaa-edab.github.io/mscatch/reference/get_multinomial_props.html</loc></url>
+<url><loc>https://noaa-edab.github.io/mscatch/reference/get_sample_data.html</loc></url>
+<url><loc>https://noaa-edab.github.io/mscatch/reference/get_species_data.html</loc></url>
+<url><loc>https://noaa-edab.github.io/mscatch/reference/get_species_object.html</loc></url>
+<url><loc>https://noaa-edab.github.io/mscatch/reference/get_species_object_mskeyrun.html</loc></url>
+<url><loc>https://noaa-edab.github.io/mscatch/reference/index.html</loc></url>
+<url><loc>https://noaa-edab.github.io/mscatch/reference/marketCodeLookupTable.html</loc></url>
+<url><loc>https://noaa-edab.github.io/mscatch/reference/mscatch.html</loc></url>
+<url><loc>https://noaa-edab.github.io/mscatch/reference/speciesLookupTable.html</loc></url>
 </urlset>
+
