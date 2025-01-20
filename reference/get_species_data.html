@@ -84,8 +84,9 @@ Palmer method applied to assign missing attributes (NEGEAR, QTR, AREA) to landin
 
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_species_data</span><span class="op">(</span></span>
-<span>  species_itis <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  stock <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">channel</span>,</span>
+<span>  speciesRules <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  year <span class="op">=</span> <span class="st">"all"</span>,</span>
 <span>  outPath <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  fileName <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -95,13 +96,18 @@ Palmer method applied to assign missing attributes (NEGEAR, QTR, AREA) to landin
     <h2>Arguments</h2>
 
 
-<dl><dt id="arg-species-itis">species_itis<a class="anchor" aria-label="anchor" href="#arg-species-itis"></a></dt>
-<dd><p>Numeric. Itis code for species (Default = NA, Returns a NA object for user to define)</p></dd>
+<dl><dt id="arg-channel">channel<a class="anchor" aria-label="anchor" href="#arg-channel"></a></dt>
+<dd><p>an Object inherited from <a href="https://dbi.r-dbi.org/reference/DBIConnection-class.html" class="external-link">DBIConnection-class</a>.
+This object is used to communicate with the database engine. (see <code>connect_to_database</code>)</p></dd>
 
 
-<dt id="arg-stock">stock<a class="anchor" aria-label="anchor" href="#arg-stock"></a></dt>
-<dd><p>Character string. Define the stock associated with species of interest.
-eg. for winter flounder stock = "GB" or "SNEMA". For black sea bass, "North" or "South"</p></dd>
+<dt id="arg-speciesrules">speciesRules<a class="anchor" aria-label="anchor" href="#arg-speciesrules"></a></dt>
+<dd><p>List. Containing species specific rules. Default = NULL (Fully automated).
+Note:  Predefined <code>speciesRules</code> will be bundled with the package for select species</p></dd>
+
+
+<dt id="arg-year">year<a class="anchor" aria-label="anchor" href="#arg-year"></a></dt>
+<dd><p>Numeric vector. Containing the years to search over. Default = "all"</p></dd>
 
 
 <dt id="arg-outpath">outPath<a class="anchor" aria-label="anchor" href="#arg-outpath"></a></dt>
