@@ -28,6 +28,7 @@ Suggests:
     rmarkdown,
     DT,
     DBI,
+    cfdbs,
     kableExtra,
     readr,
     flextable
@@ -41,5 +42,7 @@ Imports:
     purrr,
     stringr,
     nnet
+Remotes:
+    andybeet/cfdbs
 Depends: 
     R (>= 3.60)
