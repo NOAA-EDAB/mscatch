@@ -47,7 +47,7 @@ This is then merged with the catch data.
 The data set should have this form
 
 ``` {r lengthsneeds, echo = F, eval = T}
-sl <- readRDS(here::here("/data-raw/data/sampleLengths.RDS"))  |> 
+sl <- readRDS(here::here("data-raw/data/sampleLengths.RDS"))  |> 
   dplyr::select(-tripid)
 sl
 ```
